@@ -87,11 +87,11 @@
         name = "sys.personal.default";
         dependencies = hlib.signal.dependency.default.fromInputs {
           inherit inputs;
-          filter = [ "homelib" ];
+          filter = ["homelib"];
         };
         outputs = dependencies: {
-          homeManagerModules.default = { lib, ... }: {
-            imports = [ ./home-manager.nix ];
+          homeManagerModules.default = {lib, ...}: {
+            imports = [./home-manager.nix];
           };
         };
       };
