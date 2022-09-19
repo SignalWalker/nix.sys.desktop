@@ -81,22 +81,31 @@
       std = nixpkgs.lib;
       hlib = inputs.homelib.lib;
       home = hlib.home;
+      signal = hlib.signal;
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       signalModules.default = {
         name = "sys.personal.default";
-        dependencies = hlib.signal.dependency.default.fromInputs {
-          inherit inputs;
-          filter = ["homelib"];
+        dependencies = signal.flake.set.toDependencies {
+          flakes = inputs;
+          filter = [];
+          outputs = {
+            mozilla.overlays = ["rust" "firefox"];
+          };
         };
         outputs = dependencies: {
-          homeManagerModules.default = {lib, ...}: {
-            imports = [./home-manager.nix];
+          homeManagerModules = {lib, ...}: {
+            config = {
+              signal.desktop.x11.enable = true;
+            };
           };
         };
       };
-      homeConfigurations = home.genConfigurations self;
-      packages = home.genActivationPackages self.homeConfigurations;
-      apps = home.genActivationApps self.homeConfigurations;
+      homeConfigurations = home.configuration.fromFlake {
+        flake = self;
+        flakeName = "sys.personal";
+      };
+      packages = home.package.fromHomeConfigurations self.homeConfigurations;
+      apps = home.app.fromHomeConfigurations self.homeConfigurations;
     };
 }
