@@ -97,6 +97,7 @@
           homeManagerModules = {lib, ...}: {
             config = {
               signal.desktop.x11.enable = true;
+              system.isNixOS = false;
             };
           };
         };
