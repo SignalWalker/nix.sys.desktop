@@ -6,6 +6,13 @@
       url = github:kamadorueda/alejandra;
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sysbase = {
+      url = github:signalwalker/nix.sys.base;
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.alejandra.follows = "alejandra";
+      inputs.homebase.follows = "homebase";
+      inputs.homelib.follows = "homelib";
+    };
     homelib = {
       url = github:signalwalker/nix.home.lib;
       inputs.nixpkgs.follows = "nixpkgs";
@@ -82,6 +89,7 @@
       hlib = inputs.homelib.lib;
       home = hlib.home;
       signal = hlib.signal;
+      sys = hlib.sys;
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       signalModules.default = {
@@ -91,22 +99,49 @@
           filter = [];
           outputs = {
             mozilla.overlays = ["rust" "firefox"];
+            sysbase = {
+              nixosModules = ["default"];
+            };
           };
         };
         outputs = dependencies: {
           homeManagerModules = {lib, ...}: {
+            options = with lib; {};
+            imports = [];
             config = {
               signal.desktop.x11.enable = true;
-              system.isNixOS = false;
+              services.xremap.enable = lib.mkForce false;
+              services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
+              home.keyboard = {
+                model = "asus_laptop";
+                layout = "us";
+                options = [
+                  "caps:hyper"
+                ];
+              };
             };
+          };
+          nixosModules = {lib, ...}: {
+            options = with lib; {};
+            imports = [];
+            config = {};
           };
         };
       };
       homeConfigurations = home.configuration.fromFlake {
         flake = self;
         flakeName = "sys.personal";
+        extraModules = [({...}: {config.system.isNixOS = false;})];
       };
-      packages = home.package.fromHomeConfigurations self.homeConfigurations;
+      nixosConfigurations = sys.configuration.fromFlake {
+        flake = self;
+        flakeName = "sys.personal";
+        hostNameMap = {__default = "ash-laptop";};
+      };
+      packages =
+        std.recursiveUpdate
+        (home.package.fromHomeConfigurations self.homeConfigurations)
+        {default = std.mapAttrs' (name: cfg: std.nameValuePair "nixos-${name}" cfg.config.system.build.toplevel) self.nixosConfigurations;};
       apps = home.app.fromHomeConfigurations self.homeConfigurations;
     };
 }
