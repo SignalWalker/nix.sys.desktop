@@ -117,9 +117,6 @@
               wayland.windowManager.sway.extraOptions = [
                 "--unsupported-gpu"
               ];
-              signal.desktop.wayland.startupCommands = ''
-                kitty &
-              '';
               home.keyboard = {
                 model = "asus_laptop";
                 layout = "us";
