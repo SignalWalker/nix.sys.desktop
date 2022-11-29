@@ -110,8 +110,8 @@
             imports = [];
             config = {
               signal.desktop.x11.enable = false;
-              services.xremap.enable = lib.mkForce false;
-              services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
+              # services.xremap.enable = lib.mkForce false;
+              # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
               signal.desktop.wayland.compositor.sway.enable = true;
               signal.desktop.wayland.taskbar.enable = true;
               wayland.windowManager.sway.extraOptions = [
