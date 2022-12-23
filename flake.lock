@@ -51,7 +51,7 @@
         "flakeCompat": "flakeCompat_3",
         "nixpkgs": [
           "homedev",
-          "neovim-ash",
+          "ashvim",
           "nixpkgs"
         ]
       },
@@ -113,6 +113,32 @@
       "original": {
         "owner": "signalwalker",
         "repo": "scripts-rs",
+        "type": "github"
+      }
+    },
+    "ashvim": {
+      "inputs": {
+        "alejandra": "alejandra_3",
+        "neovim": [
+          "homedev",
+          "neovim"
+        ],
+        "nixpkgs": [
+          "homedev",
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1671806578,
+        "narHash": "sha256-VKj9l5TF3ItCwJLfL/CjMCE0rrY4kMw1D0PAZtBVrWY=",
+        "owner": "signalwalker",
+        "repo": "cfg.neovim",
+        "rev": "f6234b866fa69887ae6b09eebc49a53f2699fe02",
+        "type": "github"
+      },
+      "original": {
+        "owner": "signalwalker",
+        "repo": "cfg.neovim",
         "type": "github"
       }
     },
@@ -289,7 +315,7 @@
       "inputs": {
         "nixpkgs": [
           "homedev",
-          "neovim-ash",
+          "ashvim",
           "alejandra",
           "nixpkgs"
         ],
@@ -639,6 +665,7 @@
         "alejandra": [
           "alejandra"
         ],
+        "ashvim": "ashvim",
         "direnv": "direnv",
         "helix": "helix",
         "homebase": [
@@ -651,7 +678,6 @@
           "mozilla"
         ],
         "neovim": "neovim",
-        "neovim-ash": "neovim-ash",
         "nix-direnv": "nix-direnv",
         "nixpkgs": [
           "nixpkgs"
@@ -660,11 +686,11 @@
         "statix": "statix"
       },
       "locked": {
-        "lastModified": 1671805857,
-        "narHash": "sha256-DdNH0aX2/yzxg/HrPBhcRrYqXtZxXdcrliiZ1xVfd+Q=",
+        "lastModified": 1671806796,
+        "narHash": "sha256-NFMcMCOoxREZw+yyYkyaPnCTsm69TlXCeXKnuc1kG3o=",
         "owner": "signalwalker",
         "repo": "nix.home.dev",
-        "rev": "7b87f78340a553158af76712eb99fd9c7d28aa2e",
+        "rev": "62d443f9edc2124b4eb33950dfe13add2f66907f",
         "type": "github"
       },
       "original": {
@@ -839,32 +865,6 @@
         "dir": "contrib",
         "owner": "neovim",
         "repo": "neovim",
-        "type": "github"
-      }
-    },
-    "neovim-ash": {
-      "inputs": {
-        "alejandra": "alejandra_3",
-        "neovim": [
-          "homedev",
-          "neovim"
-        ],
-        "nixpkgs": [
-          "homedev",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1670859113,
-        "narHash": "sha256-wag1OoAis2HpHZ45uQJ2P7NUP0b/rHa4nT9mkbtp7YM=",
-        "owner": "signalwalker",
-        "repo": "cfg.neovim",
-        "rev": "581ce38127899f06d810bcce0af64d5b2221afbf",
-        "type": "github"
-      },
-      "original": {
-        "owner": "signalwalker",
-        "repo": "cfg.neovim",
         "type": "github"
       }
     },
