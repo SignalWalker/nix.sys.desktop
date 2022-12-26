@@ -90,6 +90,10 @@
       home = hlib.home;
       signal = hlib.signal;
       sys = hlib.sys;
+      self' = signal.flake.resolve {
+        flake = self;
+        name = "sys.personal";
+      };
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       signalModules.default = {
@@ -105,7 +109,11 @@
           };
         };
         outputs = dependencies: {
-          homeManagerModules = {lib, ...}: {
+          homeManagerModules = {
+            config,
+            lib,
+            ...
+          }: {
             options = with lib; {};
             imports = [];
             config = {
@@ -125,6 +133,8 @@
                   "grp_led:caps"
                 ];
               };
+              home.username = "ash";
+              home.homeDirectory = "/home/${config.home.username}";
             };
           };
           nixosModules = {lib, ...}: {
@@ -137,7 +147,7 @@
       homeConfigurations = home.configuration.fromFlake {
         flake = self;
         flakeName = "sys.personal";
-        extraModules = [({...}: {config.system.isNixOS = false;})];
+        isNixOS = false;
       };
       nixosConfigurations = sys.configuration.fromFlake {
         flake = self;
