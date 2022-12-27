@@ -115,8 +115,9 @@
             ...
           }: {
             options = with lib; {};
-            imports = [];
+            imports = lib.signal.fs.path.listFilePaths ./hm;
             config = {
+              programs.guix.enable = true;
               signal.desktop.x11.enable = false;
               # services.xremap.enable = lib.mkForce false;
               # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
