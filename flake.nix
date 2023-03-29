@@ -1,5 +1,5 @@
 {
-  description = "Nix configuration - personal computer";
+  description = "Nix configuration - personal desktop computer";
   inputs = {
     nixpkgs.url = github:NixOS/nixpkgs/nixpkgs-unstable;
     alejandra = {
@@ -10,17 +10,25 @@
       url = github:signalwalker/nix.sys.base;
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.homebase.follows = "homebase";
       inputs.homelib.follows = "homelib";
+      inputs.homebase.follows = "homebase";
+    };
+    syshome = {
+      url = "github:signalwalker/nix.sys.home";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.alejandra.follows = "alejandra";
+      inputs.sysbase.follows = "sysbase";
+      inputs.homelib.follows = "homelib";
+      inputs.homebase.follows = "homebase";
     };
     homelib = {
-      url = github:signalwalker/nix.home.lib;
+      url = "github:signalwalker/nix.home.lib";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.home-manager.follows = "home-manager";
     };
     homebase = {
-      url = github:signalwalker/nix.home.base;
+      url = "github:signalwalker/nix.home.base";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.homelib.follows = "homelib";
@@ -90,20 +98,19 @@
       home = hlib.home;
       signal = hlib.signal;
       sys = hlib.sys;
-      self' = signal.flake.resolve {
-        flake = self;
-        name = "sys.personal";
-      };
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       signalModules.default = {
-        name = "sys.personal.default";
+        name = "sys.desktop.default";
         dependencies = signal.flake.set.toDependencies {
           flakes = inputs;
           filter = [];
           outputs = {
             mozilla.overlays = ["rust" "firefox"];
             sysbase = {
+              nixosModules = ["default"];
+            };
+            syshome = {
               nixosModules = ["default"];
             };
           };
@@ -123,9 +130,20 @@
               # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
               signal.desktop.wayland.compositor.sway.enable = true;
               signal.desktop.wayland.taskbar.enable = true;
-              wayland.windowManager.sway.extraOptions = [
-                "--unsupported-gpu"
-              ];
+              wayland.windowManager.sway = {
+                config = {
+                  output."eDP-2" = {};
+                  output."HDMI-A-1" = {};
+                };
+                extraOptions = [
+                  "--unsupported-gpu"
+                ];
+              };
+              systemd.user.sessionVariables = {
+                # WLR_NO_HARDWARE_CURSORS = 1; # fix invisible cursors on external monitors in wayland
+                GBM_BACKEND = "nvidia-drm";
+                __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+              };
               home.keyboard = {
                 model = "asus_laptop";
                 layout = "us";
@@ -147,13 +165,12 @@
       };
       homeConfigurations = home.configuration.fromFlake {
         flake = self;
-        flakeName = "sys.personal";
+        flakeName = "sys.desktop";
         isNixOS = false;
       };
       nixosConfigurations = sys.configuration.fromFlake {
         flake = self;
-        flakeName = "sys.personal";
-        hostNameMap = {__default = "ash-laptop";};
+        flakeName = "sys.desktop";
       };
       packages =
         std.recursiveUpdate
