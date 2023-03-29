@@ -874,11 +874,11 @@
         "statix": "statix"
       },
       "locked": {
-        "lastModified": 1680092240,
-        "narHash": "sha256-o9AG4tFHhwowUYrBzIjSiNPGBHpxbKyQl2f63lOdlPw=",
+        "lastModified": 1680093916,
+        "narHash": "sha256-Ku5YLZ+xDyUJFTlQIQF3LRR+ErlWfgZSH0S8udfN3Jk=",
         "owner": "signalwalker",
         "repo": "nix.home.dev",
-        "rev": "8ad37e8a2ba088e50da77b9ce0cdb6b9c4c04814",
+        "rev": "5a01f3b4e38da3eb9f4e895303a16b2d455effa2",
         "type": "github"
       },
       "original": {
