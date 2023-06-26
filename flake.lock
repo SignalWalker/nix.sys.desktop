@@ -894,11 +894,11 @@
         "yofi": "yofi"
       },
       "locked": {
-        "lastModified": 1687749639,
-        "narHash": "sha256-0rk1BaeZVnEaqt9m3vm37zeWLtpuWd6qN49ARhlK9P0=",
+        "lastModified": 1687750145,
+        "narHash": "sha256-2xrWYZteLcJ0I5AjPH/CLQEmikm+bpxf/VLaau9pzOo=",
         "owner": "signalwalker",
         "repo": "nix.home.desktop",
-        "rev": "cffd29f8484649502f8af54ead53e9a8fd1f4add",
+        "rev": "a911dbc095f952999ac661749908bf41e8c1b53f",
         "type": "github"
       },
       "original": {
@@ -962,11 +962,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1686267378,
-        "narHash": "sha256-OrOk982igV/mtZy2mnGruYCzQihOiWvOWyRqvqBOh80=",
+        "lastModified": 1687750078,
+        "narHash": "sha256-vHegk45ccAy9MPOlapX5dhyMxoSynty8yPDWsTnm1tg=",
         "owner": "signalwalker",
         "repo": "nix.home.lib",
-        "rev": "77f58fea6da9478b5debad8235ee065f7fb63293",
+        "rev": "61eca8f238a21e243db2316a6a23491800ec66bc",
         "type": "github"
       },
       "original": {
