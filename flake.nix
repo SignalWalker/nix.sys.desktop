@@ -139,11 +139,15 @@
                   "--unsupported-gpu"
                 ];
               };
-              systemd.user.sessionVariables = {
+              signal.desktop.wayland.sessionVariables = {
                 # WLR_NO_HARDWARE_CURSORS = 1; # fix invisible cursors on external monitors in wayland
-                GBM_BACKEND = "nvidia-drm";
-                __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+                # WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:06:00.0-card"; # use the integrated gpu for wlroots rendering
+                # GBM_BACKEND = "nvidia-drm";
+                # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
+                # __EGL_VENDOR_LIBRARY_FILENAMES = "/usr/share/glvnd/egl_vendor.d/50_mesa.json";
               };
+              # systemd.user.sessionVariables = {
+              # };
               home.keyboard = {
                 model = "asus_laptop";
                 layout = "us";
@@ -158,7 +162,9 @@
           };
           nixosModules = {lib, ...}: {
             options = with lib; {};
-            imports = [];
+            imports = [
+              ./nixos/hardware/minerva.nix
+            ];
             config = {};
           };
         };
