@@ -165,7 +165,9 @@
             imports = [
               ./nixos/hardware/minerva.nix
             ];
-            config = {};
+            config = {
+              networking.hostname = "minerva";
+            };
           };
         };
       };
