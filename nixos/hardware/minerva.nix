@@ -22,6 +22,10 @@
 
   system.copySystemConfiguration = true;
 
+  services.xserver.enable = true;
+  services.xserver.displayManager.sddm.enable = true;
+  services.xserver.desktopManager.plasma5.enable = true;
+
   fileSystems."/" = {
     device = "/dev/disk/by-uuid/4dbbdac2-37a3-4578-a27b-fa43e2d483a3";
     fsType = "btrfs";

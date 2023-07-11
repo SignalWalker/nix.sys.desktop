@@ -169,6 +169,7 @@
             config = {
               networking.hostName = "minerva";
               networking.domain = "local";
+              nixpkgs.config.allowUnfree = true;
             };
           };
         };
@@ -177,10 +178,12 @@
         flake = self;
         flakeName = "sys.desktop";
         isNixOS = true;
+        allowUnfree = true;
       };
       nixosConfigurations = sys.configuration.fromFlake {
         flake = self;
         flakeName = "sys.desktop";
+        allowUnfree = true;
       };
       packages =
         std.recursiveUpdate
