@@ -1,13 +1,13 @@
 {
   description = "Nix configuration - personal desktop computer";
   inputs = {
-    nixpkgs.url = github:NixOS/nixpkgs/nixpkgs-unstable;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     alejandra = {
-      url = github:kamadorueda/alejandra;
+      url = "github:kamadorueda/alejandra";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     sysbase = {
-      url = github:signalwalker/nix.sys.base;
+      url = "github:signalwalker/nix.sys.base";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.homelib.follows = "homelib";
@@ -35,7 +35,7 @@
       inputs.home-manager.follows = "home-manager";
     };
     homedesk = {
-      url = github:signalwalker/nix.home.desktop;
+      url = "github:signalwalker/nix.home.desktop";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.homelib.follows = "homelib";
@@ -46,7 +46,7 @@
       inputs.wired.follows = "wired";
     };
     homedev = {
-      url = github:signalwalker/nix.home.dev;
+      url = "github:signalwalker/nix.home.dev";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.homelib.follows = "homelib";
@@ -54,7 +54,7 @@
       inputs.mozilla.follows = "mozilla";
     };
     homemedia = {
-      url = github:signalwalker/nix.home.media;
+      url = "github:signalwalker/nix.home.media";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.homelib.follows = "homelib";
@@ -63,27 +63,26 @@
     };
     # base
     home-manager = {
-      url = github:nix-community/home-manager;
+      url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # multi
     mozilla = {
-      url = github:mozilla/nixpkgs-mozilla;
-      inputs.nixpkgs.follows = "nixpkgs";
+      url = "github:mozilla/nixpkgs-mozilla";
     };
     # desk
     ash-scripts = {
-      url = github:signalwalker/scripts-rs;
+      url = "github:signalwalker/scripts-rs";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.mozilla.follows = "mozilla";
     };
     ## x11
     polybar-scripts = {
-      url = github:polybar/polybar-scripts;
+      url = "github:polybar/polybar-scripts";
       flake = false;
     };
     wired = {
-      url = github:Toqozz/wired-notify;
+      url = "github:Toqozz/wired-notify";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -164,9 +163,12 @@
             options = with lib; {};
             imports = [
               ./nixos/hardware/minerva.nix
+              ./nixos/system.nix
+              ./nixos/nix.nix
             ];
             config = {
-              networking.hostname = "minerva";
+              networking.hostName = "minerva";
+              networking.domain = "local";
             };
           };
         };
@@ -174,7 +176,7 @@
       homeConfigurations = home.configuration.fromFlake {
         flake = self;
         flakeName = "sys.desktop";
-        isNixOS = false;
+        isNixOS = true;
       };
       nixosConfigurations = sys.configuration.fromFlake {
         flake = self;
