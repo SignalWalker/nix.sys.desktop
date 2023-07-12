@@ -129,15 +129,6 @@
               # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
               signal.desktop.wayland.compositor.sway.enable = true;
               signal.desktop.wayland.taskbar.enable = true;
-              wayland.windowManager.sway = {
-                config = {
-                  output."eDP-2" = {};
-                  output."HDMI-A-1" = {};
-                };
-                extraOptions = [
-                  "--unsupported-gpu"
-                ];
-              };
               signal.desktop.wayland.sessionVariables = {
                 # WLR_NO_HARDWARE_CURSORS = 1; # fix invisible cursors on external monitors in wayland
                 # WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:06:00.0-card"; # use the integrated gpu for wlroots rendering
