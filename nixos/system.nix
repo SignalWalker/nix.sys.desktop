@@ -31,16 +31,6 @@ in {
       wifi.backend = "iwd";
     };
 
-    # services.xserver = {
-    #   enable = true;
-    # };
-    # services.xserver.displayManager.sddm = {
-    #   enable = true;
-    #   autoNumlock = true;
-    # };
-    # services.xserver.desktopManager.plasma5.enable = true;
-    # services.xserver.displayManager.defaultSession = "plasmawayland";
-
     security.rtkit.enable = true;
     services.pipewire = {
       enable = true;
@@ -92,10 +82,6 @@ in {
 
     programs.light.enable = true;
 
-    security.pam.services.swaylock.text = ''
-      auth  include login
-    '';
-
     services.udisks2 = {
       enable = true;
       settings = {
@@ -117,6 +103,38 @@ in {
 
     home-manager = {
       # useUserPackages = true;
+    };
+    fonts.fonts = let
+      fonts = config.home-manager.users.ash.signal.desktop.theme.font.fonts;
+    in
+      foldl' (acc: font:
+        if (fonts.${font}.package != null)
+        then (acc ++ [fonts.${font}.package])
+        else acc) [] (attrNames fonts);
+
+    boot.kernelPackages = pkgs.linuxPackages_zen;
+
+    # TODO :: zfs support (this doesn't actually override anything)
+    # nixpkgs.config.packageOverrides = pkgs: {
+    #   zfs = config.boot.kernelPackages.zfs;
+    #   zfsStable = config.boot.kernelPackages.zfsStable;
+    #   zfsUnstable = config.boot.kernelPackages.zfsUnstable;
+    # };
+
+    security.pam.u2f = {
+      enable = true;
+      cue = true;
+      control = "sufficient";
+    };
+    security.pam.services = {
+      login.u2fAuth = true;
+      sudo.u2fAuth = true;
+      swaylock = {
+        u2fAuth = true;
+        text = ''
+          auth  include login
+        '';
+      };
     };
   };
   meta = {};
