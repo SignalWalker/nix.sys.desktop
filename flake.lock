@@ -191,11 +191,11 @@
     "beetsSrc": {
       "flake": false,
       "locked": {
-        "lastModified": 1688576233,
-        "narHash": "sha256-AKmozMNVchysoQcUWd90Ic6bQBKQgylVn0E3i85dGb8=",
+        "lastModified": 1689370184,
+        "narHash": "sha256-EppsOCseTWiMcQu7d/m6ZoJG+cUjaR58rFSVCLKqM/c=",
         "owner": "beetbox",
         "repo": "beets",
-        "rev": "9481402b3c20739ca0b879d19adbfca22ccd6a44",
+        "rev": "b19b961035da23a7cbe2a049d2e3f19e7ce220d5",
         "type": "github"
       },
       "original": {
@@ -776,11 +776,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689362769,
-        "narHash": "sha256-5V7Z7T9019pGsFnYH6va5h6Wveq8FKmXa/xLfj0DhNI=",
+        "lastModified": 1689432596,
+        "narHash": "sha256-Vixn4nhjeHjGG3o6hDAnSZbXsYMYA5b39+NwAbUPpi0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c1cdce3d89741d402d8fd2c93e3d2643ff85b053",
+        "rev": "346032240c15d8b6034847dc7a5f53312a5a57fc",
         "type": "github"
       },
       "original": {
@@ -797,32 +797,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689362769,
-        "narHash": "sha256-5V7Z7T9019pGsFnYH6va5h6Wveq8FKmXa/xLfj0DhNI=",
+        "lastModified": 1689432596,
+        "narHash": "sha256-Vixn4nhjeHjGG3o6hDAnSZbXsYMYA5b39+NwAbUPpi0=",
         "owner": "nix-community",
         "repo": "home-manager",
-        "rev": "c1cdce3d89741d402d8fd2c93e3d2643ff85b053",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "type": "github"
-      }
-    },
-    "home-manager_3": {
-      "inputs": {
-        "nixpkgs": [
-          "syshome",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1689362769,
-        "narHash": "sha256-5V7Z7T9019pGsFnYH6va5h6Wveq8FKmXa/xLfj0DhNI=",
-        "owner": "nix-community",
-        "repo": "home-manager",
-        "rev": "c1cdce3d89741d402d8fd2c93e3d2643ff85b053",
+        "rev": "346032240c15d8b6034847dc7a5f53312a5a57fc",
         "type": "github"
       },
       "original": {
@@ -848,11 +827,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689366077,
-        "narHash": "sha256-cxVds/wxWQmTu6IcxsBcp6rXgmoedZnGHqXxstiMVw0=",
+        "lastModified": 1689445676,
+        "narHash": "sha256-qZ8vlk+OpnkOJwaT5fElBT/Rmgy3YACTCFTNjbCBeQE=",
         "owner": "signalwalker",
         "repo": "nix.home.base",
-        "rev": "13aad6ffb1d9123fdc94497be1c67e19cc427c4b",
+        "rev": "0f22fc5939ef9418e4f4962d1372b7193456c516",
         "type": "github"
       },
       "original": {
@@ -871,12 +850,6 @@
         ],
         "fishDone": "fishDone",
         "helixSrc": "helixSrc",
-        "homebase": [
-          "homebase"
-        ],
-        "homelib": [
-          "homelib"
-        ],
         "kitty": "kitty",
         "mozilla": [
           "mozilla"
@@ -895,11 +868,11 @@
         "yofi": "yofi"
       },
       "locked": {
-        "lastModified": 1689366157,
-        "narHash": "sha256-AelqMKIAs8zBVRjGd9eRxio4K4Xim1M3cCY7PSMA92M=",
+        "lastModified": 1689445809,
+        "narHash": "sha256-bqBa7Q4MPkuDkAaocHVSOkZxrWSExSp/ExufBLtLDgA=",
         "owner": "signalwalker",
         "repo": "nix.home.desktop",
-        "rev": "b5c5dd5612beebb005a2d0df42c5be5ea6258e5c",
+        "rev": "4ef11b21977280e733ce2d2f5c307837975a0d88",
         "type": "github"
       },
       "original": {
@@ -918,12 +891,6 @@
         "crane": "crane",
         "direnv": "direnv",
         "helix": "helix",
-        "homebase": [
-          "homebase"
-        ],
-        "homelib": [
-          "homelib"
-        ],
         "mozilla": [
           "mozilla"
         ],
@@ -937,11 +904,11 @@
         "statix": "statix"
       },
       "locked": {
-        "lastModified": 1689366124,
-        "narHash": "sha256-BBiBAsjnXoZFzQ8V/dQBMoE3em+gEqKKH3PjyXZMidY=",
+        "lastModified": 1689445771,
+        "narHash": "sha256-bNhndLOtUXlaGVQSJjOFBln9mefO+umk5NH5gKIxBQY=",
         "owner": "signalwalker",
         "repo": "nix.home.dev",
-        "rev": "dda1756058c5abc968296c77649000b21aae3536",
+        "rev": "0b7020e1925b5fc81547d9e81eaf20b94d8927e6",
         "type": "github"
       },
       "original": {
@@ -963,11 +930,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1689366033,
-        "narHash": "sha256-a35O1UakhldK2plRYB3NbadhLsxrrfsQB1+ZpkTjhgU=",
+        "lastModified": 1689445616,
+        "narHash": "sha256-RPOVRPvdkOGxGno7WeA5qcoYzQAJeAmwrfYsql/4lwg=",
         "owner": "signalwalker",
         "repo": "nix.home.lib",
-        "rev": "a96efbdd2f8683ac2bd87e317d9ffcaca11a4a88",
+        "rev": "20bde29e4d403d8b88135653054c563c1728f4f4",
         "type": "github"
       },
       "original": {
@@ -982,25 +949,16 @@
           "alejandra"
         ],
         "beetsSrc": "beetsSrc",
-        "homebase": [
-          "homebase"
-        ],
-        "homedesk": [
-          "homedesk"
-        ],
-        "homelib": [
-          "homelib"
-        ],
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1689366170,
-        "narHash": "sha256-sRUuiz7mUIZMjpVCIn992xmhg16wIIg0ebaeIhpcC50=",
+        "lastModified": 1689445845,
+        "narHash": "sha256-Gk3jsj+Ne22XxSy8+86CX6LCYRKnPCQKaBYjNELg5eg=",
         "owner": "signalwalker",
         "repo": "nix.home.media",
-        "rev": "a10be5fdc494b2ea3095ed2c1000d8c2b246d685",
+        "rev": "fbc3946db03e23ab2804ea8ca34118b61cb032b9",
         "type": "github"
       },
       "original": {
@@ -1139,11 +1097,11 @@
       },
       "locked": {
         "dir": "contrib",
-        "lastModified": 1689353238,
-        "narHash": "sha256-48FzJRK2+MD4GVXWMFNWih+8zJE+m7zBlyNOSJM1Dok=",
+        "lastModified": 1689404581,
+        "narHash": "sha256-/McdQPe6uzB7phY3HOHF9h+vtSC5GZyLexQVUCX5TnU=",
         "owner": "neovim",
         "repo": "neovim",
-        "rev": "33e1a8cd7042816a064c0d2bf32b6570d7e88b79",
+        "rev": "622ae2f53e77873a114f86f5acaff341ef3098ac",
         "type": "github"
       },
       "original": {
@@ -1172,43 +1130,6 @@
       "original": {
         "owner": "nix-community",
         "repo": "nix-direnv",
-        "type": "github"
-      }
-    },
-    "nixlib": {
-      "locked": {
-        "lastModified": 1688259758,
-        "narHash": "sha256-CYVbYQfIm3vwciCf6CCYE+WOOLE3vcfxfEfNHIfKUJQ=",
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "rev": "a92befce80a487380ea5e92ae515fe33cebd3ac6",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixpkgs.lib",
-        "type": "github"
-      }
-    },
-    "nixos-generators": {
-      "inputs": {
-        "nixlib": "nixlib",
-        "nixpkgs": [
-          "sysbase",
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1688738567,
-        "narHash": "sha256-yax5BYOfpE0+95kyJmEcfKEdZBaFvCENDogBB4VQB3Q=",
-        "owner": "nix-community",
-        "repo": "nixos-generators",
-        "rev": "9191c85aab6b1a7ad395c13d340f2aa0e3ddf552",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nix-community",
-        "repo": "nixos-generators",
         "type": "github"
       }
     },
@@ -1554,23 +1475,16 @@
           "alejandra"
         ],
         "home-manager": "home-manager_2",
-        "homebase": [
-          "homebase"
-        ],
-        "homelib": [
-          "homelib"
-        ],
-        "nixos-generators": "nixos-generators",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1689366213,
-        "narHash": "sha256-GLnp4yk4vyKze/c8GywhjmmKygEig9jtSIHoivCYDO8=",
+        "lastModified": 1689445873,
+        "narHash": "sha256-NWKCEJlAIL1aPX/c8k+EAXl52a16Jo5R/DVivij54mk=",
         "owner": "signalwalker",
         "repo": "nix.sys.base",
-        "rev": "5da4bd2f27752084a498937c4691e04ab5059626",
+        "rev": "e7dd8985d0d8c3715c3a5b149d591b72da7bf7ba",
         "type": "github"
       },
       "original": {
@@ -1584,26 +1498,16 @@
         "alejandra": [
           "alejandra"
         ],
-        "home-manager": "home-manager_3",
-        "homebase": [
-          "homebase"
-        ],
-        "homelib": [
-          "homelib"
-        ],
         "nixpkgs": [
           "nixpkgs"
-        ],
-        "sysbase": [
-          "sysbase"
         ]
       },
       "locked": {
-        "lastModified": 1689366227,
-        "narHash": "sha256-ivNPXb6xkqg3wSI7ohzoVH8QT6A5OWtRsyvqpNANS1w=",
+        "lastModified": 1689445887,
+        "narHash": "sha256-MaSMLhzoKgmetQcXnhbyUvmkXM/Q0ghhKnIxtNI4+OE=",
         "owner": "signalwalker",
         "repo": "nix.sys.home",
-        "rev": "f3d03083b4153624bac066afcf7c00c7d098a7cd",
+        "rev": "59600b20a51d301ce7cc03e1b07412bf332232c3",
         "type": "github"
       },
       "original": {
