@@ -94,14 +94,13 @@
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       nixosModules = std.genAttrs machines (machine: {lib, ...}: {
         options = {};
-        imports =
-          (std.optional (builtins.pathExists ./nixos/hardware/${machine}.nix) ./nixos/hardware/${machine}.nix)
-          ++ [
-            inputs.sysbase.nixosModules.default
-            inputs.syshome.nixosModules.default
-            ./nixos/system.nix
-            ./nixos/nix.nix
-          ];
+        imports = [
+          inputs.sysbase.nixosModules.default
+          inputs.syshome.nixosModules.default
+          ./nixos/system.nix
+          ./nixos/nix.nix
+          ./machine/${machine}.nix
+        ];
         config = {
           networking.hostName = machine;
           networking.domain = "local";

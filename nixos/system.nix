@@ -96,7 +96,7 @@ in {
     };
 
     services.blueman = {
-      enable = true;
+      enable = config.hardware.bluetooth.enable;
     };
 
     time.timeZone = "America/New_York";
@@ -112,14 +112,7 @@ in {
         then (acc ++ [fonts.${font}.package])
         else acc) [] (attrNames fonts);
 
-    boot.kernelPackages = pkgs.linuxPackages_zen;
-
-    # TODO :: zfs support (this doesn't actually override anything)
-    # nixpkgs.config.packageOverrides = pkgs: {
-    #   zfs = config.boot.kernelPackages.zfs;
-    #   zfsStable = config.boot.kernelPackages.zfsStable;
-    #   zfsUnstable = config.boot.kernelPackages.zfsUnstable;
-    # };
+    boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
     security.pam.u2f = {
       enable = true;
@@ -134,6 +127,20 @@ in {
         text = ''
           auth  include login
         '';
+      };
+    };
+
+    services.auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "schedutil";
+          turbo = "auto";
+        };
+        charger = {
+          governor = "performance";
+          turbo = "auto";
+        };
       };
     };
   };
