@@ -6,20 +6,19 @@
       url = "github:kamadorueda/alejandra";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     sysbase = {
       url = "github:signalwalker/nix.sys.base";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.homelib.follows = "homelib";
-      inputs.homebase.follows = "homebase";
     };
     syshome = {
       url = "github:signalwalker/nix.sys.home";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.sysbase.follows = "sysbase";
-      inputs.homelib.follows = "homelib";
-      inputs.homebase.follows = "homebase";
     };
     homelib = {
       url = "github:signalwalker/nix.home.lib";
@@ -57,15 +56,8 @@
       url = "github:signalwalker/nix.home.media";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.homelib.follows = "homelib";
-      inputs.homebase.follows = "homebase";
-      inputs.homedesk.follows = "homedesk";
     };
     # base
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     # multi
     mozilla = {
       url = "github:mozilla/nixpkgs-mozilla";
@@ -97,89 +89,73 @@
       home = hlib.home;
       signal = hlib.signal;
       sys = hlib.sys;
+      machines = ["artemis" "terra"];
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
-      signalModules.default = {
-        name = "sys.desktop.default";
-        dependencies = signal.flake.set.toDependencies {
-          flakes = inputs;
-          filter = [];
-          outputs = {
-            mozilla.overlays = ["rust" "firefox"];
-            sysbase = {
-              nixosModules = ["default"];
-            };
-            syshome = {
-              nixosModules = ["default"];
-            };
-          };
+      nixosModules = std.genAttrs machines (machine: {lib, ...}: {
+        options = {};
+        imports =
+          (std.optional (builtins.pathExists ./nixos/hardware/${machine}.nix) ./nixos/hardware/${machine}.nix)
+          ++ [
+            inputs.sysbase.nixosModules.default
+            inputs.syshome.nixosModules.default
+            ./nixos/system.nix
+            ./nixos/nix.nix
+          ];
+        config = {
+          networking.hostName = machine;
+          networking.domain = "local";
+          home-manager.users = self.homeConfigurations;
+          nixpkgs.overlays = [
+            inputs.mozilla.overlays.rust
+            inputs.mozilla.overlays.firefox
+          ];
         };
-        outputs = dependencies: {
-          homeManagerModules = {
-            config,
-            lib,
-            ...
-          }: {
-            options = with lib; {};
-            imports = lib.signal.fs.path.listFilePaths ./hm;
-            config = {
-              programs.guix.enable = true;
-              signal.desktop.x11.enable = false;
-              # services.xremap.enable = lib.mkForce false;
-              # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
-              signal.desktop.wayland.compositor.sway.enable = true;
-              signal.desktop.wayland.taskbar.enable = true;
-              signal.desktop.wayland.sessionVariables = {
-                # WLR_NO_HARDWARE_CURSORS = 1; # fix invisible cursors on external monitors in wayland
-                # WLR_DRM_DEVICES = "/dev/dri/by-path/pci-0000:06:00.0-card"; # use the integrated gpu for wlroots rendering
-                # GBM_BACKEND = "nvidia-drm";
-                # __GLX_VENDOR_LIBRARY_NAME = "nvidia";
-                # __EGL_VENDOR_LIBRARY_FILENAMES = "/usr/share/glvnd/egl_vendor.d/50_mesa.json";
-              };
-              # systemd.user.sessionVariables = {
-              # };
-              home.keyboard = {
-                model = "asus_laptop";
-                layout = "us";
-                options = [
-                  "caps:hyper"
-                  "grp_led:caps"
-                ];
-              };
-              home.username = "ash";
-              home.homeDirectory = "/home/${config.home.username}";
-            };
-          };
-          nixosModules = {lib, ...}: {
-            options = with lib; {};
-            imports = [
-              ./nixos/hardware/minerva.nix
-              ./nixos/system.nix
-              ./nixos/nix.nix
+      });
+      homeConfigurations.ash = {config, ...}: {
+        imports = [
+          inputs.homebase.homeManagerModules.default
+          inputs.homedev.homeManagerModules.default
+          inputs.homedesk.homeManagerModules.default
+          inputs.homemedia.homeManagerModules.default
+          ./hm/guix.nix
+        ];
+        config = {
+          home.username = "ash";
+          home.homeDirectory = "/home/${config.home.username}";
+
+          nixpkgs.overlays = [
+            inputs.mozilla.overlays.rust
+            inputs.mozilla.overlays.firefox
+          ];
+
+          programs.guix.enable = true;
+          # services.xremap.enable = lib.mkForce false;
+          # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
+          signal.desktop.x11.enable = false;
+          signal.desktop.wayland.compositor.sway.enable = true;
+          signal.desktop.wayland.taskbar.enable = true;
+
+          home.keyboard = {
+            model = "asus_laptop";
+            layout = "us";
+            options = [
+              "caps:hyper"
+              "grp_led:caps"
             ];
-            config = {
-              networking.hostName = "minerva";
-              networking.domain = "local";
-              nixpkgs.config.allowUnfree = true;
-            };
           };
         };
       };
-      homeConfigurations = home.configuration.fromFlake {
-        flake = self;
-        flakeName = "sys.desktop";
-        isNixOS = true;
-        allowUnfree = true;
-      };
-      nixosConfigurations = sys.configuration.fromFlake {
-        flake = self;
-        flakeName = "sys.desktop";
-        allowUnfree = true;
-      };
-      packages =
-        std.recursiveUpdate
-        (home.package.fromHomeConfigurations self.homeConfigurations)
-        {default = std.mapAttrs' (name: cfg: std.nameValuePair "nixos-${name}" cfg.config.system.build.toplevel) self.nixosConfigurations;};
-      apps = home.app.fromHomeConfigurations self.homeConfigurations;
+      nixosConfigurations = std.mapAttrs (machine: module:
+        std.nixosSystem {
+          system = null; # set in `config.nixpkgs.crossSystem`
+          modules = [
+            module
+          ];
+          lib = std.extend (final: prev: {
+            signal = hlib;
+          });
+        })
+      self.nixosModules;
     };
 }
