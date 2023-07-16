@@ -18,17 +18,17 @@ in {
   config = {
     boot.loader = {
       systemd-boot = {
-        enable = true;
+        enable = false;
         configurationLimit = config.boot.loader.configurationLimit;
         consoleMode = "auto";
       };
-      # grub = {
-      #   enable = lib.mkForce false;
-      #   efiSupport = true;
-      #   zfsSupport = any (fs: fs == "zfs") config.boot.supportedFileSystems;
-      #   configurationLimit = config.boot.loader.configurationLimit;
-      #   theme = pkgs.nixos-grub2-theme;
-      # };
+      grub = {
+        enable = true;
+        efiSupport = true;
+        zfsSupport = any (fs: fs == "zfs") config.boot.supportedFilesystems;
+        configurationLimit = config.boot.loader.configurationLimit;
+        theme = pkgs.nixos-grub2-theme;
+      };
     };
   };
   meta = {};

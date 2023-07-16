@@ -21,9 +21,9 @@ in {
 
     boot.loader = {
       efi.canTouchEfiVariables = true;
-      # grub.devices = [
-      #   "/dev/disk/by-id/wwn-0x5001b44c835b39c0"
-      # ];
+      grub.devices = [
+        "/dev/disk/by-id/wwn-0x5001b44c835b39c0"
+      ];
     };
 
     system.copySystemConfiguration = true;
@@ -47,12 +47,12 @@ in {
     };
 
     fileSystems."/boot" = {
-      device = "/dev/disk/by-uuid/C3D6-5EBD";
+      device = "/dev/disk/by-uuid/0F81-4BB5";
       fsType = "vfat";
     };
 
     swapDevices = [
-      {device = "/dev/disk/by-uuid/526a9c71-bde5-41da-a0bd-77a3d2270d73";}
+      {device = "/dev/disk/by-uuid/d8015444-373a-463f-b307-5e036e74a9de";}
     ];
 
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
