@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  modulesPath,
   ...
 }:
 with builtins; let
@@ -11,7 +12,7 @@ in {
   disabledModules = [];
   imports =
     [
-      "${nixpkgs}/nixos/modules/installer/scan/not-detected.nix"
+      (modulesPath + "/installer/scan/not-detected.nix")
     ]
     ++ lib.signal.fs.path.listFilePaths ./hardware;
   config = {};
