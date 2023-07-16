@@ -9,7 +9,11 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./terra;
+  imports =
+    [
+      "${nixpkgs}/nixos/modules/installer/scan/not-detected.nix"
+    ]
+    ++ lib.signal.fs.path.listFilePaths ./hardware;
   config = {};
   meta = {};
 }
