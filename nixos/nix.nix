@@ -15,7 +15,7 @@ in {
       gc.automatic = false;
     };
 
-    # programs.command-not-found.enable = false; # using `nix-index` (configured from home-manager) instead
+    programs.command-not-found.enable = false; # doesn't work in a pure-flake system
   };
   meta = {};
 }

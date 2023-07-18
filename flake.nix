@@ -85,6 +85,14 @@
       url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nix-index = {
+      url = "github:nix-community/nix-index";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    nix-index-database = {
+      url = "github:nix-community/nix-index-database";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -102,6 +110,7 @@
         imports = [
           inputs.sysbase.nixosModules.default
           inputs.syshome.nixosModules.default
+          inputs.nix-index-database.nixosModules.nix-index
           inputs.foundryvtt.nixosModules.foundryvtt
           ./nixos/system.nix
           ./nixos/nix.nix
@@ -125,6 +134,9 @@
           inputs.homedev.homeManagerModules.default
           inputs.homedesk.homeManagerModules.default
           inputs.homemedia.homeManagerModules.default
+
+          inputs.nix-index-database.hmModules.nix-index
+
           ./hm/guix.nix
         ];
         config = {
