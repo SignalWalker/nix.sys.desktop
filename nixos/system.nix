@@ -25,6 +25,9 @@ in {
     };
 
     systemd.network.enable = false;
+    services.resolved = {
+      multicastDns = true;
+    };
 
     networking.networkmanager = {
       enable = true;

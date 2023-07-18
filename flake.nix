@@ -6,6 +6,10 @@
       url = "github:kamadorueda/alejandra";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    deploy-rs = {
+      url = "github:serokell/deploy-rs";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -77,18 +81,19 @@
       url = "github:Toqozz/wired-notify";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    foundryvtt = {
+      url = "github:reckenrode/nix-foundryvtt";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
     nixpkgs,
+    deploy-rs,
     ...
   }:
     with builtins; let
       std = nixpkgs.lib;
-      hlib = inputs.homelib.lib;
-      home = hlib.home;
-      signal = hlib.signal;
-      sys = hlib.sys;
       machines = ["artemis" "terra"];
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
@@ -97,6 +102,7 @@
         imports = [
           inputs.sysbase.nixosModules.default
           inputs.syshome.nixosModules.default
+          inputs.foundryvtt.nixosModules.foundryvtt
           ./nixos/system.nix
           ./nixos/nix.nix
           ./machine/${machine}.nix
@@ -104,7 +110,9 @@
         config = {
           networking.hostName = machine;
           networking.domain = "local";
-          home-manager.users = self.homeConfigurations;
+          home-manager = {
+            users = self.homeConfigurations;
+          };
           nixpkgs.overlays = [
             inputs.mozilla.overlays.rust
             inputs.mozilla.overlays.firefox
@@ -120,15 +128,12 @@
           ./hm/guix.nix
         ];
         config = {
-          home.username = "ash";
-          home.homeDirectory = "/home/${config.home.username}";
-
           nixpkgs.overlays = [
             inputs.mozilla.overlays.rust
             inputs.mozilla.overlays.firefox
           ];
 
-          programs.guix.enable = true;
+          programs.guix.enable = false;
           # services.xremap.enable = lib.mkForce false;
           # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
           signal.desktop.x11.enable = false;
@@ -147,14 +152,25 @@
       };
       nixosConfigurations = std.mapAttrs (machine: module:
         std.nixosSystem {
-          system = null; # set in `config.nixpkgs.crossSystem`
+          system = null; # set in `config.nixpkgs.hostPlatform`
           modules = [
             module
           ];
           lib = std.extend (final: prev: {
-            signal = hlib;
+            signal = inputs.homelib.lib;
           });
         })
       self.nixosModules;
+
+      deploy.nodes = std.mapAttrs (machine: config: {
+        hostname = "${machine}.local";
+        remoteBuild = machine == "terra";
+        profiles.system = {
+          user = "root";
+          path = deploy-rs.lib.x86_64-linux.activate.nixos config;
+        };
+      });
+
+      checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
