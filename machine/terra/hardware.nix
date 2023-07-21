@@ -23,6 +23,26 @@ in {
       enable = true;
     };
     boot.supportedFilesystems = ["ntfs"];
+
+    hardware.opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
+    services.xserver.videoDrivers = ["nvidia"];
+    hardware.nvidia = {
+      modesetting.enable = true;
+      open = true;
+      nvidiaSettings = true;
+      nvidiaPersistenced = true;
+    };
+
+    # VFIO (doesn't work on terra atm)
+    # boot.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd"];
+    # boot.kernelParams = [
+    #   "intel_iommu=on"
+    #   "iommu=pt"
+    # ];
   };
   meta = {};
 }

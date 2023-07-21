@@ -50,6 +50,9 @@ in {
         };
       };
     };
+    environment.systemPackages = with pkgs; [sunshine];
+
+    signal.network.wireguard.networks."wg-signal".addresses = ["fd24:fad3:8246::1" "172.24.86.1"];
   };
   meta = {};
 }

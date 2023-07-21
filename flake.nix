@@ -110,8 +110,10 @@
         imports = [
           inputs.sysbase.nixosModules.default
           inputs.syshome.nixosModules.default
+
           inputs.nix-index-database.nixosModules.nix-index
           inputs.foundryvtt.nixosModules.foundryvtt
+
           ./nixos/system.nix
           ./nixos/nix.nix
           ./machine/${machine}.nix
@@ -153,7 +155,7 @@
           signal.desktop.wayland.taskbar.enable = true;
 
           home.keyboard = {
-            model = "asus_laptop";
+            model = "pc104";
             layout = "us";
             options = [
               "caps:hyper"

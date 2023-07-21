@@ -24,13 +24,12 @@ in {
       };
     };
 
-    systemd.network.enable = false;
     services.resolved = {
       multicastDns = true;
     };
 
     networking.networkmanager = {
-      enable = true;
+      enable = lib.mkDefault (!config.systemd.network.enable);
       wifi.backend = "iwd";
     };
 
@@ -83,7 +82,17 @@ in {
           {
             return polkit.Result.YES;
           }
-        })
+        });
+        polkit.addRule(function(action, subject) {
+          if (
+            subject.isInGroup("wheel")
+            && (
+              action.id == "org.libvirt.unix.manage"
+            )
+          ) {
+            return polkit.Result.YES;
+          }
+        });
       '';
     };
 
@@ -150,6 +159,40 @@ in {
         };
       };
     };
+
+    # services.transmission = {
+    #   enable = true;
+    #   settings = {
+    #   };
+    #   openPeerPorts = true;
+    #   openRPCPort = true;
+    # };
+    services.deluge = let
+      deluge = config.services.deluge;
+    in {
+      enable = false; # todo
+      # authFile = null; # todo
+      declarative = false; # todo
+      openFirewall = true;
+      config = {
+        download_location = "${deluge.dataDir}/downloads";
+        share_ratio_limit = "2.0";
+        allow_remote = true;
+        daemon_port = 58846;
+        listen_ports = [6881 6889];
+      };
+      web = {
+        enable = false; # todo
+        openFirewall = true;
+        port = 8112;
+      };
+    };
+
+    services.mullvad-vpn = {
+      enable = true;
+    };
+
+    signal.network.wireguard.networks."wg-signal".privateKeyFile = "/home/ash/.local/share/wireguard/wg-signal.sign";
   };
   meta = {};
 }

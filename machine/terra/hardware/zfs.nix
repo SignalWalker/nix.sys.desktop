@@ -25,6 +25,36 @@ in {
     hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     networking.hostId = "8ffb526d";
+
+    # boot.zfs.enableUnstable = true;
+    # nixpkgs.overlays = [
+    #   (final: prev: {
+    #     zfs = prev.zfs.overrideAttrs (zfinal: zprev: {
+    #       src = final.fetchFromGitHub {
+    #         owner = "openzfs";
+    #         repo = "zfs";
+    #         rev = "2.2.0-rc1";
+    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
+    #       };
+    #     });
+    #     zfsStable = prev.zfsStable.overrideAttrs (zfinal: zprev: {
+    #       src = final.fetchFromGitHub {
+    #         owner = "openzfs";
+    #         repo = "zfs";
+    #         rev = "2.2.0-rc1";
+    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
+    #       };
+    #     });
+    #     zfsUnstable = prev.zfsUnstable.overrideAttrs (zfinal: zprev: {
+    #       src = final.fetchFromGitHub {
+    #         owner = "openzfs";
+    #         repo = "zfs";
+    #         rev = "2.2.0-rc1";
+    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
+    #       };
+    #     });
+    #   })
+    # ];
   };
   meta = {};
 }

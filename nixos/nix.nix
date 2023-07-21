@@ -12,7 +12,10 @@ in {
   imports = [];
   config = {
     nix = {
-      gc.automatic = false;
+      gc = {
+        automatic = true;
+        dates = "weekly";
+      };
     };
 
     programs.command-not-found.enable = false; # doesn't work in a pure-flake system
