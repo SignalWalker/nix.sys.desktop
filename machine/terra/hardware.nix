@@ -24,17 +24,36 @@ in {
     };
     boot.supportedFilesystems = ["ntfs"];
 
+    boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+
+    services.xserver.videoDrivers = ["nvidia"];
+    hardware.nvidia = {
+      modesetting.enable = true;
+      # open = true;
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      nvidiaPersistenced = true;
+    };
+    nixpkgs.config.packageOverrides = pkgs: {
+      vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+    };
     hardware.opengl = {
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
+      extraPackages = with pkgs; [
+        # intel-media-driver
+        # vaapiIntel
+        vaapiVdpau
+        libvdpau-va-gl
+        # intel-compute-runtime
+        nvidia-vaapi-driver
+        vulkan-validation-layers
+      ];
     };
-    services.xserver.videoDrivers = ["nvidia"];
-    hardware.nvidia = {
-      modesetting.enable = true;
-      open = true;
-      nvidiaSettings = true;
-      nvidiaPersistenced = true;
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+      NVD_LOG = "1";
     };
 
     # VFIO (doesn't work on terra atm)

@@ -19,7 +19,11 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c 'sway-wrapper -d'";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c 'sway-wrapper -d ${
+            if config.hardware.nvidia.modesetting.enable
+            then "--unsupported-gpu"
+            else ""
+          }'";
         };
       };
     };
@@ -52,7 +56,7 @@ in {
         gtk = true;
       };
       extraPackages = with pkgs; [
-        swaylock
+        # swaylock-effects
         swayidle
       ];
     };
@@ -128,8 +132,6 @@ in {
         then (acc ++ [fonts.${font}.package])
         else acc) [] (attrNames fonts);
 
-    boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-
     security.pam.u2f = {
       enable = true;
       cue = true;
@@ -192,7 +194,34 @@ in {
       enable = true;
     };
 
-    signal.network.wireguard.networks."wg-signal".privateKeyFile = "/home/ash/.local/share/wireguard/wg-signal.sign";
+    signal.network.wireguard.networks."wg-signal" = {
+      privateKeyFile = "/run/wireguard/wg-signal.sign";
+    };
+    systemd.tmpfiles.rules = [
+      "C /run/wireguard/wg-signal.sign - - - - /home/ash/.local/share/wireguard/wg-signal.sign"
+      "z /run/wireguard/wg-signal.sign 0400 systemd-network systemd-network"
+    ];
+
+    programs.wireshark = {
+      enable = true;
+      package = pkgs.wireshark-qt;
+    };
+
+    programs.steam = {
+      enable = true;
+      remotePlay.openFirewall = true;
+      package = pkgs.steam.override {
+        extraEnv = {
+          "MANGOHUD" = true;
+          "OBS_VKCAPTURE" = true;
+        };
+        extraPkgs = pkgs:
+          with pkgs; [
+            mangohud
+            gamescope
+          ];
+      };
+    };
   };
   meta = {};
 }

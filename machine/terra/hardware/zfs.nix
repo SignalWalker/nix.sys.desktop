@@ -26,6 +26,8 @@ in {
 
     networking.hostId = "8ffb526d";
 
+    boot.zfs.extraPools = ["mir1024"];
+
     # boot.zfs.enableUnstable = true;
     # nixpkgs.overlays = [
     #   (final: prev: {

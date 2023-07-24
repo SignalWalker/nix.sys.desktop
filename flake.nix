@@ -93,6 +93,14 @@
       url = "github:nix-community/nix-index-database";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    musnix = {
+      url = "github:musnix/musnix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    wayland = {
+      url = "github:nix-community/nixpkgs-wayland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -113,6 +121,7 @@
 
           inputs.nix-index-database.nixosModules.nix-index
           inputs.foundryvtt.nixosModules.foundryvtt
+          inputs.musnix.nixosModules.musnix
 
           ./nixos/system.nix
           ./nixos/nix.nix
@@ -127,6 +136,7 @@
           nixpkgs.overlays = [
             inputs.mozilla.overlays.rust
             inputs.mozilla.overlays.firefox
+            inputs.wayland.overlays.default
           ];
         };
       });

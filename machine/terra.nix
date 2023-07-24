@@ -11,33 +11,6 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./terra;
   config = {
-    services.atuin = {
-      enable = true;
-      host = "0.0.0.0";
-      openRegistration = false;
-      openFirewall = true;
-      port = 8398;
-    };
-    services.foundryvtt = {
-      enable = true;
-      minifyStaticFiles = true;
-      upnp = true;
-    };
-    services.jellyfin = {
-      enable = true;
-      openFirewall = true;
-    };
-    services.jellyseerr = {
-      enable = true;
-    };
-    networking.firewall.allowedUDPPorts = [
-      30000 # foundry
-      5055 # jellyseerr
-    ];
-    networking.firewall.allowedTCPPorts = [
-      30000 # foundry
-      5055 # jellyseerr
-    ];
     virtualisation.libvirtd = {
       enable = true;
       onBoot = "ignore";
@@ -50,9 +23,6 @@ in {
         };
       };
     };
-    environment.systemPackages = with pkgs; [sunshine];
-
-    signal.network.wireguard.networks."wg-signal".addresses = ["fd24:fad3:8246::1" "172.24.86.1"];
   };
   meta = {};
 }

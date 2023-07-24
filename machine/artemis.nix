@@ -14,7 +14,30 @@ in {
     networking.networkmanager = {
       enable = true;
     };
-    signal.network.wireguard.networks."wg-signal".addresses = ["fd24:fad3:8246::2" "172.24.86.2"];
+
+    musnix = {
+      enable = true;
+      alsaSeq.enable = true;
+      soundcardPciId = "00:1b.0";
+      kernel = {
+        realtime = true;
+        packages = pkgs.linuxPackages_latest_rt;
+      };
+    };
+
+    nix.extraOptions = ''
+      builders-use-substitutes = true
+    '';
+
+    signal.machines."terra" = {
+      nix.build.sshKey = "/run/nix/remote-build.sign";
+    };
+    systemd.tmpfiles.rules = [
+      "C /run/nix/remote-build.sign - - - - /home/ash/.ssh/id_ed25519"
+      "z /run/nix/remote-build.sign 0400 root root"
+      "L /root/.ssh/known_hosts - - - - /home/ash/.ssh/known_hosts"
+      "L /root/.ssh/id_ed25519 - - - - /home/ash/.ssh/id_ed25519"
+    ];
   };
   meta = {};
 }

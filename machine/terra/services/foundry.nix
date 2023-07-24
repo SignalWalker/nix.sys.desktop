@@ -1,0 +1,43 @@
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+with builtins; let
+  std = pkgs.lib;
+in {
+  options = with lib; {};
+  disabledModules = [];
+  imports = [];
+  config = {
+    services.foundryvtt = {
+      enable = true;
+      minifyStaticFiles = true;
+      upnp = false;
+    };
+    services.nginx.virtualHosts."vtt.home.ashwalker.net" = {
+      enableACME = true;
+      forceSSL = true;
+      extraConfig = ''
+        client_max_body_size 300M;
+      '';
+      locations."/" = {
+        extraConfig = ''
+          # Set proxy headers
+          proxy_set_header Host $host;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+
+          # These are important to support WebSockets
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "Upgrade";
+
+          # Make sure to set your Foundry VTT port number
+          proxy_pass http://localhost:30000;
+        '';
+      };
+    };
+  };
+  meta = {};
+}
