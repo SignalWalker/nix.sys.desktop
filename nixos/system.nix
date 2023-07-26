@@ -19,11 +19,58 @@ in {
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c 'sway-wrapper -d ${
-            if config.hardware.nvidia.modesetting.enable
-            then "--unsupported-gpu"
-            else ""
-          }'";
+          command =
+            if config.programs.regreet.enable
+            then "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -- ${lib.getExe config.programs.regreet.package}"
+            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS";
+        };
+      };
+    };
+    services.xserver.displayManager.sessionPackages = let
+      writeSession = name: text:
+        (pkgs.writeTextFile {
+          name = "${name}.desktop";
+          text = ''
+            [Desktop Entry]
+            Name=${name}
+            Type=Application
+          '';
+          destination = "/share/wayland-sessions/${name}.desktop";
+        })
+        .overrideAttrs (final: prev: {
+          passthru =
+            (prev.passthru or {})
+            // {
+              providedSessions = [name];
+            };
+        });
+    in [
+      (writeSession "SwayWrapped" ''
+        Comment=Sway + features
+        Exec=sway-wrapper -d ${
+          if config.hardware.nvidia.modesetting.enable
+          then "--unsupported-gpu"
+          else ""
+        } 1> $XDG_CONFIG_HOME/log/sway/out.log 2> $XDG_CONFIG_HOME/log/sway/err.log
+      '')
+    ];
+    programs.regreet = {
+      enable = true;
+      settings = {
+        background = {
+          path = "/home/ash/pictures/wallpapers/train_and_lake.png";
+          fit = "Cover";
+        };
+        GTK = {
+          application_prefer_dark_theme = true;
+          cursor_theme_name = "Adwaita";
+          font_name = "Cantarell 16";
+          icon_theme_name = "Adwaita";
+          theme_name = "Adwaita";
+        };
+        commands = {
+          reboot = ["systemctl" "reboot"];
+          poweroff = ["systemctl" "poweroff"];
         };
       };
     };
@@ -57,6 +104,23 @@ in {
       };
       extraPackages = with pkgs; [
         # swaylock-effects
+        swayidle
+      ];
+    };
+    services.xserver.windowManager.qtile = {
+      enable = false; # pywlroots build failure
+      backend = "wayland";
+      extraPackages = python3Packages: [
+        python3Packages.qtile-extras
+      ];
+    };
+    services.xserver.desktopManager.plasma5 = {
+      enable = true;
+      useQtScaling = true;
+    };
+    programs.river = {
+      enable = true;
+      extraPackages = with pkgs; [
         swayidle
       ];
     };

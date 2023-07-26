@@ -20,7 +20,7 @@ in {
       alsaSeq.enable = true;
       soundcardPciId = "00:1b.0";
       kernel = {
-        realtime = true;
+        realtime = false;
         packages = pkgs.linuxPackages_latest_rt;
       };
     };

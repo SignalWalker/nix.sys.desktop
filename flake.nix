@@ -98,7 +98,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
+      # url = "github:nix-community/nixpkgs-wayland";
+      url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
