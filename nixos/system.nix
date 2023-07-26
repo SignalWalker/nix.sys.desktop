@@ -26,7 +26,8 @@ in {
         };
       };
     };
-    services.xserver.displayManager.sessionPackages = let
+
+    environment.systemPackages = let
       writeSession = name: text:
         (pkgs.writeTextFile {
           name = "${name}.desktop";
@@ -46,7 +47,7 @@ in {
         });
     in [
       (writeSession "SwayWrapped" ''
-        Comment=Sway + features
+        Comment=Sway with extra features
         Exec=sway-wrapper -d ${
           if config.hardware.nvidia.modesetting.enable
           then "--unsupported-gpu"
@@ -55,7 +56,7 @@ in {
       '')
     ];
     programs.regreet = {
-      enable = true;
+      enable = false;
       settings = {
         background = {
           path = "/home/ash/pictures/wallpapers/train_and_lake.png";
