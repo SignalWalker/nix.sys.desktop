@@ -9,7 +9,8 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./zfs;
+  # imports = lib.signal.fs.path.listFilePaths ./zfs;
+  imports = [];
   config = {
     zfs-root = {
       boot = {
@@ -21,42 +22,10 @@ in {
         kernelParams = [];
       };
     };
-    nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
 
     networking.hostId = "8ffb526d";
 
     boot.zfs.extraPools = ["mir1024"];
-
-    # boot.zfs.enableUnstable = true;
-    # nixpkgs.overlays = [
-    #   (final: prev: {
-    #     zfs = prev.zfs.overrideAttrs (zfinal: zprev: {
-    #       src = final.fetchFromGitHub {
-    #         owner = "openzfs";
-    #         repo = "zfs";
-    #         rev = "2.2.0-rc1";
-    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
-    #       };
-    #     });
-    #     zfsStable = prev.zfsStable.overrideAttrs (zfinal: zprev: {
-    #       src = final.fetchFromGitHub {
-    #         owner = "openzfs";
-    #         repo = "zfs";
-    #         rev = "2.2.0-rc1";
-    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
-    #       };
-    #     });
-    #     zfsUnstable = prev.zfsUnstable.overrideAttrs (zfinal: zprev: {
-    #       src = final.fetchFromGitHub {
-    #         owner = "openzfs";
-    #         repo = "zfs";
-    #         rev = "2.2.0-rc1";
-    #         sha256 = "eYUR5d4gpTrlFu6j1uL83DWL9uPGgAUDRdSEb73V5i4=";
-    #       };
-    #     });
-    #   })
-    # ];
   };
   meta = {};
 }

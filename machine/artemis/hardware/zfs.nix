@@ -9,16 +9,17 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./zfs;
+  # imports = lib.signal.fs.path.listFilePaths ./zfs;
+  imports = [];
   config = {
     zfs-root = {
       boot = {
         devNodes = "/dev/disk/by-id/";
-        bootDevices = [  "nvme-WDC_PC_SN530_SDBPNPZ-1T00-1002_20309U447208" ];
+        bootDevices = ["nvme-WDC_PC_SN530_SDBPNPZ-1T00-1002_20309U447208"];
         immutable = false;
-        availableKernelModules = [  "xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod" ];
+        availableKernelModules = ["xhci_pci" "thunderbolt" "nvme" "usb_storage" "sd_mod"];
         removableEfi = false;
-        kernelParams = [ ];
+        kernelParams = [];
       };
     };
 
