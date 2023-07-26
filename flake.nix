@@ -102,6 +102,15 @@
       url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # hardware-specific
+    nixos-hardware = {
+      url = "github:NixOS/nixos-hardware";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    # fw-fanctrl = {
+    #   url = "github:mdvmeijer/fw-fanctrl-nix";
+    #   flake = false;
+    # };
   };
   outputs = inputs @ {
     self,
@@ -116,18 +125,22 @@
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       nixosModules = std.genAttrs machines (machine: {lib, ...}: {
         options = {};
-        imports = [
-          inputs.sysbase.nixosModules.default
-          inputs.syshome.nixosModules.default
+        imports =
+          [
+            inputs.sysbase.nixosModules.default
+            inputs.syshome.nixosModules.default
 
-          inputs.nix-index-database.nixosModules.nix-index
-          inputs.foundryvtt.nixosModules.foundryvtt
-          inputs.musnix.nixosModules.musnix
+            inputs.nix-index-database.nixosModules.nix-index
+            inputs.foundryvtt.nixosModules.foundryvtt
+            inputs.musnix.nixosModules.musnix
 
-          ./nixos/system.nix
-          ./nixos/nix.nix
-          ./machine/${machine}.nix
-        ];
+            ./nixos/system.nix
+            ./nixos/nix.nix
+            ./machine/${machine}.nix
+          ]
+          ++ (std.optionals (machine == "artemis") [
+            inputs.nixos-hardware.nixosModules.framework
+          ]);
         config = {
           networking.hostName = machine;
           networking.domain = "local";
