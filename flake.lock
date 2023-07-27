@@ -858,6 +858,48 @@
         "type": "github"
       }
     },
+    "fw-ectool": {
+      "inputs": {
+        "ec-git": [
+          "fw-ectool-src"
+        ],
+        "ec-local": [
+          "fw-ectool-src"
+        ],
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1676940045,
+        "narHash": "sha256-6+KEjo2LtQaX0n01iEuvLRuPaT09hLOB4wdhtpgc1r8=",
+        "owner": "ssddq",
+        "repo": "fw-ectool",
+        "rev": "7d3a68cabbcef3efbbf2b75e49439a72d289685e",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ssddq",
+        "repo": "fw-ectool",
+        "type": "github"
+      }
+    },
+    "fw-ectool-src": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1685084639,
+        "narHash": "sha256-hwI61GKzID9rv7hZiKH5MC1Fzbuw+D7mZG9twgLgS9Y=",
+        "owner": "FrameworkComputer",
+        "repo": "EmbeddedController",
+        "rev": "f6d6b927eed71550d3475411cfc3e59abe5cef2a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "FrameworkComputer",
+        "repo": "EmbeddedController",
+        "type": "github"
+      }
+    },
     "helix": {
       "inputs": {
         "nci": "nci",
@@ -1559,6 +1601,8 @@
         "ash-scripts": "ash-scripts",
         "deploy-rs": "deploy-rs",
         "foundryvtt": "foundryvtt",
+        "fw-ectool": "fw-ectool",
+        "fw-ectool-src": "fw-ectool-src",
         "home-manager": "home-manager",
         "homebase": "homebase",
         "homedesk": "homedesk",
