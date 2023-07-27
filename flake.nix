@@ -107,6 +107,16 @@
       url = "github:NixOS/nixos-hardware";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    fw-ectool-src = {
+      url = "github:FrameworkComputer/EmbeddedController";
+      flake = false;
+    };
+    fw-ectool = {
+      url = "github:ssddq/fw-ectool";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.ec-git.follows = "fw-ectool-src";
+      inputs.ec-local.follows = "fw-ectool-src";
+    };
     # fw-fanctrl = {
     #   url = "github:mdvmeijer/fw-fanctrl-nix";
     #   flake = false;
@@ -123,7 +133,11 @@
       machines = ["artemis" "terra"];
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
-      nixosModules = std.genAttrs machines (machine: {lib, ...}: {
+      nixosModules = std.genAttrs machines (machine: {
+        lib,
+        pkgs,
+        ...
+      }: {
         options = {};
         imports =
           [
@@ -150,6 +164,9 @@
             inputs.mozilla.overlays.rust
             inputs.mozilla.overlays.firefox
             inputs.wayland.overlays.default
+          ];
+          environment.systemPackages = std.optionals (machine == "artemis") [
+            inputs.fw-ectool.packages.${pkgs.system}.default
           ];
         };
       });

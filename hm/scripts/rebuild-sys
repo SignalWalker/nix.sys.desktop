@@ -1,0 +1,12 @@
+#! /usr/bin/env zsh
+nixos-rebuild \
+	--flake '/home/ash/projects/nix/sys/desktop' \
+	--override-input homelib ~/projects/nix/home/lib \
+	--override-input homebase ~/projects/nix/home/base \
+	--override-input homedev ~/projects/nix/home/dev \
+	--override-input homedev/ashvim ~/projects/cfg/neovim \
+	--override-input homedesk ~/projects/nix/home/desktop \
+	--override-input homemedia ~/projects/nix/home/media \
+	--override-input sysbase ~/projects/nix/sys/base \
+	--override-input syshome ~/projects/nix/sys/home \
+	"$@"
