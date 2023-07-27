@@ -13,10 +13,14 @@ in {
   config = {
     programs.dconf.enable = true;
 
+    services.xserver.displayManager.sddm = {
+      enable = false;
+    };
+    services.xserver.enable = config.services.xserver.displayManager.sddm.enable;
     services.greetd = let
       greetd = config.services.greetd;
     in {
-      enable = true;
+      enable = !config.services.xserver.displayManager.sddm.enable;
       settings = {
         default_session = {
           command =
@@ -30,13 +34,14 @@ in {
     environment.systemPackages = let
       writeSession = name: text:
         (pkgs.writeTextFile {
-          name = "${name}.desktop";
+          name = "${lib.toLower name}.desktop";
           text = ''
             [Desktop Entry]
             Name=${name}
             Type=Application
+            ${text}
           '';
-          destination = "/share/wayland-sessions/${name}.desktop";
+          destination = "/share/wayland-sessions/${lib.toLower name}.desktop";
         })
         .overrideAttrs (final: prev: {
           passthru =
@@ -116,7 +121,7 @@ in {
       ];
     };
     services.xserver.desktopManager.plasma5 = {
-      enable = true;
+      enable = config.services.xserver.enable;
       useQtScaling = true;
     };
     programs.river = {

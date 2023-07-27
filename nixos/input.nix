@@ -27,10 +27,7 @@ in {
         languages = ["eng"];
       };
       layout = "hypersuper(us)";
-      xkbOptions = [
-        "caps:hyper"
-        "grp_led:caps"
-      ];
+      xkbOptions = "caps:hyper,grp_led:caps";
     };
   };
   meta = {};
