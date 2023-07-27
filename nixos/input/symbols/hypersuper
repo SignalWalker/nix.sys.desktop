@@ -1,0 +1,13 @@
+partial modifier_keys xkb_symbols "mods" {
+  modifier_map Mod3 { Super_L, Super_R };
+  key <SUPR> { [ NoSymbol, Super_L ] };
+  modifier_map Mod3 { <SUPR> };
+
+  modifier_map Mod4 { Hyper_L, Hyper_R };
+  key <HYPR> { [ NoSymbol, Hyper_L ] };
+  modifier_map Mod4 { <HYPR> };
+};
+default xkb_symbols "us" {
+  include "us"
+  include "hypersuper(mods)"
+};

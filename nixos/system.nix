@@ -137,21 +137,22 @@ in {
 
     security.polkit = {
       enable = true;
+
+      # polkit.addRule(function(action, subject) {
+      #   if (
+      #     subject.isInGroup("wheel")
+      #       && (
+      #         action.id == "org.freedesktop.login1.reboot" ||
+      #         action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
+      #         action.id == "org.freedesktop.login1.power-off" ||
+      #         action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
+      #       )
+      #     )
+      #   {
+      #     return polkit.Result.YES;
+      #   }
+      # });
       extraConfig = ''
-        polkit.addRule(function(action, subject) {
-          if (
-            subject.isInGroup("wheel")
-              && (
-                action.id == "org.freedesktop.login1.reboot" ||
-                action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-                action.id == "org.freedesktop.login1.power-off" ||
-                action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
-              )
-            )
-          {
-            return polkit.Result.YES;
-          }
-        });
         polkit.addRule(function(action, subject) {
           if (
             subject.isInGroup("wheel")
@@ -189,7 +190,7 @@ in {
     home-manager = {
       # useUserPackages = true;
     };
-    fonts.fonts = let
+    fonts.packages = let
       fonts = config.home-manager.users.ash.signal.desktop.theme.font.fonts;
     in
       foldl' (acc: font:

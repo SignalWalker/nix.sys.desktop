@@ -134,10 +134,9 @@
             inputs.foundryvtt.nixosModules.foundryvtt
             inputs.musnix.nixosModules.musnix
 
-            ./nixos/system.nix
-            ./nixos/nix.nix
             ./machine/${machine}.nix
           ]
+          ++ (lib.signal.fs.path.listFilePaths ./nixos)
           ++ (std.optionals (machine == "artemis") [
             inputs.nixos-hardware.nixosModules.framework
           ]);
@@ -154,17 +153,21 @@
           ];
         };
       });
-      homeConfigurations.ash = {config, ...}: {
-        imports = [
-          inputs.homebase.homeManagerModules.default
-          inputs.homedev.homeManagerModules.default
-          inputs.homedesk.homeManagerModules.default
-          inputs.homemedia.homeManagerModules.default
+      homeConfigurations.ash = {
+        config,
+        lib,
+        ...
+      }: {
+        imports =
+          [
+            inputs.homebase.homeManagerModules.default
+            inputs.homedev.homeManagerModules.default
+            inputs.homedesk.homeManagerModules.default
+            inputs.homemedia.homeManagerModules.default
 
-          inputs.nix-index-database.hmModules.nix-index
-
-          ./hm/guix.nix
-        ];
+            inputs.nix-index-database.hmModules.nix-index
+          ]
+          ++ (lib.signal.fs.path.listFilePaths ./hm);
         config = {
           nixpkgs.overlays = [
             inputs.mozilla.overlays.rust
@@ -178,14 +181,14 @@
           signal.desktop.wayland.compositor.sway.enable = true;
           signal.desktop.wayland.taskbar.enable = true;
 
-          home.keyboard = {
-            model = "pc104";
-            layout = "us";
-            options = [
-              "caps:hyper"
-              "grp_led:caps"
-            ];
-          };
+          # home.keyboard = lib.mkIf (!(osConfig.signal.input.enable or false)) {
+          #   # model = "pc104";
+          #   layout = "us";
+          #   options = [
+          #     "caps:hyper"
+          #     "grp_led:caps"
+          #   ];
+          # };
         };
       };
       nixosConfigurations = std.mapAttrs (machine: module:
