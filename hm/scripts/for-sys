@@ -1,0 +1,41 @@
+#! /usr/bin/env zsh
+
+set -e
+
+autoload colors; colors
+
+printerr() { printf "${fg[yellow]}[for-sys]${fg[blue]}[$(date +%T)]${reset_color} %s\n" "$@" 1>&2; }
+
+if [[ "$HOME" = "" ]]; then
+	printerr '$HOME not set'
+	exit 1
+fi
+
+PROJECTS=${XDG_PROJECTS_DIR:-$HOME/projects}
+
+if [[ ! -d "$PROJECTS" ]]; then
+	printerr "$PROJECTS is inaccessible || not a directory"
+	exit 1
+fi
+
+declare -a DIRS
+DIRS=("$PROJECTS/nix/home/lib" "$PROJECTS/nix/home/base" "$PROJECTS/nix/home/dev" "$PROJECTS/nix/home/desktop" "$PROJECTS/nix/home/media" "$PROJECTS/nix/sys/base" "$PROJECTS/nix/sys/home" "$PROJECTS/nix/sys/desktop")
+declare -r DIRS
+
+for flake in $DIRS; do
+	if [[ ! -d "$flake" ]]; then
+		printerr "$flake is inaccessible || not a directory"
+		exit 1
+	fi
+	if [[ ! -e "$flake/flake.nix" ]]; then
+		printerr "$flake does not contain flake.nix"
+		exit 1
+	fi
+done
+
+for flake in $DIRS; do
+	printerr "$argv $flake"
+	command "$@" "$flake"
+done
+
+printerr "done"

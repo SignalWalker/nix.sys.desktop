@@ -10,7 +10,6 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./system;
-  config = {
-  };
+  config = {};
   meta = {};
 }

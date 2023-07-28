@@ -11,6 +11,7 @@ in {
   disabledModules = [];
   imports = [];
   config = {
+    # userspace manager for mounting usb devices, etc.
     services.udisks2 = {
       enable = true;
       settings = {

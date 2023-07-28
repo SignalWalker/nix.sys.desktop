@@ -11,6 +11,7 @@ in {
   disabledModules = [];
   imports = [];
   config = {
+    # essentially a file manager interface to udisks
     services.gvfs = {
       enable = true;
     };

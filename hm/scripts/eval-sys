@@ -1,7 +1,7 @@
 #! /usr/bin/env zsh
 host=`hostname`
 
-projects=/home/ash/projects
+projects=$HOME/projects
 sys=$projects/nix/sys
 hm=$projects/nix/home
 
