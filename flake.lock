@@ -466,11 +466,11 @@
     "fishFzf": {
       "flake": false,
       "locked": {
-        "lastModified": 1689114187,
-        "narHash": "sha256-Aqr6+DcOS3U1R8o9Mlbxszo5/Dy9viU4KbmRGXo95R8=",
+        "lastModified": 1690569122,
+        "narHash": "sha256-YjH+2p+1k/343GZ3m9Z9BdrdLsU+d7umRIq3zt0WQNI=",
         "owner": "PatrickF1",
         "repo": "fzf.fish",
-        "rev": "9876f5f74aab7f58b0359341dc26bf4a0f2e9021",
+        "rev": "883b78c8d7955b049f670a1e6ac74c0ea3d388ed",
         "type": "github"
       },
       "original": {
@@ -925,11 +925,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1690564608,
-        "narHash": "sha256-g5ueEhP7ZsCCfSbgFcR78QQbmgC0lIE58wNsXM4l/dA=",
+        "lastModified": 1690571372,
+        "narHash": "sha256-aWkQFjJBSv/KeUlUv/Da62MpLJKVdx3J6eDGbwfig8I=",
         "owner": "signalwalker",
         "repo": "nix.home.base",
-        "rev": "8959d06e66d953c9070237bcb10e9ac387851c75",
+        "rev": "f2d5a644035550891a706a4e09b5019761b46e3c",
         "type": "github"
       },
       "original": {
@@ -1054,11 +1054,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1690571034,
-        "narHash": "sha256-K37oM3/sr6J6pMIIZWyEGW0DuUvme3vlrhPmjiN9Lv8=",
+        "lastModified": 1690571359,
+        "narHash": "sha256-cjNqLuszS7lvEoBSAclgx9UcGM+Gfjrjmi60dmAR4ns=",
         "owner": "signalwalker",
         "repo": "nix.home.media",
-        "rev": "754474d21c363e53cfbd5418f114dd95477befd3",
+        "rev": "ca8d3e84544167bb1baedf0f2ddb42679ef71621",
         "type": "github"
       },
       "original": {
