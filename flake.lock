@@ -968,11 +968,11 @@
         "yofi": "yofi"
       },
       "locked": {
-        "lastModified": 1690563975,
-        "narHash": "sha256-/YGWcx8+Ub9mastcQYhoHUKihfev0D3RCbRNn++Obws=",
+        "lastModified": 1690565345,
+        "narHash": "sha256-nsLQ33eiPv1zey9/fCd75Qu7IJ0W0kwoxwsbbzPfrCM=",
         "owner": "signalwalker",
         "repo": "nix.home.desktop",
-        "rev": "48708d74c2860e09b68411203710ae50418e9ce9",
+        "rev": "ac91d3791e6384f37d3398c4b5e6a14b514d64da",
         "type": "github"
       },
       "original": {
