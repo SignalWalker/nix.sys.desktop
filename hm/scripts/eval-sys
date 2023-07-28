@@ -1,14 +1,18 @@
 #! /usr/bin/env zsh
 host=`hostname`
+
+projects=/home/ash/projects
+sys=$projects/nix/sys
+hm=$projects/nix/home
+
 nix eval \
-	--override-input homelib ~/projects/nix/home/lib \
-	--override-input homebase ~/projects/nix/home/base \
-	--override-input homedev ~/projects/nix/home/dev \
-	--override-input homedev/ashvim ~/projects/cfg/neovim \
-	--override-input homedesk ~/projects/nix/home/desktop \
-	--override-input homemedia ~/projects/nix/home/media \
-	--override-input sysbase ~/projects/nix/sys/base \
-	--override-input syshome ~/projects/nix/sys/home \
-	--recreate-lock-file \
+	--override-input homelib $hm/lib \
+	--override-input homebase $hm/base \
+	--override-input homedev $hm/dev \
+	--override-input homedev/ashvim $projects/cfg/neovim \
+	--override-input homedesk $hm/desktop \
+	--override-input homemedia $hm/media \
+	--override-input sysbase $sys/base \
+	--override-input syshome $sys/home \
 	"$HOME/projects/nix/sys/desktop#nixosConfigurations.${host}.$1" \
 	${argv[2,-1]}

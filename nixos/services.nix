@@ -9,8 +9,12 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./system;
+  imports = lib.signal.fs.path.listFilePaths ./services;
   config = {
+    services.dbus = {
+      enable = true;
+      implementation = "broker";
+    };
   };
   meta = {};
 }

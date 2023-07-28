@@ -1,12 +1,21 @@
 #! /usr/bin/env zsh
+
+projects=/home/ash/projects
+sys=$projects/nix/sys
+hm=$projects/nix/home
+
+printf "Rebuilding from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
+
+flake="$sys/desktop"
+
 nixos-rebuild \
-	--flake '/home/ash/projects/nix/sys/desktop' \
-	--override-input homelib ~/projects/nix/home/lib \
-	--override-input homebase ~/projects/nix/home/base \
-	--override-input homedev ~/projects/nix/home/dev \
-	--override-input homedev/ashvim ~/projects/cfg/neovim \
-	--override-input homedesk ~/projects/nix/home/desktop \
-	--override-input homemedia ~/projects/nix/home/media \
-	--override-input sysbase ~/projects/nix/sys/base \
-	--override-input syshome ~/projects/nix/sys/home \
+	--flake "$sys/desktop" \
+	--override-input homelib $hm/lib \
+	--override-input homebase $hm/base \
+	--override-input homedev $hm/dev \
+	--override-input homedev/ashvim $projects/cfg/neovim \
+	--override-input homedesk $hm/desktop \
+	--override-input homemedia $hm/media \
+	--override-input sysbase $sys/base \
+	--override-input syshome $sys/home \
 	"$@"

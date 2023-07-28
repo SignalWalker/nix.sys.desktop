@@ -9,8 +9,15 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./system;
+  imports = [];
   config = {
+    services.gvfs = {
+      enable = true;
+    };
+    services.tumbler = {
+      # dbus thumbnail service
+      enable = true;
+    };
   };
   meta = {};
 }

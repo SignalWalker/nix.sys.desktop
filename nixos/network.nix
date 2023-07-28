@@ -9,18 +9,25 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = [];
+  imports = lib.signal.fs.path.listFilePaths ./network;
   config = {
-    networking.firewall.allowedTCPPorts = [
-      # syncthing
-      22000
-    ];
-    networking.firewall.allowedUDPPorts = [
-      # syncthing
-      22000
-      # syncthing discovery broadcasts
-      21027
-    ];
+    programs.wireshark = {
+      enable = true;
+      package = pkgs.wireshark-qt;
+    };
+
+    services.blueman = {
+      enable = config.hardware.bluetooth.enable;
+    };
+
+    services.resolved = {
+      multicastDns = true;
+    };
+
+    networking.networkmanager = {
+      enable = lib.mkDefault (!config.systemd.network.enable);
+      wifi.backend = "iwd";
+    };
   };
   meta = {};
 }
