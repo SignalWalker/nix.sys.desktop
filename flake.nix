@@ -41,8 +41,6 @@
       url = "github:signalwalker/nix.home.desktop";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.homelib.follows = "homelib";
-      inputs.homebase.follows = "homebase";
       inputs.mozilla.follows = "mozilla";
       inputs.ash-scripts.follows = "ash-scripts";
       inputs.polybar-scripts.follows = "polybar-scripts";
@@ -52,8 +50,6 @@
       url = "github:signalwalker/nix.home.dev";
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
-      inputs.homelib.follows = "homelib";
-      inputs.homebase.follows = "homebase";
       inputs.mozilla.follows = "mozilla";
     };
     homemedia = {
@@ -105,7 +101,8 @@
     # hardware-specific
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # this doesn't actually take any inputs
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
     fw-ectool-src = {
       url = "github:FrameworkComputer/EmbeddedController";
