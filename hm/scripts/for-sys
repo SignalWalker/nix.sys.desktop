@@ -35,7 +35,9 @@ done
 
 for flake in $DIRS; do
 	printerr "$flake :: $argv"
-	xargs -I{} "$@" <<< "$flake"
+	pushd "$flake"
+		xargs -I{} "$@" <<< "$flake"
+	popd
 done
 
 printerr "done"
