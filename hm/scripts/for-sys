@@ -19,7 +19,7 @@ if [[ ! -d "$PROJECTS" ]]; then
 fi
 
 declare -a DIRS
-DIRS=("$PROJECTS/nix/home/lib" "$PROJECTS/nix/home/base" "$PROJECTS/nix/home/dev" "$PROJECTS/nix/home/desktop" "$PROJECTS/nix/home/media" "$PROJECTS/nix/sys/base" "$PROJECTS/nix/sys/home" "$PROJECTS/nix/sys/desktop")
+DIRS=("$PROJECTS/nix/home/lib" "$PROJECTS/nix/home/base" "$PROJECTS/nix/home/dev" "$PROJECTS/cfg/neovim" "$PROJECTS/nix/home/desktop" "$PROJECTS/nix/home/media" "$PROJECTS/nix/sys/base" "$PROJECTS/nix/sys/home" "$PROJECTS/nix/sys/desktop")
 declare -r DIRS
 
 for flake in $DIRS; do
