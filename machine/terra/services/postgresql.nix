@@ -9,8 +9,13 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./system;
+  imports = [];
   config = {
+    services.postgresql = {
+      enable = true;
+      package = pkgs.postgresql;
+      extraPlugins = with pkgs.postgresql.pkgs; [];
+    };
   };
   meta = {};
 }

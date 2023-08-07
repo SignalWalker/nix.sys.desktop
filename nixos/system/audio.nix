@@ -22,6 +22,7 @@ in {
       jack.enable = true;
       wireplumber.enable = true;
     };
+    hardware.pulseaudio.enable = false;
   };
   meta = {};
 }

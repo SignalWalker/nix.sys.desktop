@@ -62,6 +62,10 @@
     mozilla = {
       url = "github:mozilla/nixpkgs-mozilla";
     };
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     # desk
     ash-scripts = {
       url = "github:signalwalker/scripts-rs";
@@ -118,6 +122,10 @@
     #   url = "github:mdvmeijer/fw-fanctrl-nix";
     #   flake = false;
     # };
+    grub-theme-yorha = {
+      url = "github:OliveThePuffin/yorha-grub-theme";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     self,
@@ -144,6 +152,7 @@
             inputs.nix-index-database.nixosModules.nix-index
             inputs.foundryvtt.nixosModules.foundryvtt
             inputs.musnix.nixosModules.musnix
+            inputs.agenix.nixosModules.age
 
             ./machine/${machine}.nix
           ]
@@ -151,21 +160,32 @@
           ++ (std.optionals (machine == "artemis") [
             inputs.nixos-hardware.nixosModules.framework
           ]);
-        config = {
-          networking.hostName = machine;
-          networking.domain = "local";
-          home-manager = {
-            users = self.homeConfigurations;
-          };
-          nixpkgs.overlays = [
-            inputs.mozilla.overlays.rust
-            inputs.mozilla.overlays.firefox
-            inputs.wayland.overlays.default
-          ];
-          environment.systemPackages = std.optionals (machine == "artemis") [
-            inputs.fw-ectool.packages.${pkgs.system}.default
-          ];
-        };
+        config = lib.mkMerge [
+          {
+            networking.hostName = machine;
+            # networking.domain = lib.mkDefault "local";
+            home-manager = {
+              users = self.homeConfigurations;
+            };
+            nixpkgs.overlays = [
+              inputs.mozilla.overlays.rust
+              inputs.mozilla.overlays.firefox
+              inputs.wayland.overlays.default
+              inputs.agenix.overlays.default
+            ];
+          }
+          (lib.mkIf (machine == "artemis") {
+            environment.systemPackages = [
+              inputs.fw-ectool.packages.${pkgs.system}.default
+            ];
+            boot.loader.grub = {
+              theme = "${inputs.grub-theme-yorha}/yorha-2256x1504";
+            };
+          })
+          (lib.mkIf (machine == "terra") {
+            networking.fqdn = "home.ashwalker.net";
+          })
+        ];
       });
       homeConfigurations.ash = {
         config,
@@ -180,6 +200,7 @@
             inputs.homemedia.homeManagerModules.default
 
             inputs.nix-index-database.hmModules.nix-index
+            inputs.agenix.homeManageModules.age
           ]
           ++ (lib.signal.fs.path.listFilePaths ./hm);
         config = {

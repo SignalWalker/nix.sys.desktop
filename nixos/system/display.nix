@@ -6,6 +6,7 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  xserver = config.services.xserver;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -13,20 +14,21 @@ in {
   config = {
     programs.dconf.enable = true;
 
+    services.xserver.enable = false;
+
     services.xserver.displayManager.sddm = {
-      enable = false;
+      enable = xserver.enable;
     };
-    services.xserver.enable = config.services.xserver.displayManager.sddm.enable;
     services.greetd = let
       greetd = config.services.greetd;
     in {
-      enable = !config.services.xserver.displayManager.sddm.enable;
+      enable = !xserver.displayManager.sddm.enable;
       settings = {
         default_session = {
           command =
             if config.programs.regreet.enable
             then "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -- ${lib.getExe config.programs.regreet.package}"
-            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS";
+            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c sway-wrapper";
         };
       };
     };
@@ -100,9 +102,15 @@ in {
       ];
     };
     services.xserver.desktopManager.plasma5 = {
-      enable = config.services.xserver.enable;
+      enable = false; # xserver.enable;
       useQtScaling = true;
     };
+
+    services.xserver.desktopManager.cinnamon = {
+      enable = xserver.enable;
+    };
+    services.cinnamon.apps.enable = xserver.desktopManager.cinnamon.enable;
+
     programs.river = {
       enable = true;
       extraPackages = with pkgs; [
@@ -114,7 +122,7 @@ in {
       enable = true;
       xdgOpenUsePortal = true;
       wlr.enable = true;
-      extraPortals = [pkgs.xdg-desktop-portal-gtk];
+      extraPortals = lib.mkIf (!xserver.enable) [pkgs.xdg-desktop-portal-gtk];
     };
 
     fonts.packages = let

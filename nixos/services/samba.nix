@@ -16,6 +16,7 @@ in {
     services.samba-wsdd = {
       enable = true;
       openFirewall = true;
+      workgroup = "WORKGROUP";
     };
     services.samba = {
       enable = true;

@@ -15,6 +15,7 @@ nixos-rebuild \
 	--override-input homedev $hm/dev \
 	--override-input homedev/ashvim $projects/cfg/neovim \
 	--override-input homedesk $hm/desktop \
+	--override-input homedesk/ash-scripts $projects/system/scripts/rust \
 	--override-input homemedia $hm/media \
 	--override-input sysbase $sys/base \
 	--override-input syshome $sys/home \

@@ -16,7 +16,7 @@ in {
       openFirewall = false;
     };
     services.jellyseerr = {
-      enable = true;
+      enable = false;
     };
     services.nginx.virtualHosts."media.home.ashwalker.net" = {
       enableACME = true;
@@ -26,7 +26,7 @@ in {
         client_max_body_size 300M;
 
         add_header X-Frame-Options "SAMEORIGIN";
-        add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
+        # add_header X-XSS-Protection "0"; # Do NOT enable. This is obsolete/dangerous
         add_header X-Content-Type-Options "nosniff";
 
         add_header Cross-Origin-Opener-Policy "same-origin" always;
