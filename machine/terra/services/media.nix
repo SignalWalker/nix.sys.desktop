@@ -15,9 +15,7 @@ in {
       enable = true;
       openFirewall = false;
     };
-    services.jellyseerr = {
-      enable = false;
-    };
+
     services.nginx.virtualHosts."media.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;

@@ -126,6 +126,11 @@
       url = "github:OliveThePuffin/yorha-grub-theme";
       flake = false;
     };
+
+    flaresolverr = {
+      url = "github:flaresolverr/flaresolverr";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     self,
@@ -159,11 +164,13 @@
           ++ (lib.signal.fs.path.listFilePaths ./nixos)
           ++ (std.optionals (machine == "artemis") [
             inputs.nixos-hardware.nixosModules.framework
-          ]);
+          ])
+          ++ (std.optionals (machine == "terra") [
+            ]);
         config = lib.mkMerge [
           {
             networking.hostName = machine;
-            # networking.domain = lib.mkDefault "local";
+            networking.domain = lib.mkDefault "local";
             home-manager = {
               users = self.homeConfigurations;
             };
@@ -183,7 +190,9 @@
             };
           })
           (lib.mkIf (machine == "terra") {
-            networking.fqdn = "home.ashwalker.net";
+            # networking.domain = "home.ashwalker.net";
+            # networking.fqdn = "home.ashwalker.net";
+            services.flaresolverr.src = inputs.flaresolverr;
           })
         ];
       });
@@ -200,7 +209,7 @@
             inputs.homemedia.homeManagerModules.default
 
             inputs.nix-index-database.hmModules.nix-index
-            inputs.agenix.homeManageModules.age
+            inputs.agenix.homeManagerModules.age
           ]
           ++ (lib.signal.fs.path.listFilePaths ./hm);
         config = {

@@ -83,8 +83,10 @@ in {
 
     services.nginx.virtualHosts = lib.mkIf (qbit.webui.hostName != null) {
       ${qbit.webui.hostName} = {
-        enableACME = true;
-        forceSSL = true;
+        enableACME = false;
+        forceSSL = false;
+
+        # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
 
         locations."/" = {
           extraConfig = ''

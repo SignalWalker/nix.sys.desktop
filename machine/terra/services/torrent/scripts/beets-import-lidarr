@@ -1,0 +1,14 @@
+#!/usr/bin/env zsh
+
+config="/home/ash/.config/beets/config.yaml"
+
+lidarr_first_track=$(echo "$lidarr_addedtrackpaths" | cut -d '|' -f1)
+lidarr_album_path=$(dirname "$lidarr_first_track")
+
+beet --config="$config" update
+beet --config="$config" -q "$lidarr_album_path"
+
+FILE=/config/config.xml
+until test -f $FILE; do sleep 1; done
+API=`grep -oP '(?<=<ApiKey>)(.*)(?=<\/ApiKey>)' /config/config.xml`
+curl -s "http://localhost:8686/music/api/v1/command?apikey=$API" -X POST -d "{'name': 'ReScanArtist', 'artistID': $lidarr_artist_id}" > /dev/null

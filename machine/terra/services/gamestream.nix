@@ -15,6 +15,18 @@ in {
     services.sunshine = {
       enable = true;
     };
+    # services.x2goserver = {
+    #   enable = true;
+    # };
+    services.xrdp = {
+      enable = true;
+      openFirewall = false;
+      defaultWindowManager = "startplasma-x11";
+    };
+
+    services.flatpak = {
+      enable = true;
+    };
   };
   meta = {};
 }

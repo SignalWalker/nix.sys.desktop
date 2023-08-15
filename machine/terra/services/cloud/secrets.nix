@@ -1,7 +1,7 @@
 let
-  srv-host = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIA0v+D2d69PTrv/Sg5UWLqCQ5VEggFu1oMSiZYNQQdCM";
+  terra = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHyS/8OGr5KbM1PS7QO3qEwE1xN4JuEzI2SzkBWzks7c";
   ash = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJFqg4NlJu7u1pcCel3EZshVwUxIfwpsh2fxhaQlLAar";
-  keys = [srv-host ash];
+  keys = [terra ash];
 in {
   "cloudAdminPassword.age".publicKeys = keys;
 }

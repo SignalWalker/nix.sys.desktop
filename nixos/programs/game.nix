@@ -16,12 +16,12 @@ in {
       remotePlay.openFirewall = true;
       package = pkgs.steam.override {
         extraEnv = {
-          "MANGOHUD" = true;
-          "OBS_VKCAPTURE" = true;
+          # "MANGOHUD" = true;
+          # "OBS_VKCAPTURE" = true;
         };
         extraPkgs = pkgs:
           with pkgs; [
-            mangohud
+            # mangohud
             gamescope
           ];
       };

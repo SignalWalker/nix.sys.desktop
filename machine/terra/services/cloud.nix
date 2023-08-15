@@ -20,10 +20,12 @@ in {
 
     services.nextcloud = {
       enable = true;
-      hostName = "cloud.${config.networking.fqdn}";
+      hostName = "cloud.home.ashwalker.net";
       https = true;
       package = pkgs.nextcloud27;
       autoUpdateApps.enable = true;
+      configureRedis = true;
+      database.createLocally = true;
       config = {
         dbtype = "pgsql";
         dbuser = "nextcloud";
@@ -35,6 +37,11 @@ in {
           if nc.https
           then "https"
           else null;
+        defaultPhoneRegion = "US";
+      };
+      phpOptions = {
+        # upload_max_filesize = "64G";
+        # post_max_size = "64G";
       };
     };
 
@@ -43,20 +50,20 @@ in {
       forceSSL = true;
     };
 
-    services.postgresql = {
-      ensureDatabases = [nc.config.dbname];
-      ensureUsers = [
-        {
-          name = nc.config.dbuser;
-          ensurePermissions."DATABASE ${nc.config.dbname}" = "ALL PRIVILEGES";
-        }
-      ];
-    };
+    # services.postgresql = {
+    #   ensureDatabases = [nc.config.dbname];
+    #   ensureUsers = [
+    #     {
+    #       name = nc.config.dbuser;
+    #       ensurePermissions."DATABASE ${nc.config.dbname}" = "ALL PRIVILEGES";
+    #     }
+    #   ];
+    # };
 
-    systemd.services."nextcloud-setup" = {
-      requires = ["postgresql.service"];
-      after = ["postgresql.service"];
-    };
+    # systemd.services."nextcloud-setup" = {
+    #   requires = ["postgresql.service"];
+    #   after = ["postgresql.service"];
+    # };
   };
   meta = {};
 }

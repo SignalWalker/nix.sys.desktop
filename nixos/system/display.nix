@@ -14,7 +14,7 @@ in {
   config = {
     programs.dconf.enable = true;
 
-    services.xserver.enable = false;
+    services.xserver.enable = lib.mkDefault false;
 
     services.xserver.displayManager.sddm = {
       enable = xserver.enable;
@@ -102,12 +102,12 @@ in {
       ];
     };
     services.xserver.desktopManager.plasma5 = {
-      enable = false; # xserver.enable;
+      enable = xserver.enable;
       useQtScaling = true;
     };
 
     services.xserver.desktopManager.cinnamon = {
-      enable = xserver.enable;
+      enable = false;
     };
     services.cinnamon.apps.enable = xserver.desktopManager.cinnamon.enable;
 
@@ -121,7 +121,7 @@ in {
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      wlr.enable = true;
+      wlr.enable = !xserver.enable;
       extraPortals = lib.mkIf (!xserver.enable) [pkgs.xdg-desktop-portal-gtk];
     };
 

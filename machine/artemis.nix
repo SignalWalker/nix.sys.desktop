@@ -38,6 +38,11 @@ in {
       "L /root/.ssh/known_hosts - - - - /home/ash/.ssh/known_hosts"
       "L /root/.ssh/id_ed25519 - - - - /home/ash/.ssh/id_ed25519"
     ];
+
+    signal.network.wireguard.tunnels."wg-airvpn" = {
+      # TODO :: figure out a good way to keep this out of public repos
+      addresses = ["10.171.122.61/32" "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"];
+    };
   };
   meta = {};
 }
