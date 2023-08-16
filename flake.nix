@@ -127,8 +127,12 @@
       flake = false;
     };
 
-    flaresolverr = {
-      url = "github:flaresolverr/flaresolverr";
+    napalm = {
+      url = "github:nix-community/napalm";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    cross-seed = {
+      url = "github:cross-seed/cross-seed";
       flake = false;
     };
   };
@@ -143,6 +147,12 @@
       machines = ["artemis" "terra"];
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
+      overlays.default = final: prev: {
+        cross-seed = import ./pkgs/cross-seed.nix {
+          inherit inputs;
+          pkgs = final;
+        };
+      };
       nixosModules = std.genAttrs machines (machine: {
         lib,
         pkgs,
@@ -175,6 +185,8 @@
               users = self.homeConfigurations;
             };
             nixpkgs.overlays = [
+              self.overlays.default
+
               inputs.mozilla.overlays.rust
               inputs.mozilla.overlays.firefox
               inputs.wayland.overlays.default
@@ -192,7 +204,6 @@
           (lib.mkIf (machine == "terra") {
             # networking.domain = "home.ashwalker.net";
             # networking.fqdn = "home.ashwalker.net";
-            services.flaresolverr.src = inputs.flaresolverr;
           })
         ];
       });

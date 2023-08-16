@@ -15,15 +15,9 @@ in {
         type = types.package;
         default = pkgs.ungoogled-chromium;
       };
-      src = mkOption {
-        type = types.path;
-      };
       package = mkOption {
         type = types.package;
-        default = pkgs.python311Packages.buildPythonApplication {
-          name = "flaresolverr";
-          src = flare.src;
-        };
+        default = pkgs.flaresolverr;
       };
       user = mkOption {
         type = types.str;

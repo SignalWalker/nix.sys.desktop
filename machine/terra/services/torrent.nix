@@ -105,7 +105,12 @@ in {
     };
 
     services.flaresolverr = {
+      enable = false;
+    };
+
+    services.cross-seed = {
       enable = true;
+      # configFilePath = "/home/ash/.config/cross-seed/config.js";
     };
 
     terra.network.tunnel.users = [
