@@ -135,6 +135,10 @@
       url = "github:cross-seed/cross-seed";
       flake = false;
     };
+    autobrr = {
+      url = "github:autobrr/autobrr";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     self,
@@ -149,6 +153,10 @@
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       overlays.default = final: prev: {
         cross-seed = import ./pkgs/cross-seed.nix {
+          inherit inputs;
+          pkgs = final;
+        };
+        autobrr = import ./pkgs/autobrr.nix {
           inherit inputs;
           pkgs = final;
         };

@@ -7,6 +7,7 @@
 with builtins; let
   std = pkgs.lib;
   syncthing = config.services.syncthing;
+  atuin = config.services.atuin;
 in {
   options = with lib; {
     services.syncthing = {
@@ -16,6 +17,10 @@ in {
           readOnly = true;
           default = 8384;
         };
+        hostName = mkOption {
+          type = types.str;
+          default = "sync.terra.ashwalker.net";
+        };
       };
     };
   };
@@ -24,13 +29,13 @@ in {
   config = {
     services.atuin = {
       enable = true;
-      host = "0.0.0.0";
+      host = "127.0.0.1"; # hurray for reverse proxy
       openRegistration = false;
-      openFirewall = true;
+      openFirewall = false;
       port = 8398;
     };
 
-    services.nginx.virtualHosts."sync.terra.ashwalker.net" = {
+    services.nginx.virtualHosts."${syncthing.gui.hostName}" = {
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString syncthing.gui.port}/";
         recommendedProxySettings = false;
@@ -41,10 +46,15 @@ in {
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
 
-
           proxy_read_timeout 600s;
           proxy_send_timeout 600s;
         '';
+      };
+    };
+
+    services.nginx.virtualHosts."atuin.${syncthing.gui.hostName}" = {
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString atuin.port}";
       };
     };
   };

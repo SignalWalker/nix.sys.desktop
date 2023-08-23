@@ -113,6 +113,11 @@ in {
       # configFilePath = "/home/ash/.config/cross-seed/config.js";
     };
 
+    services.autobrr = {
+      enable = false;
+      hostName = "autobrr.${qbit.webui.hostName}";
+    };
+
     terra.network.tunnel.users = [
       qbit.user
       # jackett.user

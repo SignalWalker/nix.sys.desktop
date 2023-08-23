@@ -29,10 +29,10 @@ in {
     services.xserver.videoDrivers = ["nvidia"];
     hardware.nvidia = {
       modesetting.enable = true;
-      open = true;
+      open = false;
       nvidiaSettings = true;
       package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-      nvidiaPersistenced = true;
+      nvidiaPersistenced = false;
     };
     nixpkgs.config.packageOverrides = pkgs: {
       vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
