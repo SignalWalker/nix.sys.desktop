@@ -6,11 +6,11 @@ hm=$projects/nix/home
 
 printf "Rebuilding from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
 
-flake="$sys/desktop"
+flake="$sys/desktop#$1"
 
 deploy \
 	-- \
-	"$sys/desktop#$1" \
+	"$flake" \
 	--override-input homelib $hm/lib \
 	--override-input homebase $hm/base \
 	--override-input homedev $hm/dev \
@@ -20,4 +20,4 @@ deploy \
 	--override-input homemedia $hm/media \
 	--override-input sysbase $sys/base \
 	--override-input syshome $sys/home \
-	"${argv[2, -1]}"
+	${argv[2, -1]}
