@@ -267,7 +267,7 @@
       self.nixosModules;
 
       deploy.nodes = std.mapAttrs (machine: config: {
-        hostname = "${machine}.local";
+        hostname = "${machine}.ashwalker.net";
         remoteBuild = machine == "terra";
         profiles.system = {
           user = "root";

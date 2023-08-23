@@ -1,0 +1,23 @@
+#! /usr/bin/env zsh
+
+projects=/home/ash/projects
+sys=$projects/nix/sys
+hm=$projects/nix/home
+
+printf "Rebuilding from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
+
+flake="$sys/desktop"
+
+deploy \
+	-- \
+	"$sys/desktop#$1" \
+	--override-input homelib $hm/lib \
+	--override-input homebase $hm/base \
+	--override-input homedev $hm/dev \
+	--override-input homedev/ashvim $projects/cfg/neovim \
+	--override-input homedesk $hm/desktop \
+	--override-input homedesk/ash-scripts $projects/system/scripts/rust \
+	--override-input homemedia $hm/media \
+	--override-input sysbase $sys/base \
+	--override-input syshome $sys/home \
+	"$argv[2, -1]"
