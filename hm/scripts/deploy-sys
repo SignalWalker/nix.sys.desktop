@@ -20,4 +20,4 @@ deploy \
 	--override-input homemedia $hm/media \
 	--override-input sysbase $sys/base \
 	--override-input syshome $sys/home \
-	"$argv[2, -1]"
+	"${argv[2, -1]}"
