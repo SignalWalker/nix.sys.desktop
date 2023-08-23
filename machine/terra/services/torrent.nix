@@ -118,6 +118,27 @@ in {
       hostName = "autobrr.${qbit.webui.hostName}";
     };
 
+    # system.aclMap = let
+    #   mapUsers = users:
+    #     map (user: {
+    #       type = "user";
+    #       entity = user;
+    #       read = true;
+    #       write = true;
+    #       execute = true;
+    #     })
+    #     users;
+    #   withUsers = users: {
+    #     recursive = true;
+    #     append = true;
+    #     entries = mapUsers users;
+    #   };
+    # in {
+    #   "/elysium/media/video/film" = withUsers [radarr.user qbit.user];
+    #   "/elysium/media/video/tv" = withUsers [sonarr.user qbit.user];
+    #   "/elysium/media/video/torrent" = withUsers [sonarr.user radarr.user qbit.user];
+    # };
+
     terra.network.tunnel.users = [
       qbit.user
       # jackett.user
@@ -128,16 +149,7 @@ in {
       (lib.mkIf jackett.enable {
         "search.${qbit.webui.hostName}" = {
           # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
-            extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString jackett.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString jackett.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
-            '';
-          };
+          locations."/".proxyPass = "http://127.0.0.1:${toString jackett.port}";
         };
       })
       (lib.mkIf radarr.enable {

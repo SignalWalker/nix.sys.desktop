@@ -266,14 +266,23 @@
         })
       self.nixosModules;
 
-      deploy.nodes = std.mapAttrs (machine: config: {
-        hostname = "${machine}.ashwalker.net";
-        remoteBuild = machine == "terra";
-        profiles.system = {
-          user = "root";
-          path = deploy-rs.lib.x86_64-linux.activate.nixos config;
+      deploy.nodes = {
+        "terra" = {
+          hostname = "terra.ashwalker.net";
+          remoteBuild = true;
+          profiles.system = {
+            user = "root";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."terra";
+          };
         };
-      });
+        "artemis" = {
+          hostname = "artemis.ashwalker.net";
+          profiles.system = {
+            user = "root";
+            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."artemis";
+          };
+        };
+      };
 
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
