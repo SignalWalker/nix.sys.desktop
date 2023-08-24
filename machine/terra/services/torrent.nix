@@ -145,109 +145,71 @@ in {
       # radarr.user
     ];
 
-    services.nginx.virtualHosts = lib.mkMerge [
-      (lib.mkIf jackett.enable {
-        "search.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/".proxyPass = "http://127.0.0.1:${toString jackett.port}";
-        };
-      })
-      (lib.mkIf radarr.enable {
-        "radarr.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
+    services.nginx.virtualHosts = let
+      # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
+      # listen = [
+      #   {
+      #   }
+      # ];
+    in
+      lib.mkMerge [
+        (lib.mkIf jackett.enable {
+          "search.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString jackett.port}";
+          };
+        })
+        (lib.mkIf radarr.enable {
+          "radarr.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString radarr.port}";
+          };
+        })
+        (lib.mkIf sonarr.enable {
+          "sonarr.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString sonarr.port}";
+          };
+        })
+        (lib.mkIf lidarr.enable {
+          "lidarr.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString lidarr.port}";
+          };
+        })
+        (lib.mkIf readarr.enable {
+          "readarr.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString readarr.port}";
+          };
+        })
+        (lib.mkIf prowlarr.enable {
+          "prowlarr.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
+            locations."/".proxyPass = "http://127.0.0.1:${toString prowlarr.port}";
+          };
+        })
+        (lib.mkIf jseer.enable {
+          "seer.${qbit.webui.hostName}" = {
+            # inherit listenAddresses;
             extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString radarr.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString radarr.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
+              proxy_set_header Referer $http_referer;
+              proxy_set_header Host $host;
+              proxy_set_header X-Real-IP $remote_addr;
+              proxy_set_header X-Real-Port $remote_port;
+              proxy_set_header X-Forwarded-Host $host:$remote_port;
+              proxy_set_header X-Forwarded-Server $host;
+              proxy_set_header X-Forwarded-Port $remote_port;
+              proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+              proxy_set_header X-Forwarded-Proto $scheme;
+              proxy_set_header X-Forwarded-Ssl on;
             '';
+            locations."/" = {
+              proxyPass = "http://127.0.0.1:${toString jseer.port}";
+            };
           };
-        };
-      })
-      (lib.mkIf sonarr.enable {
-        "sonarr.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
-            extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString sonarr.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString sonarr.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
-            '';
-          };
-        };
-      })
-      (lib.mkIf lidarr.enable {
-        "lidarr.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
-            extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString lidarr.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString lidarr.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
-            '';
-          };
-        };
-      })
-      (lib.mkIf readarr.enable {
-        "readarr.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
-            extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString readarr.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString readarr.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
-            '';
-          };
-        };
-      })
-      (lib.mkIf prowlarr.enable {
-        "prowlarr.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          locations."/" = {
-            extraConfig = ''
-              proxy_pass         http://127.0.0.1:${toString prowlarr.port}/;
-              proxy_http_version 1.1;
-
-              proxy_set_header   Host               127.0.0.1:${toString prowlarr.port};
-              proxy_set_header   X-Forwarded-Host   $http_host;
-              proxy_set_header   X-Forwarded-For    $remote_addr;
-            '';
-          };
-        };
-      })
-      (lib.mkIf jseer.enable {
-        "seer.${qbit.webui.hostName}" = {
-          # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-          extraConfig = ''
-            proxy_set_header Referer $http_referer;
-            proxy_set_header Host $host;
-            proxy_set_header X-Real-IP $remote_addr;
-            proxy_set_header X-Real-Port $remote_port;
-            proxy_set_header X-Forwarded-Host $host:$remote_port;
-            proxy_set_header X-Forwarded-Server $host;
-            proxy_set_header X-Forwarded-Port $remote_port;
-            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-            proxy_set_header X-Forwarded-Proto $scheme;
-            proxy_set_header X-Forwarded-Ssl on;
-          '';
-          locations."/" = {
-            proxyPass = "http://127.0.0.1:${toString jseer.port}";
-          };
-        };
-      })
-    ];
+        })
+      ];
   };
   meta = {};
 }

@@ -43,6 +43,11 @@ in {
       # TODO :: figure out a good way to keep this out of public repos
       addresses = ["10.171.122.61/32" "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"];
     };
+
+    programs.kdeconnect = {
+      enable = true;
+      package = pkgs.gnomeExtensions.gsconnect;
+    };
   };
   meta = {};
 }
