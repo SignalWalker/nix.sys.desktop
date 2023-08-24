@@ -118,6 +118,11 @@ in {
       hostName = "autobrr.${qbit.webui.hostName}";
     };
 
+    services.mylar3 = {
+      enable = true;
+      hostName = "mylar3.${qbit.webui.hostName}";
+    };
+
     # system.aclMap = let
     #   mapUsers = users:
     #     map (user: {

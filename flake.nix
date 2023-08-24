@@ -139,6 +139,10 @@
       url = "github:autobrr/autobrr";
       flake = false;
     };
+    mylar3 = {
+      url = "github:mylar3/mylar3";
+      flake = false;
+    };
   };
   outputs = inputs @ {
     self,
@@ -157,6 +161,10 @@
           pkgs = final;
         };
         autobrr = import ./pkgs/autobrr.nix {
+          inherit inputs;
+          pkgs = final;
+        };
+        mylar3 = import ./pkgs/mylar3.nix {
           inherit inputs;
           pkgs = final;
         };
