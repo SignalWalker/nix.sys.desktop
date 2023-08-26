@@ -141,6 +141,11 @@
     };
     mylar3 = {
       url = "github:mylar3/mylar3";
+      # inputs.nixpkgs.follows = "nixpkgs";
+      flake = false;
+    };
+    kaizoku = {
+      url = "github:oae/kaizoku";
       flake = false;
     };
   };
@@ -168,6 +173,19 @@
           inherit inputs;
           pkgs = final;
         };
+        kaizoku = import ./pkgs/kaizoku.nix {
+          inherit inputs;
+          pkgs = final;
+        };
+      };
+      packages."x86_64-linux" = let
+        pkgs = import nixpkgs {
+          localSystem = "x86_64-linux";
+          crossSystem = "x86_64-linux";
+          overlays = [self.overlays.default];
+        };
+      in {
+        inherit (pkgs) cross-seed autobrr mylar3 kaizoku;
       };
       nixosModules = std.genAttrs machines (machine: {
         lib,
@@ -220,6 +238,7 @@
           (lib.mkIf (machine == "terra") {
             # networking.domain = "home.ashwalker.net";
             # networking.fqdn = "home.ashwalker.net";
+            # services.mylar3.package = inputs.mylar3.packages.${pkgs.system}.mylar3;
           })
         ];
       });

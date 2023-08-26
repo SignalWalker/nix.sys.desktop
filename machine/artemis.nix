@@ -48,6 +48,12 @@ in {
       enable = true;
       package = pkgs.gnomeExtensions.gsconnect;
     };
+
+    programs.weylus = {
+      enable = true;
+      users = [ "ash" ];
+      openFirewall = true;
+    };
   };
   meta = {};
 }

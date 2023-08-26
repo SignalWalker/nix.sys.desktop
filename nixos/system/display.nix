@@ -122,7 +122,7 @@ in {
       enable = true;
       xdgOpenUsePortal = true;
       wlr.enable = !xserver.enable;
-      extraPortals = lib.mkIf (!xserver.enable) [pkgs.xdg-desktop-portal-gtk];
+      # extraPortals = lib.mkIf (!xserver.enable) [pkgs.xdg-desktop-portal-gtk];
     };
 
     fonts.packages = let

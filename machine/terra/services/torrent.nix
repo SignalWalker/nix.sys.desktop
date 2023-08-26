@@ -119,8 +119,14 @@ in {
     };
 
     services.mylar3 = {
-      enable = true;
+      enable = false;
       hostName = "mylar3.${qbit.webui.hostName}";
+      settings = {};
+    };
+
+    services.kaizoku = {
+      enable = false;
+      hostName = "kaizoku.${qbit.webui.hostName}";
     };
 
     # system.aclMap = let

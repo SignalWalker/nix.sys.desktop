@@ -6,6 +6,7 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  machines = config.signal.machines;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -18,34 +19,42 @@ in {
         "172.24.86.0/24"
         "fd24:fad3:8246::0/48"
       ];
-      zones = {
-        # "home.ashwalker.net" = {
-        #   master = true;
-        #   file = ''
-        #     $ORIGIN home.ashwalker.net.
-        #     $TTL 2h
-        #
-        #
-        #   '';
-        # };
-        "terra.ashwalker.net" = {
-          master = true;
-          # @ SOA hydrogen.ns.hetzner.com. dns.hetzner.com. 2023072400 86400 10800 3600000 3600
-          file = pkgs.writeText "terra.ashwalker.net.zone" ''
-            $ORIGIN terra.ashwalker.net.
-            $TTL 2h
+      zones = std.foldl' (acc: name: let
+        hostName = "${name}.ashwalker.net";
+        machine = machines.${name};
+      in
+        std.recursiveUpdate acc {
+          ${hostName} = {
+            master = true;
+            file = let
+              entries = let
+                recs = {
+                  "v4" = "A";
+                  "v6" = "AAAA";
+                };
+              in
+                std.concatLines (std.foldl' (acc: addr: let
+                  record = recs.${addr.type};
+                in
+                  acc
+                  ++ [
+                    "@ IN ${record} ${addr.address}"
+                    "* IN ${record} ${addr.address}"
+                  ]) []
+                machine.wireguard.addresses);
+            in
+              pkgs.writeText "${hostName}.zone" ''
+                $ORIGIN ${hostName}.
+                $TTL 2h
 
-            @ IN SOA ns1.terra.ashwalker.net. dns.terra.ashwalker.net. 2023081200 86400 10800 3600000 3600
+                @ IN SOA ns1.terra.ashwalker.net. dns.terra.ashwalker.net. 2023081200 86400 10800 3600000 3600
 
-            @ IN NS ns1.terra.ashwalker.net.
+                @ IN NS ns1.terra.ashwalker.net.
 
-            @ IN A 172.24.86.1
-            @ IN AAAA fd24:fad3:8246::1
-            * IN A 172.24.86.1
-            * IN AAAA fd24:fad3:8246::1
-          '';
-        };
-      };
+                ${entries}
+              '';
+          };
+        }) {} (attrNames machines);
     };
     # services.unbound = {
     #   enable = true;

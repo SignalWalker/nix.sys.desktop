@@ -1,0 +1,19 @@
+[build-system]
+requires = ["hatchling", "hatch-vcs"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mylar3"
+version = "0.7.4"
+requires-python = ">=3.11"
+# dynamic = ["version"]
+# dependencies = [
+# 	"APScheduler>=3.6.3"
+# ]
+
+[project.scripts]
+mylar3 = "Mylar:main"
+
+# [tool.hatch.version]
+# source = "vcs"
+# [tool.hatch.build.targets.wheel]
