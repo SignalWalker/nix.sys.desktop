@@ -25,9 +25,11 @@ in {
       };
     };
 
-    nix.extraOptions = ''
-      builders-use-substitutes = true
-    '';
+    nix = {
+      extraOptions = ''
+        builders-use-substitutes = true
+      '';
+    };
 
     signal.machines."terra" = {
       nix.build.sshKey = "/run/nix/remote-build.sign";
