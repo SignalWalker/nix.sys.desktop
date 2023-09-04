@@ -18,7 +18,7 @@ in {
     musnix = {
       enable = true;
       alsaSeq.enable = true;
-      soundcardPciId = "00:1b.0";
+      soundcardPciId = "00:1f.3";
       kernel = {
         realtime = false;
         packages = pkgs.linuxPackages_latest_rt;
@@ -51,7 +51,7 @@ in {
 
     programs.weylus = {
       enable = true;
-      users = [ "ash" ];
+      users = ["ash"];
       openFirewall = true;
     };
   };
