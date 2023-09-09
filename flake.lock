@@ -213,11 +213,11 @@
     "autobrr": {
       "flake": false,
       "locked": {
-        "lastModified": 1694123557,
-        "narHash": "sha256-3Gd5x7iieYHHF5O8OWK0CmNOoposvRJh7eeJVeta+EI=",
+        "lastModified": 1694255636,
+        "narHash": "sha256-2aWB12xMBqV6fsHPtpnu6TvqjcV4/l99CcQOwh3XgiQ=",
         "owner": "autobrr",
         "repo": "autobrr",
-        "rev": "3d64ed150aca3b5fd6d5f91a76f4a91216fbabde",
+        "rev": "087471a1f738d3da67268365e53d464ee609edab",
         "type": "github"
       },
       "original": {
