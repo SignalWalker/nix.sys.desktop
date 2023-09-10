@@ -169,7 +169,7 @@ in {
       enable = true;
       virtualHosts.${grocy.nginx.hostName} = {
         inherit (grocy.nginx) enableACME forceSSL;
-        root = "${grocy.dir.data}/public";
+        root = "${grocy.dir.state}/public";
         locations."/".extraConfig = ''
           rewrite ^ /index.php;
         '';

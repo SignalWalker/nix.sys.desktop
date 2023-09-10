@@ -148,6 +148,10 @@
       url = "github:oae/kaizoku";
       flake = false;
     };
+    minecraft = {
+      url = "github:signalwalker/cfg.minecraft.modpack/drifting-league";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -210,7 +214,8 @@
             inputs.nixos-hardware.nixosModules.framework
           ])
           ++ (std.optionals (machine == "terra") [
-            ]);
+            inputs.minecraft.nixosModules.default
+          ]);
         config = lib.mkMerge [
           {
             networking.hostName = machine;

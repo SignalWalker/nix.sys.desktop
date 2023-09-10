@@ -13,7 +13,15 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./security;
   config = {
     services.crowdsec = {
-      enable = true;
+      enable = false; # there aren't any bouncers packaged yet.......
+      settings = {
+        api.server.trusted_ips = [
+          "172.24.86.0/24" # wg-signal
+        ];
+      };
+      extraGroups = [
+        "nginx"
+      ];
     };
   };
   meta = {};
