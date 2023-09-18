@@ -109,7 +109,7 @@ in {
     };
 
     services.cross-seed = {
-      enable = true;
+      enable = false;
       # configFilePath = "/home/ash/.config/cross-seed/config.js";
     };
 
