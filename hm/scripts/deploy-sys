@@ -4,7 +4,7 @@ projects=/home/ash/projects
 sys=$projects/nix/sys
 hm=$projects/nix/home
 
-printf "Rebuilding from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
+printf "Deploying from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
 
 flake="$sys/desktop#$1"
 
