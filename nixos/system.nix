@@ -11,6 +11,9 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./system;
   config = {
+    environment.sessionVariables = {
+      NIXOS_OZONE_WL = "1";
+    };
   };
   meta = {};
 }
