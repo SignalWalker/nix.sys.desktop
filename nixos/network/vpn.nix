@@ -29,7 +29,7 @@ in {
       peer = {
         publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
         presharedKeyFile = "/run/wireguard/wg-airvpn.psk";
-        endpoint = "64.42.179.34:1637";
+        endpoint = "64.42.179.61:1637";
         allowedIps = ["0.0.0.0/0" "::/0"];
       };
     };

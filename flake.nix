@@ -10,6 +10,10 @@
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixinate = {
+      url = "github:matthewcroughan/nixinate";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -291,12 +295,23 @@
           system = null; # set in `config.nixpkgs.hostPlatform`
           modules = [
             module
+            {
+              _module.args.nixinate = {
+                host = "${machine}.ashwalker.net";
+                sshUser = "root";
+                buildOn = "remote";
+                substituteOnTarget = true;
+                hermetic = false;
+              };
+            }
           ];
           lib = std.extend (final: prev: {
             signal = inputs.homelib.lib;
           });
         })
       self.nixosModules;
+
+      apps = inputs.nixinate.nixinate.x86_64-linux self;
 
       deploy.nodes = {
         "terra" = {
