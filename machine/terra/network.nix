@@ -21,10 +21,10 @@ in {
   config = {
     networking.firewall = {
       allowedTCPPorts = [
-        9995 # hammerwatch
+        # 9995 # hammerwatch
       ];
       allowedUDPPorts = [
-        9995 # hammerwatch
+        # 9995 # hammerwatch
       ];
     };
 

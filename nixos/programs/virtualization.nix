@@ -12,7 +12,7 @@ in {
   imports = [];
   config = {
     virtualisation.docker = {
-      enable = true;
+      enable = false;
     };
     users.extraGroups.docker.members = ["ash"];
   };

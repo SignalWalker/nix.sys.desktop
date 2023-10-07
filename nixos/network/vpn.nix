@@ -14,7 +14,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./vpn;
   config = {
     services.mullvad-vpn = {
-      enable = true;
+      enable = false;
     };
 
     signal.network.wireguard.networks."wg-signal" = {
