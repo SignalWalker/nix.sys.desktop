@@ -25,31 +25,39 @@ in {
       enable = !xserver.displayManager.sddm.enable;
       settings = {
         default_session = {
-          command =
+          command = let
+            swayCmd = "sway-wrapper ${
+              if config.hardware.nvidia.modesetting.enable
+              then "--unsupported-gpu"
+              else ""
+            } 1> \${XDG_STATE_HOME}/log/sway/out.log 2> \${XDG_STATE_HOME}/log/sway/err.log";
+          in
             if config.programs.regreet.enable
             then "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -- ${lib.getExe config.programs.regreet.package}"
-            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c sway-wrapper";
+            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c \"${swayCmd}\"";
         };
       };
     };
 
     environment.systemPackages = let
-      writeSession = name: text:
+      writeSession = name: text: let
+        fileName = lib.toLower name;
+      in
         (pkgs.writeTextFile {
-          name = "${lib.toLower name}.desktop";
+          name = "${fileName}.desktop";
           text = ''
             [Desktop Entry]
             Name=${name}
             Type=Application
             ${text}
           '';
-          destination = "/share/wayland-sessions/${lib.toLower name}.desktop";
+          destination = "/share/wayland-sessions/${fileName}.desktop";
         })
         .overrideAttrs (final: prev: {
           passthru =
             (prev.passthru or {})
             // {
-              providedSessions = [name];
+              providedSessions = [fileName];
             };
         });
     in [

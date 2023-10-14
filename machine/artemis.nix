@@ -56,6 +56,10 @@ in {
       users = ["ash"];
       openFirewall = true;
     };
+
+    virtualisation.libvirtd = {
+      enable = true;
+    };
   };
   meta = {};
 }

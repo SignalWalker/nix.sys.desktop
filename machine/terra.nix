@@ -12,16 +12,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./terra;
   config = {
     virtualisation.libvirtd = {
-      enable = false;
-      onBoot = "ignore";
-      onShutdown = "shutdown";
-      qemu = {
-        package = pkgs.qemu_kvm;
-        ovmf = {
-          enable = true;
-          packages = [pkgs.OVMFFull.fd];
-        };
-      };
+      enable = true;
     };
   };
   meta = {};

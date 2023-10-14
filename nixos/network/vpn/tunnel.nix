@@ -38,9 +38,6 @@ in {
                 addresses = mkOption {
                   type = types.listOf types.str;
                 };
-                gateway = mkOption {
-                  type = types.str;
-                };
                 peer = {
                   publicKey = mkOption {
                     type = types.str;
@@ -55,37 +52,36 @@ in {
                     type = types.listOf types.str;
                   };
                 };
+                table = mkOption {
+                  type = types.int;
+                  example = 51820;
+                };
+                fwMark = mkOption {
+                  type = types.int;
+                  default = config.table;
+                };
+                priority = mkOption {
+                  type = types.int;
+                  example = 10;
+                };
                 routingPolicyRules = mkOption {
                   type = types.listOf types.anything;
                   default = [
                     {
                       routingPolicyRuleConfig = {
-                        FirewallMark = 51820;
+                        FirewallMark = config.fwMark;
                         InvertRule = true;
-                        Table = 51820;
-                        Priority = 10;
+                        Table = config.table;
+                        Priority = config.priority + 1;
                         Family = "both";
                       };
                     }
                     {
                       routingPolicyRuleConfig = {
                         Table = "main";
-                        Priority = 9;
+                        Priority = config.priority;
                         SuppressPrefixLength = 0;
                         Family = "both";
-                      };
-                    }
-                    # exempt local addresses
-                    {
-                      routingPolicyRuleConfig = {
-                        To = "192.168.0.0/24";
-                        Priority = 6;
-                      };
-                    }
-                    {
-                      routingPolicyRuleConfig = {
-                        To = "10.0.0.0/24";
-                        Priority = 6;
                       };
                     }
                   ];
@@ -105,8 +101,8 @@ in {
       lib.mkIf tunnel.enable {
         enable = tunnel.enable;
         inherit (tunnel) privateKeyFile dns addresses port;
-        firewallMark = 51820;
-        routeTable = "51820";
+        firewallMark = tunnel.fwMark;
+        routeTable = toString tunnel.table;
         peers = [
           (tunnel.peer
             // {
@@ -118,10 +114,19 @@ in {
             ActivationPolicy = "manual";
           };
           networkConfig = {
-            DNSDefaultRoute = true;
+            # DNSDefaultRoute = true;
             Domains = "~.";
           };
           inherit (tunnel) routingPolicyRules;
+          routes =
+            map (dest: {
+              routeConfig = {
+                Destination = dest;
+                Table = tunnel.table;
+                Scope = "link";
+              };
+            })
+            tunnel.peer.allowedIps;
         };
       })
     tunnels;

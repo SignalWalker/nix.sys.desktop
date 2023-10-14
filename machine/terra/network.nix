@@ -28,68 +28,91 @@ in {
       ];
     };
 
-    signal.network.wireguard.tunnels."wg-airvpn" = {
-      # TODO :: figure out a good way to keep this out of public repos
-      addresses = ["10.159.66.94/32" "fd7d:76ee:e68f:a993:b560:c12b:27ba:5557/128"];
-      routingPolicyRules = foldl' (acc: user:
-        acc
-        ++ [
-          {
-            routingPolicyRuleConfig = {
-              User = user;
-              Table = 51820;
-              Priority = 10;
-              Family = "both";
-            };
-          }
-          {
-            routingPolicyRuleConfig = {
-              Table = "main";
-              User = user;
-              Priority = 9;
-              SuppressPrefixLength = 0;
-              Family = "both";
-            };
-          }
-          # exempt local addresses
-          {
-            routingPolicyRuleConfig = {
-              To = "192.168.0.0/24";
-              User = user;
-              Priority = 6;
-            };
-          }
-          {
-            routingPolicyRuleConfig = {
-              To = "10.0.0.0/24";
-              User = user;
-              Priority = 6;
-            };
-          }
-          {
-            routingPolicyRuleConfig = {
-              To = "127.0.0.0/8";
-              User = user;
-              Priority = 6;
-            };
-          }
-          # {
-          #   routingPolicyRuleConfig = {
-          #     To = "172.24.86.0/24";
-          #     User = user;
-          #     Priority = 6;
-          #   };
-          # }
-          # {
-          #   routingPolicyRuleConfig = {
-          #     To = "fd24:fad3:8246::/48";
-          #     User = user;
-          #     Priority = 6;
-          #   };
-          # }
-        ]) []
-      config.terra.network.tunnel.users;
+    signal.network.wireguard.tunnels = {
+      "wg-airvpn" = {
+        addresses = ["10.156.31.29/32" "fd7d:76ee:e68f:a993:95cf:4056:9fb6:dc5a/128"];
+      };
+      "wg-torrent" = {
+        enable = true;
+        # TODO :: figure out a good way to keep this out of public repos
+        addresses = ["10.159.66.94/32" "fd7d:76ee:e68f:a993:b560:c12b:27ba:5557/128"];
+        privateKeyFile = "/run/wireguard/wg-torrent.sign";
+        dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
+        table = 51820;
+        peer = {
+          publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
+          presharedKeyFile = "/run/wireguard/wg-torrent.psk";
+          # airvpn hercules
+          endpoint = "64.42.179.61:1637";
+          allowedIps = ["0.0.0.0/0" "::/0"];
+        };
+        routingPolicyRules = foldl' (acc: user:
+          acc
+          ++ [
+            {
+              routingPolicyRuleConfig = {
+                User = user;
+                Table = 51820;
+                Priority = 10;
+                Family = "both";
+              };
+            }
+            {
+              routingPolicyRuleConfig = {
+                Table = "main";
+                User = user;
+                Priority = 9;
+                SuppressPrefixLength = 0;
+                Family = "both";
+              };
+            }
+            # exempt local addresses
+            {
+              routingPolicyRuleConfig = {
+                To = "192.168.0.0/16";
+                User = user;
+                Priority = 6;
+              };
+            }
+            {
+              routingPolicyRuleConfig = {
+                To = "10.0.0.0/24";
+                User = user;
+                Priority = 6;
+              };
+            }
+            {
+              routingPolicyRuleConfig = {
+                To = "127.0.0.0/8";
+                User = user;
+                Priority = 6;
+              };
+            }
+            # {
+            #   routingPolicyRuleConfig = {
+            #     To = "172.24.86.0/24";
+            #     User = user;
+            #     Priority = 6;
+            #   };
+            # }
+            # {
+            #   routingPolicyRuleConfig = {
+            #     To = "fd24:fad3:8246::/48";
+            #     User = user;
+            #     Priority = 6;
+            #   };
+            # }
+          ]) []
+        config.terra.network.tunnel.users;
+      };
     };
+
+    systemd.tmpfiles.rules = [
+      "C /run/wireguard/wg-torrent.sign - - - - /home/ash/.local/share/wireguard/wg-torrent.sign"
+      "z /run/wireguard/wg-torrent.sign 0400 systemd-network systemd-network"
+      "C /run/wireguard/wg-torrent.psk - - - - /home/ash/.local/share/wireguard/wg-torrent.psk"
+      "z /run/wireguard/wg-torrent.psk 0400 systemd-network systemd-network"
+    ];
 
     services.fail2ban = {
       enable = false;

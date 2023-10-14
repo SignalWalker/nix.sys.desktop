@@ -26,6 +26,11 @@ in {
           ];
       };
     };
+
+    users.extraGroups."fusee".members = ["ash"];
+    services.udev.extraRules = ''
+      SUBSYSTEMS=="usb", ATTRS{manufacturer}=="NVIDIA Corp.", ATTRS{product}=="APX", GROUP="fusee"
+    '';
   };
   meta = {};
 }

@@ -21,16 +21,20 @@ in {
       privateKeyFile = "/run/wireguard/wg-signal.sign";
     };
 
-    signal.network.wireguard.tunnels."wg-airvpn" = {
-      enable = true;
-      privateKeyFile = "/run/wireguard/wg-airvpn.sign";
-      gateway = "10.128.0.1";
-      dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
-      peer = {
-        publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
-        presharedKeyFile = "/run/wireguard/wg-airvpn.psk";
-        endpoint = "64.42.179.61:1637";
-        allowedIps = ["0.0.0.0/0" "::/0"];
+    signal.network.wireguard.tunnels = {
+      "wg-airvpn" = {
+        enable = true;
+        privateKeyFile = "/run/wireguard/wg-airvpn.sign";
+        dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
+        table = 51820;
+        priority = 20;
+        peer = {
+          publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
+          presharedKeyFile = "/run/wireguard/wg-airvpn.psk";
+          # airvpn musca
+          endpoint = "64.42.179.45:1637";
+          allowedIps = ["0.0.0.0/0" "::/0"];
+        };
       };
     };
 
@@ -40,7 +44,6 @@ in {
 
       "C /run/wireguard/wg-airvpn.sign - - - - /home/ash/.local/share/wireguard/wg-airvpn.sign"
       "z /run/wireguard/wg-airvpn.sign 0400 systemd-network systemd-network"
-
       "C /run/wireguard/wg-airvpn.psk - - - - /home/ash/.local/share/wireguard/wg-airvpn.psk"
       "z /run/wireguard/wg-airvpn.psk 0400 systemd-network systemd-network"
     ];
