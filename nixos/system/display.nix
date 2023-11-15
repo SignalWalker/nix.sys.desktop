@@ -14,11 +14,12 @@ in {
   config = {
     programs.dconf.enable = true;
 
-    services.xserver.enable = lib.mkDefault false;
+    services.xserver.enable = lib.mkDefault true;
 
     services.xserver.displayManager.sddm = {
       enable = xserver.enable;
     };
+
     services.greetd = let
       greetd = config.services.greetd;
     in {

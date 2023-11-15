@@ -12,7 +12,7 @@ in {
   imports = [];
   config = {
     services.xserver = {
-      enable = false;
+      enable = lib.mkDefault true;
     };
   };
   meta = {};

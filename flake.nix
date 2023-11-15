@@ -156,6 +156,10 @@
       url = "github:signalwalker/cfg.minecraft.modpack/drifting-league";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    thaw = {
+      url = "github:snowfallorg/thaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -215,7 +219,7 @@
           ]
           ++ (lib.signal.fs.path.listFilePaths ./nixos)
           ++ (std.optionals (machine == "artemis") [
-            inputs.nixos-hardware.nixosModules.framework
+            inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
           ])
           ++ (std.optionals (machine == "terra") [
             inputs.minecraft.nixosModules.default
@@ -234,6 +238,8 @@
               inputs.mozilla.overlays.firefox
               inputs.wayland.overlays.default
               inputs.agenix.overlays.default
+
+              inputs.thaw.overlays."package/thaw"
             ];
           }
           (lib.mkIf (machine == "artemis") {

@@ -31,6 +31,8 @@ in {
       '';
     };
 
+    services.xserver.enable = false;
+
     signal.machines."terra" = {
       nix.build.sshKey = "/run/nix/remote-build.sign";
     };

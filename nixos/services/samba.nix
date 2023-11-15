@@ -14,12 +14,12 @@ in {
   imports = [];
   config = {
     services.samba-wsdd = {
-      enable = false;
+      enable = true;
       openFirewall = true;
       workgroup = "WORKGROUP";
     };
     services.samba = {
-      enable = false;
+      enable = true;
       openFirewall = true;
       extraConfig = ''
         workgroup = ${wsdd.workgroup}
@@ -39,6 +39,8 @@ in {
         usershare owner only = yes
       '';
     };
+
+    networking.firewall.allowPing = lib.mkDefault samba.enable;
     # networking.firewall = {
     #   allowedTCPPorts = [ 5357 ];
     #   allowedUDPPorts = [ 3702 ];
