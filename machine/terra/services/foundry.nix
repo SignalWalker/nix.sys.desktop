@@ -13,7 +13,7 @@ in {
   imports = [];
   config = {
     services.foundryvtt = {
-      enable = true;
+      enable = false;
       minifyStaticFiles = true;
       upnp = false;
     };
