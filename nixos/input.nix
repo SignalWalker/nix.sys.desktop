@@ -20,15 +20,18 @@ in {
       pkgs.xorg.setxkbmap
     ];
     services.xserver = {
-      xkbModel = "pc104";
-      extraLayouts."hypersuper" = {
-        description = "Ensures correct modifier mapping for hyper and super.";
-        symbolsFile = ./input/symbols/hypersuper;
-        languages = ["eng"];
+      xkb = {
+        options = "caps:hyper,grp_led:caps";
+        extraLayouts."hypersuper" = {
+          description = "Ensures correct modifier mapping for hyper and super.";
+          symbolsFile = ./input/symbols/hypersuper;
+          languages = ["eng"];
+        };
+        layout = "hypersuper(us)";
       };
-      layout = "hypersuper(us)";
-      xkbOptions = "caps:hyper,grp_led:caps";
     };
+
+    programs.wshowkeys.enable = true;
   };
   meta = {};
 }

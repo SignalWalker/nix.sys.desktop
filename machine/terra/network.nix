@@ -21,10 +21,8 @@ in {
   config = {
     networking.firewall = {
       allowedTCPPorts = [
-        # 9995 # hammerwatch
       ];
       allowedUDPPorts = [
-        # 9995 # hammerwatch
       ];
     };
 
@@ -105,6 +103,13 @@ in {
           ]) []
         config.terra.network.tunnel.users;
       };
+    };
+
+    networking.hosts = let
+      fqdns = ["home.ashwalker.net" "media.home.ashwalker.net" "terra.ashwalker.net" "torrent.terra.ashwalker.net"];
+    in {
+      "127.0.1.1" = fqdns;
+      "::1" = fqdns;
     };
 
     systemd.tmpfiles.rules = [

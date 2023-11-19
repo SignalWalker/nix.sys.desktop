@@ -62,6 +62,26 @@ in {
     virtualisation.libvirtd = {
       enable = true;
     };
+
+    services.clight = let
+      backlight_curve = point_scale: bl_max: let
+        xs = map (p: p / (point_scale * 1.0)) (std.lists.range 0 point_scale);
+      in (map (x: x * x * bl_max) xs);
+    in {
+      enable = false;
+      settings = {
+        verbose = true;
+        inhibit = {disabled = true;};
+        screen = {disabled = true;};
+        dpms = {disabled = true;};
+        dimmer = {disabled = true;};
+        sensor = {
+          devname = "iio:device0";
+          ac_regression_points = backlight_curve 10 0.5;
+          batt_regression_points = backlight_curve 10 0.5;
+        };
+      };
+    };
   };
   meta = {};
 }

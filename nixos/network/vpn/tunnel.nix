@@ -64,6 +64,10 @@ in {
                   type = types.int;
                   example = 10;
                 };
+                mtu = mkOption {
+                  type = types.nullOr types.ints.unsigned;
+                  default = null;
+                };
                 routingPolicyRules = mkOption {
                   type = types.listOf types.anything;
                   default = [
@@ -102,17 +106,23 @@ in {
         enable = tunnel.enable;
         inherit (tunnel) privateKeyFile dns addresses port;
         firewallMark = tunnel.fwMark;
-        routeTable = toString tunnel.table;
+        # routeTable = toString tunnel.table;
         peers = [
           (tunnel.peer
             // {
               persistentKeepAlive = 15;
             })
         ];
+        addPrefixRoute = false;
         extraNetworkConfig = {
-          linkConfig = {
-            ActivationPolicy = "manual";
-          };
+          linkConfig = lib.mkMerge [
+            {
+              ActivationPolicy = "manual";
+            }
+            (lib.mkIf (tunnel.mtu != null) {
+              MTUBytes = toString tunnel.mtu;
+            })
+          ];
           networkConfig = {
             # DNSDefaultRoute = true;
             Domains = "~.";
@@ -130,6 +140,20 @@ in {
         };
       })
     tunnels;
+
+    networking.firewall.allowedUDPPorts =
+      foldl' (
+        acc: tunName: let
+          tunnel = tunnels.${tunName};
+        in
+          if tunnel.enable && tunnel.port != "auto"
+          then acc ++ [tunnel.port]
+          else acc
+      )
+      [] (attrNames tunnels);
+
+    # this prevents nftables from breaking tunnels
+    networking.firewall.checkReversePath = "loose";
   };
   meta = {};
 }

@@ -102,8 +102,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     wayland = {
-      # url = "github:nix-community/nixpkgs-wayland";
-      url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
+      url = "github:nix-community/nixpkgs-wayland";
+      # url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # hardware-specific
@@ -158,6 +158,10 @@
     };
     thaw = {
       url = "github:snowfallorg/thaw";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    eww = {
+      url = "github:elkowar/eww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -240,6 +244,8 @@
               inputs.agenix.overlays.default
 
               inputs.thaw.overlays."package/thaw"
+
+              # inputs.eww.overlays.default
             ];
           }
           (lib.mkIf (machine == "artemis") {
@@ -280,20 +286,9 @@
           ];
 
           programs.guix.enable = false;
-          # services.xremap.enable = lib.mkForce false;
-          # services.xremap.services."primary".settings.modmap = [{remap."f20" = "micmute";}];
           signal.desktop.x11.enable = false;
           signal.desktop.wayland.compositor.sway.enable = true;
           signal.desktop.wayland.taskbar.enable = true;
-
-          # home.keyboard = lib.mkIf (!(osConfig.signal.input.enable or false)) {
-          #   # model = "pc104";
-          #   layout = "us";
-          #   options = [
-          #     "caps:hyper"
-          #     "grp_led:caps"
-          #   ];
-          # };
         };
       };
       nixosConfigurations = std.mapAttrs (machine: module:

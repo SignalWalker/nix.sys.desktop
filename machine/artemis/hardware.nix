@@ -61,6 +61,10 @@ in {
         vulkan-validation-layers
       ];
     };
+
+    services.xserver.xkb = {
+      model = "pc104";
+    };
   };
   meta = {};
 }
