@@ -30,13 +30,16 @@ in {
       "wg-airvpn" = {
         addresses = ["10.156.31.29/32" "fd7d:76ee:e68f:a993:95cf:4056:9fb6:dc5a/128"];
       };
-      "wg-torrent" = {
+      "wg-torrent" = let
+        table = 51821;
+      in {
         enable = true;
         # TODO :: figure out a good way to keep this out of public repos
         addresses = ["10.159.66.94/32" "fd7d:76ee:e68f:a993:b560:c12b:27ba:5557/128"];
         privateKeyFile = "/run/wireguard/wg-torrent.sign";
         dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
-        table = 51820;
+        inherit table;
+        port = table;
         peer = {
           publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
           presharedKeyFile = "/run/wireguard/wg-torrent.psk";
@@ -44,13 +47,14 @@ in {
           endpoint = "64.42.179.61:1637";
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
+        activationPolicy = "up";
         routingPolicyRules = foldl' (acc: user:
           acc
           ++ [
             {
               routingPolicyRuleConfig = {
                 User = user;
-                Table = 51820;
+                Table = table;
                 Priority = 10;
                 Family = "both";
               };
@@ -103,13 +107,6 @@ in {
           ]) []
         config.terra.network.tunnel.users;
       };
-    };
-
-    networking.hosts = let
-      fqdns = ["home.ashwalker.net" "media.home.ashwalker.net" "terra.ashwalker.net" "torrent.terra.ashwalker.net"];
-    in {
-      "127.0.1.1" = fqdns;
-      "::1" = fqdns;
     };
 
     systemd.tmpfiles.rules = [

@@ -68,6 +68,10 @@ in {
                   type = types.nullOr types.ints.unsigned;
                   default = null;
                 };
+                activationPolicy = mkOption {
+                  type = types.nullOr (types.enum ["always-up" "up" "manual" "down" "always-down" "bound"]);
+                  default = "manual";
+                };
                 routingPolicyRules = mkOption {
                   type = types.listOf types.anything;
                   default = [
@@ -116,9 +120,9 @@ in {
         addPrefixRoute = false;
         extraNetworkConfig = {
           linkConfig = lib.mkMerge [
-            {
-              ActivationPolicy = "manual";
-            }
+            (lib.mkIf (tunnel.activationPolicy != null) {
+              ActivationPolicy = tunnel.activationPolicy;
+            })
             (lib.mkIf (tunnel.mtu != null) {
               MTUBytes = toString tunnel.mtu;
             })

@@ -6,12 +6,13 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  bouncer = config.services.znc;
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./programs;
+  imports = lib.signal.fs.path.listFilePaths ./irc;
   config = {
-    services.guix = {
+    services.irc.bouncer = {
       enable = true;
     };
   };

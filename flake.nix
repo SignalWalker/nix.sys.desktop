@@ -247,6 +247,20 @@
 
               # inputs.eww.overlays.default
             ];
+            nixpkgs.config.packageOverrides = pkgs: {
+              # TODO :: revert this after https://github.com/NixOS/nixpkgs/issues/268429 is fixed
+              vulkan-validation-layers =
+                pkgs.lib.trivial.warn "using temporary vulkan-validation-layers hack"
+                (pkgs.vulkan-validation-layers.overrideAttrs (final: prev: {
+                  version = "1.3.268.0";
+                  src = pkgs.fetchFromGitHub {
+                    owner = "KhronosGroup";
+                    repo = "Vulkan-Utility-Libraries";
+                    rev = "vulkan-sdk-${final.version}";
+                    hash = "sha256-O1agpzZpXiQZFYx1jPosIhxJovZtfZSLBNFj1LVB1VI=";
+                  };
+                }));
+            };
           }
           (lib.mkIf (machine == "artemis") {
             environment.systemPackages = [
