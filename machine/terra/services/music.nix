@@ -6,6 +6,7 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  navi = config.services.navidrome;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -23,7 +24,7 @@ in {
       enableACME = true;
       forceSSL = true;
       locations."/" = {
-        proxyPass = "unix:${navi.listen.address}";
+        proxyPass = "http://unix:${navi.listen.address}";
       };
     };
   };
