@@ -19,7 +19,13 @@ in {
         "172.24.86.0/24"
         "fd24:fad3:8246::0/48"
       ];
-      zones = std.foldl' (acc: name: let
+      forwarders = [
+        "9.9.9.9"
+        "149.112.112.112"
+        "2620:fe::fe"
+        "2620:fe::9"
+      ];
+      zones = foldl' (acc: name: let
         hostName = "${name}.ashwalker.net";
         machine = machines.${name};
       in
@@ -55,22 +61,22 @@ in {
               '';
           };
         }) {
-        "home.ashwalker.net" = {
-          master = true;
-          file = pkgs.writeText "home.ashwalker.net.zone" ''
-            $ORIGIN home.ashwalker.net.
-            $TTL 2h
-
-            @ IN SOA ns1.terra.ashwalker.net. dns.terra.ashwalker.net. 2023081200 86400 10800 3600000 3600
-
-            @ IN NS ns1.terra.ashwalker.net.
-
-            @ IN A 172.24.86.1
-            * IN A 172.24.86.1
-            @ IN AAAA fd24:fad3:8246::1
-            * IN AAAA fd24:fad3:8246::1
-          '';
-        };
+        # "home.ashwalker.net" = {
+        #   master = true;
+        #   file = pkgs.writeText "home.ashwalker.net.zone" ''
+        #     $ORIGIN home.ashwalker.net.
+        #     $TTL 2h
+        #
+        #     @ IN SOA ns1.terra.ashwalker.net. dns.terra.ashwalker.net. 2023081200 86400 10800 3600000 3600
+        #
+        #     @ IN NS ns1.terra.ashwalker.net.
+        #
+        #     @ IN A 172.24.86.1
+        #     * IN A 172.24.86.1
+        #     @ IN AAAA fd24:fad3:8246::1
+        #     * IN AAAA fd24:fad3:8246::1
+        #   '';
+        # };
       } (attrNames machines);
     };
     # services.unbound = {

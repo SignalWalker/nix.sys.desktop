@@ -15,6 +15,8 @@ in {
       enable = true;
     };
 
+    boot.supportedFilesystems = ["ntfs"];
+
     musnix = {
       enable = true;
       alsaSeq.enable = true;
