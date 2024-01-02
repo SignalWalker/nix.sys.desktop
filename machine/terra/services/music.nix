@@ -16,15 +16,25 @@ in {
       enable = true;
     };
 
-    services.navidrome.settings = {
-      BaseUrl = "https://music.home.ashwalker.net";
+    services.navidrome = {
+      listen.port = 41457;
+      settings = {
+        BaseUrl = "https://music.home.ashwalker.net";
+        RecentlyAddedByModTime = true;
+        CoverArtPriority = "embedded, cover.*, folder.*, front.*, external";
+        EnableUserEditing = false;
+        TranscodingCacheSize = "1GiB";
+        FFmpegPath = "${pkgs.ffmpeg}/bin/ffmpeg";
+        EnableSharing = true;
+      };
+      dir.library = "/elysium/media/audio/library";
     };
 
     services.nginx.virtualHosts."music.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
       locations."/" = {
-        proxyPass = "http://unix:${navi.listen.address}";
+        proxyPass = "http://${navi.listen.address}:${toString navi.listen.port}";
       };
     };
   };
