@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  # imports = lib.signal.fs.path.listFilePaths ./programs;
+  imports = lib.signal.fs.path.listFilePaths ./programs;
   config = {
     # services.guix = {
     #   enable = fa;
