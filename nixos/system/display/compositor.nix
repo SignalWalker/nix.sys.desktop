@@ -9,11 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = [];
-  config = {
-    services.xserver = {
-      enable = true;
-    };
-  };
+  imports = lib.signal.fs.path.listFilePaths ./compositor;
+  config = {};
   meta = {};
 }

@@ -14,12 +14,12 @@ in {
   imports = [];
   config = {
     services.samba-wsdd = {
-      enable = true;
+      enable = samba.enable;
       openFirewall = true;
       workgroup = "WORKGROUP";
     };
     services.samba = {
-      enable = true;
+      enable = false;
       openFirewall = true;
       extraConfig = ''
         workgroup = ${wsdd.workgroup}

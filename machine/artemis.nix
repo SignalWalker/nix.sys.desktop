@@ -11,9 +11,14 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./artemis;
   config = {
+    warnings = [
+      "disabling systemd.network.wait-online"
+    ];
     networking.networkmanager = {
       enable = true;
     };
+    systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
+    systemd.network.wait-online.enable = false;
 
     boot.supportedFilesystems = ["ntfs"];
 

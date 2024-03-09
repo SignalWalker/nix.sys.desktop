@@ -7,70 +7,65 @@
 with builtins; let
   std = pkgs.lib;
   xserver = config.services.xserver;
+
+  sway-session = let
+    writeSession = name: text:
+      (pkgs.writeTextFile {
+        name = "${name}.desktop";
+        text = ''
+          [Desktop Entry]
+          Version=1.0
+          Name=${name}
+          Type=Application
+          ${text}
+        '';
+        destination = "/share/wayland-sessions/${name}.desktop";
+      })
+      // {
+        providedSessions = [name];
+      };
+  in (writeSession "SwayWrapped" (let
+    swayCmd = "systemd-cat --identifier=sway --priority=info --stderr-priority=err sway";
+  in ''
+    DesktopNames=sway
+    Comment=Sway with extra features
+    TryExec=sway
+    Exec=${./display/compositor/sway/run-sway.sh}
+  ''));
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = [];
+  imports = lib.signal.fs.path.listFilePaths ./display;
   config = {
     programs.dconf.enable = true;
 
-    services.xserver.enable = lib.mkDefault true;
+    services.xserver.enable = lib.mkDefault false;
 
     services.xserver.displayManager.sddm = {
       enable = xserver.enable;
     };
 
+    services.xserver.displayManager.sessionPackages = [sway-session];
+
     services.greetd = let
       greetd = config.services.greetd;
+      sessions = {
+        wayland = std.concatStringsSep ":" ["/usr/share/wayland-sessions" "${sway-session}/share/wayland-sessions"];
+        x11 = std.concatStringsSep ":" ["/usr/share/xsessions"];
+      };
     in {
       enable = !xserver.displayManager.sddm.enable;
       settings = {
         default_session = {
-          command = let
-            swayCmd = "sway-wrapper ${
-              if config.hardware.nvidia.modesetting.enable
-              then "--unsupported-gpu"
-              else ""
-            } 1> \${XDG_STATE_HOME}/log/sway/out.log 2> \${XDG_STATE_HOME}/log/sway/err.log";
-          in
+          command =
             if config.programs.regreet.enable
             then "${pkgs.dbus}/bin/dbus-run-session ${lib.getExe pkgs.cage} -s -- ${lib.getExe config.programs.regreet.package}"
-            else "${pkgs.greetd.tuigreet}/bin/tuigreet -tr --asterisks --remember-session -g SignalOS -c \"${swayCmd}\"";
+            else "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}";
+          user = "greeter";
         };
       };
     };
 
-    environment.systemPackages = let
-      writeSession = name: text: let
-        fileName = lib.toLower name;
-      in
-        (pkgs.writeTextFile {
-          name = "${fileName}.desktop";
-          text = ''
-            [Desktop Entry]
-            Name=${name}
-            Type=Application
-            ${text}
-          '';
-          destination = "/share/wayland-sessions/${fileName}.desktop";
-        })
-        .overrideAttrs (final: prev: {
-          passthru =
-            (prev.passthru or {})
-            // {
-              providedSessions = [fileName];
-            };
-        });
-    in [
-      (writeSession "SwayWrapped" ''
-        Comment=Sway with extra features
-        Exec=sway-wrapper -d ${
-          if config.hardware.nvidia.modesetting.enable
-          then "--unsupported-gpu"
-          else ""
-        } 1> $XDG_CONFIG_HOME/log/sway/out.log 2> $XDG_CONFIG_HOME/log/sway/err.log
-      '')
-    ];
     programs.regreet = {
       enable = false;
       settings = {
@@ -92,17 +87,6 @@ in {
       };
     };
     programs.light.enable = true;
-    programs.sway = {
-      enable = true;
-      wrapperFeatures = {
-        base = true;
-        gtk = true;
-      };
-      extraPackages = with pkgs; [
-        # swaylock-effects
-        swayidle
-      ];
-    };
     services.xserver.windowManager.qtile = {
       enable = false; # pywlroots build failure
       backend = "wayland";
@@ -130,8 +114,8 @@ in {
     xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      wlr.enable = !xserver.enable;
-      # extraPortals = lib.mkIf (!xserver.enable) [pkgs.xdg-desktop-portal-gtk];
+      wlr.enable = true;
+      extraPortals = [pkgs.xdg-desktop-portal-gtk];
     };
 
     fonts.packages = let

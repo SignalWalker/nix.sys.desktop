@@ -6,15 +6,24 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  guix = config.services.guix;
 in {
   options = with lib; {};
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./programs;
   config = {
-    # services.guix = {
-    #   enable = fa;
-    # };
-    # users.groups.${config.services.guix.build.group}.members = ["ash"];
+    services.guix = {
+      enable = true;
+      gc = {
+        enable = true;
+      };
+    };
+    users.groups.${guix.group}.members = ["ash"];
+
+    environment.systemPackages = with pkgs; [
+      wineWowPackages.waylandFull
+      winetricks
+    ];
   };
   meta = {};
 }

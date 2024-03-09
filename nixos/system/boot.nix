@@ -25,10 +25,11 @@ in {
       grub = {
         enable = true;
         efiSupport = true;
-        zfsSupport = any (fs: fs == "zfs") config.boot.supportedFilesystems;
+        zfsSupport = config.boot.supportedFilesystems.zfs or false;
         configurationLimit = config.boot.loader.configurationLimit;
         theme = lib.mkDefault pkgs.nixos-grub2-theme;
         useOSProber = true;
+        default = "saved";
       };
     };
   };
