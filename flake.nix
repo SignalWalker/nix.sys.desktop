@@ -227,6 +227,14 @@
           ])
           ++ (std.optionals (machine == "terra") [
             inputs.minecraft.nixosModules.default
+
+            inputs.nixos-hardware.nixosModules.common-pc
+            inputs.nixos-hardware.nixosModules.common-pc-ssd
+            inputs.nixos-hardware.nixosModules.common-pc-hdd
+
+            inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
+
+            inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
           ]);
         config = lib.mkMerge [
           {
@@ -249,6 +257,7 @@
             ];
             nixpkgs.config.packageOverrides = pkgs: {};
             nixpkgs.config.permittedInsecurePackages = [
+              "nix-2.16.2" # FIX :: why
               # "electron-25.9.0"
             ];
           }
@@ -290,7 +299,9 @@
           ];
 
           programs.guix.enable = false;
+
           signal.desktop.x11.enable = false;
+
           signal.desktop.wayland.compositor.sway.enable = true;
           signal.desktop.wayland.taskbar.enable = true;
         };

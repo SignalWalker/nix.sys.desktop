@@ -13,7 +13,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./groceries;
   config = {
     services.grocy-signal = {
-      enable = true;
+      enable = false;
       nginx = {
         hostName = "groceries.home.ashwalker.net";
         enableACME = true;

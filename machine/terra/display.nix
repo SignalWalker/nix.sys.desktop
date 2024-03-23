@@ -12,7 +12,7 @@ in {
   imports = [];
   config = {
     services.xserver = {
-      enable = true;
+      enable = false;
     };
   };
   meta = {};

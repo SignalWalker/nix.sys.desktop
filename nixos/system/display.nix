@@ -8,6 +8,8 @@ with builtins; let
   std = pkgs.lib;
   xserver = config.services.xserver;
 
+  runSway = pkgs.writeShellScript "run-sway" (readFile ./display/compositor/sway/run-sway.sh);
+
   sway-session = let
     writeSession = name: text:
       (pkgs.writeTextFile {
@@ -24,19 +26,19 @@ with builtins; let
       // {
         providedSessions = [name];
       };
-  in (writeSession "SwayWrapped" (let
-    swayCmd = "systemd-cat --identifier=sway --priority=info --stderr-priority=err sway";
-  in ''
+  in (writeSession "SwayWrapped" ''
     DesktopNames=sway
     Comment=Sway with extra features
     TryExec=sway
-    Exec=${./display/compositor/sway/run-sway.sh}
-  ''));
+    Exec=${runSway}
+  '');
 in {
   options = with lib; {};
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./display;
   config = {
+    environment.systemPackages = [sway-session];
+
     programs.dconf.enable = true;
 
     services.xserver.enable = lib.mkDefault false;

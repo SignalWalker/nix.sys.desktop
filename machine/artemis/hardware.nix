@@ -21,23 +21,33 @@ in {
     # handled by nixos-hardware#framework
     # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
-    # services.auto-cpufreq = {
-    #   enable = true;
-    #   settings = {
-    #     battery = {
-    #       governor = "powersave";
-    #       turbo = "auto";
-    #     };
-    #     charger = {
-    #       governor = "performance";
-    #       turbo = "auto";
-    #     };
-    #   };
-    # };
+    services.auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          energy_performance_preference = "balance_power";
+          turbo = "auto";
+        };
+        charger = {
+          governor = "performance";
+          energy_performance_preference = "performance";
+          turbo = "auto";
+        };
+      };
+    };
 
-    services.thermald.enable = true;
+    services.tlp.enable = false;
+
+    services.thermald.enable = false;
+
     powerManagement = {
       enable = true;
+    };
+
+    services.fwupd = {
+      enable = true;
+      extraRemotes = ["lvfs-testing"];
     };
 
     hardware.bluetooth = {
@@ -52,11 +62,7 @@ in {
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        vaapiVdpau
-        # handled by nixos-hardware#framework
-        # libvdpau-va-gl
-        # intel-media-driver
-        # vaapiIntel
+        vaapiVdpau # hardware video acceleration
         intel-compute-runtime
         vulkan-validation-layers
       ];

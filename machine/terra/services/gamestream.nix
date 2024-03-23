@@ -19,13 +19,13 @@ in {
     #   enable = true;
     # };
     services.xrdp = {
-      enable = true;
+      enable = false;
       openFirewall = false;
       defaultWindowManager = "startplasma-x11";
     };
 
     services.flatpak = {
-      enable = true;
+      enable = false;
     };
   };
   meta = {};

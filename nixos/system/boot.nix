@@ -28,7 +28,7 @@ in {
         zfsSupport = config.boot.supportedFilesystems.zfs or false;
         configurationLimit = config.boot.loader.configurationLimit;
         theme = lib.mkDefault pkgs.nixos-grub2-theme;
-        useOSProber = true;
+        useOSProber = lib.mkDefault false;
         default = "saved";
       };
     };

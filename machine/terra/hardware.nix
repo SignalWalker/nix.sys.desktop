@@ -17,16 +17,40 @@ in {
     ++ lib.signal.fs.path.listFilePaths ./hardware;
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
-    hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    services.thermald.enable = true;
+
+    environment.sessionVariables = {
+      NVD_LOG = "1";
+      WLR_NO_HARDWARE_CURSORS = "1";
+    };
+    environment.variables."EXTRA_SWAY_ARGS" = "--unsupported-gpu";
+
+    services.auto-cpufreq = {
+      enable = true;
+      settings = {
+        battery = {
+          governor = "powersave";
+          energy_performance_preference = "balance_power";
+          turbo = "auto";
+        };
+        charger = {
+          governor = "performance";
+          energy_performance_preference = "performance";
+          turbo = "auto";
+        };
+      };
+    };
+
+    services.tlp.enable = false;
+    services.thermald.enable = false;
+
     hardware.bluetooth = {
       enable = true;
     };
+
     boot.supportedFilesystems = ["ntfs"];
 
     boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
-    services.xserver.videoDrivers = ["nvidia"];
     hardware.nvidia = {
       modesetting.enable = true;
       open = false;
@@ -42,19 +66,13 @@ in {
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        # intel-media-driver
-        # vaapiIntel
-        vaapiVdpau
-        libvdpau-va-gl
-        # intel-compute-runtime
-        nvidia-vaapi-driver
+        # libvdpau-va-gl
+        # nvidia-vaapi-driver
         vulkan-validation-layers
       ];
     };
-    environment.sessionVariables = {
-      NVD_LOG = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
-    };
+
+    boot.loader.grub.useOSProber = true;
 
     # VFIO (doesn't work on terra atm)
     # boot.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd"];

@@ -11,7 +11,7 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = {
+  config = lib.mkIf false {
     age.secrets.cloudAdminPassword = {
       file = ./cloud/cloudAdminPassword.age;
       owner = "nextcloud";
@@ -22,10 +22,17 @@ in {
       enable = true;
       hostName = "cloud.home.ashwalker.net";
       https = true;
-      package = pkgs.nextcloud27;
+      package = pkgs.nextcloud28;
       autoUpdateApps.enable = true;
       configureRedis = true;
       database.createLocally = true;
+      settings = {
+        overwriteprotocol =
+          if nc.https
+          then "https"
+          else null;
+        default_phone_region = "US";
+      };
       config = {
         dbtype = "pgsql";
         dbuser = "nextcloud";
@@ -33,11 +40,6 @@ in {
         dbname = "nextcloud";
         adminpassFile = config.age.secrets.cloudAdminPassword.path;
         adminuser = "admin";
-        overwriteProtocol =
-          if nc.https
-          then "https"
-          else null;
-        defaultPhoneRegion = "US";
       };
       phpOptions = {
         # upload_max_filesize = "64G";
