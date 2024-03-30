@@ -54,17 +54,17 @@ in {
       enable = true;
     };
 
-    nixpkgs.config.packageOverrides = pkgs: {
-      vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-    };
+    # nixpkgs.config.packageOverrides = pkgs: {
+    #   vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
+    # };
     hardware.opengl = {
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        vaapiVdpau # hardware video acceleration
-        intel-compute-runtime
-        vulkan-validation-layers
+        # vaapiVdpau # hardware video acceleration
+        # intel-compute-runtime
+        # vulkan-validation-layers
       ];
     };
 
