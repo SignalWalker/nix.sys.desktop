@@ -9,7 +9,7 @@ with builtins; let
   forgejo = config.services.forgejo;
   domain = "git.home.ashwalker.net";
   secrets = config.age.secrets;
-  redis = services.redis.servers."forgejo";
+  redis = config.services.redis.servers."forgejo";
 in {
   options = with lib; {
   };
@@ -46,6 +46,9 @@ in {
         enable = true;
       };
       settings = {
+        default = {
+          APP_NAME = "SignalForge";
+        };
         session.COOKIE_SECURE = true;
         server = {
           DOMAIN = domain;
