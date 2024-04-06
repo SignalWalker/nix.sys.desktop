@@ -255,7 +255,9 @@
 
               # inputs.eww.overlays.default
             ];
-            nixpkgs.config.packageOverrides = pkgs: {};
+            nixpkgs.config.packageOverrides = pkgs: {
+              gamescope = pkgs.gamescope.override {wlroots = pkgs.wlroots_0_17;};
+            };
             nixpkgs.config.permittedInsecurePackages = [
               "nix-2.16.2" # FIX :: why
               # "electron-25.9.0"

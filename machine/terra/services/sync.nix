@@ -30,7 +30,7 @@ in {
     services.atuin = {
       enable = true;
       host = "127.0.0.1"; # hurray for reverse proxy
-      openRegistration = false;
+      openRegistration = true;
       openFirewall = false;
       port = 8398;
     };
