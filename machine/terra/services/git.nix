@@ -27,6 +27,9 @@ in {
         owner = forgejo.user;
         group = forgejo.group;
       };
+      gitRunnerToken = {
+        file = ./git/gitRunnerToken.age;
+      };
     };
     services.forgejo = let
       redisUri = "redis+socket://${redis.unixSocket}";
