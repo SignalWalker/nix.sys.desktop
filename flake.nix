@@ -164,6 +164,11 @@
       url = "github:elkowar/eww";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    simple-nixos-mailserver = {
+      url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -226,8 +231,6 @@
             inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
           ])
           ++ (std.optionals (machine == "terra") [
-            inputs.minecraft.nixosModules.default
-
             inputs.nixos-hardware.nixosModules.common-pc
             inputs.nixos-hardware.nixosModules.common-pc-ssd
             inputs.nixos-hardware.nixosModules.common-pc-hdd
@@ -235,6 +238,10 @@
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+
+            inputs.minecraft.nixosModules.default
+
+            inputs.simple-nixos-mailserver.nixosModules.default
           ]);
         config = lib.mkMerge [
           {

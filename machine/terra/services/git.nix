@@ -28,14 +28,16 @@ in {
         group = forgejo.group;
       };
     };
-    services.forgejo = {
+    services.forgejo = let
+      redisUri = "redis+socket://${redis.unixSocket}";
+    in {
       enable = true;
       stateDir = "/var/lib/forgejo"; # this is an elysium dataset
       database = {
         type = "postgres";
         name = forgejo.user;
         user = forgejo.user;
-        # passwordFile = secrets.gitDbPassword.path;
+        passwordFile = secrets.gitDbPassword.path;
       };
       mailerPasswordFile = secrets.gitMailerPassword.path;
       dump = {
@@ -46,18 +48,34 @@ in {
         enable = true;
       };
       settings = {
-        default = {
+        DEFAULT = {
           APP_NAME = "SignalForge";
         };
-        session.COOKIE_SECURE = true;
+        session = {
+          PROVIDER = "redis";
+          PROVIDER_CONFIG = redisUri;
+          COOKIE_SECURE = true;
+        };
         server = {
           DOMAIN = domain;
           PROTOCOL = "http+unix";
           ROOT_URL = "https://${domain}/";
         };
-        cache = {
+        cache = lib.mkIf redis.enable {
           ADAPTER = "redis";
-          HOST = "${redis.unixSocket}";
+          HOST = redisUri;
+        };
+        security = {
+          INSTALL_LOCK = true;
+        };
+        service = {
+          DISABLE_REGISTRATION = true;
+        };
+        picture = {
+          ENABLE_FEDERATED_AVATAR = true;
+        };
+        federation = {
+          ENABLED = true;
         };
       };
     };
