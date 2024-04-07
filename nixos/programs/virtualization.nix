@@ -18,10 +18,13 @@ in {
       }
     ];
 
-    virtualisation.docker = {
-      enable = false;
-    };
-    users.extraGroups.docker.members = ["ash"];
+    environment.systemPackages = lib.mkIf config.virtualisation.containers.enable (with pkgs; [
+      dive # look into docker image layers
+      podman-tui # status of containers in the terminal
+      podman-compose # start group of containers for dev
+    ]);
+
+    users.extraGroups."docker".members = ["ash"];
 
     virtualisation.libvirtd = {
       enable = lib.mkDefault false;

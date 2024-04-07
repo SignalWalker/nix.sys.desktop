@@ -61,6 +61,10 @@ in {
     nixpkgs.config.packageOverrides = pkgs: {
       vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
     };
+    virtualisation.containers = {
+      cdi.dynamic.nvidia.enable = true;
+    };
+
     hardware.opengl = {
       enable = true;
       driSupport = true;

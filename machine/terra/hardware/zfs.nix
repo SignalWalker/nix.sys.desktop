@@ -17,9 +17,20 @@ in {
         devNodes = "/dev/disk/by-id/";
         bootDevices = ["nvme-eui.002538d51100a6ad"];
         immutable = false;
-        availableKernelModules = ["xhci_pci" "ahci" "nvme" "usb_storage" "usbhid" "sd_mod"];
+        availableKernelModules = [
+          "xhci_pci"
+          "ahci"
+          "nvme"
+          "usb_storage"
+          "usbhid"
+          "sd_mod"
+        ];
         removableEfi = false;
         kernelParams = [];
+        sshUnlock = {
+          enable = false;
+          authorizedKeys = config.users.users."root".openssh.authorizedKeys.keys;
+        };
       };
     };
 

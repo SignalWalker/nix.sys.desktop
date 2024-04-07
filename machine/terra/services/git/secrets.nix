@@ -8,4 +8,5 @@ let
 in {
   "gitMailerPassword.age".publicKeys = users ++ systems;
   "gitDbPassword.age".publicKeys = users ++ systems;
+  "gitRunnerToken.age".publicKeys = users ++ systems;
 }

@@ -77,6 +77,10 @@ in {
         federation = {
           ENABLED = true;
         };
+
+        actions = {
+          ENABLED = true;
+        };
       };
     };
     services.redis.servers."forgejo" = {
@@ -93,6 +97,30 @@ in {
         '';
       };
     };
+
+    services.gitea-actions-runner = {
+      package = pkgs.forgejo-actions-runner;
+      instances = {
+        ${config.networking.hostName} = {
+          enable = true;
+          name = config.networking.hostName;
+          url = "https://git.home.ashwalker.net";
+          labels = [
+            "native:hostt"
+          ];
+          tokenFile = secrets.gitRunnerToken.path;
+        };
+      };
+    };
+    virtualisation = {
+      containers.enable = true;
+      podman = {
+        enable = true;
+        dockerCompat = true;
+        defaultNetwork.settings.dns_enabled = true;
+      };
+    };
+    networking.firewall.trustedInterfaces = ["br-*"];
   };
   meta = {};
 }

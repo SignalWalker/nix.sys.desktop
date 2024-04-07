@@ -11,9 +11,6 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./terra;
   config = {
-    virtualisation.libvirtd = {
-      enable = true;
-    };
   };
   meta = {};
 }
