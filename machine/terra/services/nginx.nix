@@ -33,7 +33,10 @@ in {
       recommendedZstdSettings = true;
 
       defaultListenAddresses = [
-        # by default, listen only on wg-signal
+        # by default, listen only on wg-signal and localhost
+        "127.0.0.1"
+        "[::1]"
+
         "172.24.86.0"
         "[fd24:fad3:8246::0]"
       ];

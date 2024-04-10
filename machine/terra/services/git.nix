@@ -80,7 +80,14 @@ in {
         federation = {
           ENABLED = true;
         };
-
+        repository = {
+          ENABLE_PUSH_CREATE_USER = true;
+          ENABLE_PUSH_CREATE_ORG = true;
+        };
+        "repository.signing" = {
+          INITIAL_COMMIT = "twofa,pubkey";
+          WIKI = "twofa,pubkey";
+        };
         actions = {
           ENABLED = true;
         };
