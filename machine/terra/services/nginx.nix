@@ -7,25 +7,38 @@
 with builtins; let
   std = pkgs.lib;
 in {
-  options = with lib; {};
+  options = with lib; {
+    services.nginx = {
+      publicListenAddresses = mkOption {
+        description = "Default listen addresses for public virtual hosts.";
+        type = types.listOf types.str;
+        default = [
+          "0.0.0.0"
+          "[::0]"
+        ];
+      };
+    };
+  };
   disabledModules = [];
   imports = [];
   config = {
     services.nginx = {
       enable = true;
 
-      recommendedTlsSettings = true;
-      recommendedOptimisation = true;
+      recommendedBrotliSettings = true;
       recommendedGzipSettings = true;
+      recommendedOptimisation = true;
       recommendedProxySettings = true;
+      recommendedTlsSettings = true;
+      recommendedZstdSettings = true;
+
+      defaultListenAddresses = [
+        # by default, listen only on wg-signal
+        "172.24.86.0"
+        "[fd24:fad3:8246::0]"
+      ];
     };
     networking.firewall.allowedTCPPorts = [80 443];
-    security.acme = {
-      defaults = {
-        email = "admin@ashwalker.net";
-      };
-      acceptTerms = true;
-    };
   };
   meta = {};
 }

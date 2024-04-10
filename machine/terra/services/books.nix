@@ -54,6 +54,7 @@ in {
     services.nginx.virtualHosts."library.books.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       extraConfig = ''
         client_max_body_size 64M;
       '';
@@ -64,6 +65,7 @@ in {
     services.nginx.virtualHosts."books.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       extraConfig = ''
         client_max_body_size 64M;
       '';

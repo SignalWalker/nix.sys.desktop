@@ -6,8 +6,17 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  jelly = config.services.jellyfin;
 in {
-  options = with lib; {};
+  options = with lib; {
+    services.jellyfin = {
+      port = mkOption {
+        type = types.port;
+        readOnly = true;
+        default = 8096;
+      };
+    };
+  };
   disabledModules = [];
   imports = [];
   config = {
@@ -19,6 +28,8 @@ in {
     services.nginx.virtualHosts."media.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
+
+      listenAddresses = config.services.nginx.publicListenAddresses;
 
       extraConfig = ''
         client_max_body_size 300M;
@@ -41,7 +52,7 @@ in {
       };
 
       locations."/" = {
-        proxyPass = "http://127.0.0.1:8096";
+        proxyPass = "http://127.0.0.1:${toString jelly.port}";
         extraConfig = ''
           proxy_set_header X-Forwarded-Protocol $scheme;
           # Disable buffering when the nginx proxy gets very resource heavy upon streaming
@@ -50,14 +61,14 @@ in {
       };
 
       locations."=/web/" = {
-        proxyPass = "http://127.0.0.1:8096/web/index.html";
+        proxyPass = "http://127.0.0.1:${toString jelly.port}/web/index.html";
         extraConfig = ''
           proxy_set_header X-Forwarded-Protocol $scheme;
         '';
       };
 
       locations."/socket" = {
-        proxyPass = "http://127.0.0.1:8096";
+        proxyPass = "http://127.0.0.1:${toString jelly.port}";
         proxyWebsockets = true;
         extraConfig = ''
           proxy_set_header X-Forwarded-Protocol $scheme;

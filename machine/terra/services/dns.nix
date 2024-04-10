@@ -15,9 +15,14 @@ in {
     services.bind = {
       enable = true;
       cacheNetworks = [
-        "127.0.0.0/24"
-        "172.24.86.0/24"
-        "fd24:fad3:8246::0/48"
+        # host
+        "127.0.0.0/8"
+
+        # private networks
+        "10.0.0.0/8"
+        "172.16.0.0/12"
+        "192.168.0.0/16"
+        "fc00::/7"
       ];
       forwarders = [
         "9.9.9.9"

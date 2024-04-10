@@ -13,7 +13,7 @@ in {
   config = {
     programs.steam = {
       enable = true;
-      remotePlay.openFirewall = true;
+      remotePlay.openFirewall = true; # tcp 27036, udp 27031-27035
       package = pkgs.steam;
       gamescopeSession = {
         enable = false;

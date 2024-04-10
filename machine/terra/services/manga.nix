@@ -20,6 +20,7 @@ in {
     services.nginx.virtualHosts."manga.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/".proxyPass = "http://127.0.0.1:${toString komga.port}";
     };
   };

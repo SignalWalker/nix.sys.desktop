@@ -50,6 +50,7 @@ in {
     services.nginx.virtualHosts.${nc.hostName} = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
     };
 
     # services.postgresql = {

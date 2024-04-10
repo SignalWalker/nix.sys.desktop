@@ -19,7 +19,7 @@ in {
       sshServe = {
         write = true;
       };
-      settings.secret_key_files = [secrets.nixStoreKey.path];
+      settings.secret-key-files = [secrets.nixStoreKey.path];
     };
   };
   meta = {};

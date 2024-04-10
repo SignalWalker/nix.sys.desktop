@@ -19,13 +19,6 @@ in {
   disabledModules = [];
   imports = [];
   config = {
-    networking.firewall = {
-      allowedTCPPorts = [
-      ];
-      allowedUDPPorts = [
-      ];
-    };
-
     networking.wireless.iwd.enable = false;
 
     signal.network.wireguard.tunnels = {

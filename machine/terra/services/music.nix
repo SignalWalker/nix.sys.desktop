@@ -33,6 +33,7 @@ in {
     services.nginx.virtualHosts."music.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
         proxyPass = "http://${navi.listen.address}:${toString navi.listen.port}";
       };

@@ -28,6 +28,7 @@ in {
       "search.home.ashwalker.net" = {
         enableACME = true;
         forceSSL = true;
+        listenAddresses = config.services.nginx.publicListenAddresses;
         locations."/" = {
           extraConfig = ''
             uwsgi_pass unix:///run/uwsgi/searx.sock;

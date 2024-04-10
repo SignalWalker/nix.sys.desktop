@@ -25,6 +25,12 @@ in {
     ]);
 
     users.extraGroups."docker".members = ["ash"];
+    users.extraGroups."podman".members = ["ash"];
+
+    virtualisation.podman = {
+      autoPrune.enable = true;
+      dockerSocket.enable = true;
+    };
 
     virtualisation.libvirtd = {
       enable = lib.mkDefault false;

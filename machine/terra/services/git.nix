@@ -7,7 +7,7 @@
 with builtins; let
   std = pkgs.lib;
   forgejo = config.services.forgejo;
-  domain = "git.home.ashwalker.net";
+  domain = "git.ashwalker.net";
   secrets = config.age.secrets;
   redis = config.services.redis.servers."forgejo";
 in {
@@ -93,6 +93,7 @@ in {
     services.nginx.virtualHosts.${domain} = {
       enableACME = true;
       forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
         proxyPass = "http://unix:${forgejo.settings.server.HTTP_ADDR}";
         extraConfig = ''
@@ -107,9 +108,11 @@ in {
         ${config.networking.hostName} = {
           enable = true;
           name = config.networking.hostName;
-          url = "https://git.home.ashwalker.net";
+          url = "https://${domain}";
           labels = [
-            "native:hostt"
+            "native:host"
+            "rust-latest:docker://rust:latest"
+            "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
           ];
           tokenFile = secrets.gitRunnerToken.path;
         };
@@ -120,10 +123,12 @@ in {
       podman = {
         enable = true;
         dockerCompat = true;
-        defaultNetwork.settings.dns_enabled = true;
+        defaultNetwork.settings = {
+          dns_enabled = true;
+          ipv6_enabled = true;
+        };
       };
     };
-    networking.firewall.trustedInterfaces = ["br-*"];
   };
   meta = {};
 }

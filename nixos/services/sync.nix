@@ -18,7 +18,7 @@ in {
       configDir = "${config.users.users.${st.user}.home}/.config/syncthing";
       # this is called "dataDir" but it's actually the default folder for new sync folders
       dataDir = "${config.users.users.${st.user}.home}/public";
-      openDefaultPorts = true;
+      openDefaultPorts = true; # tcp 22000, udp 21027
     };
   };
   meta = {};

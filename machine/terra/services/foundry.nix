@@ -21,6 +21,7 @@ in {
       "vtt.home.ashwalker.net" = {
         enableACME = true;
         forceSSL = true;
+        listenAddresses = config.services.nginx.publicListenAddresses;
         extraConfig = ''
           client_max_body_size 300M;
         '';
