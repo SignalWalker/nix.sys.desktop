@@ -13,8 +13,8 @@ in {
         description = "Default listen addresses for public virtual hosts.";
         type = types.listOf types.str;
         default = [
-          "0.0.0.0"
-          "[::0]"
+          "192.168.0.2"
+          "[fd24:fad3:9137::2]"
         ];
       };
     };
