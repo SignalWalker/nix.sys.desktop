@@ -26,6 +26,7 @@ in {
     ];
     systemd.automounts = [
       {
+        wantedBy = ["multi-user.target"];
         automountConfig = {
           TimeoutIdleSec = "720";
         };
