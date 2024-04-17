@@ -13,7 +13,7 @@ in {
   config = {
     nix = {
       gc = {
-        automatic = false;
+        automatic = true;
         dates = "weekly";
       };
     };
