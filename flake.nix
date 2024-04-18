@@ -237,7 +237,8 @@
 
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
-            inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            # using nouveau instead
+            # inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
 
             inputs.minecraft.nixosModules.default
 

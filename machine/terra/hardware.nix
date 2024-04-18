@@ -18,12 +18,6 @@ in {
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-    environment.sessionVariables = {
-      NVD_LOG = "1";
-      WLR_NO_HARDWARE_CURSORS = "1";
-    };
-    environment.variables."EXTRA_SWAY_ARGS" = "--unsupported-gpu";
-
     services.auto-cpufreq = {
       enable = true;
       settings = {
@@ -50,31 +44,6 @@ in {
     boot.supportedFilesystems = ["ntfs"];
 
     boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-
-    hardware.nvidia = {
-      modesetting.enable = true;
-      open = false;
-      nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-      nvidiaPersistenced = false;
-    };
-    nixpkgs.config.packageOverrides = pkgs: {
-      vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
-    };
-    virtualisation.containers = {
-      cdi.dynamic.nvidia.enable = true;
-    };
-
-    hardware.opengl = {
-      enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        # libvdpau-va-gl
-        # nvidia-vaapi-driver
-        vulkan-validation-layers
-      ];
-    };
 
     boot.loader.grub.useOSProber = true;
 
