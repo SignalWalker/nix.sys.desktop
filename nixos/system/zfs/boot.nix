@@ -8,61 +8,63 @@
   inherit (lib) mkIf types mkDefault mkOption mkMerge strings;
   inherit (builtins) head toString map tail;
 in {
-  options.zfs-root.boot = {
-    enable = mkOption {
-      description = "Enable root on ZFS support";
-      type = types.bool;
-      default = true;
-    };
-    devNodes = mkOption {
-      description = "Specify where to discover ZFS pools";
-      type = types.str;
-      apply = x:
-        assert (strings.hasSuffix "/" x
-          || abort "devNodes '${x}' must have trailing slash!"); x;
-      default = "/dev/disk/by-id/";
-    };
-    bootDevices = mkOption {
-      description = "Specify boot devices";
-      type = types.nonEmptyListOf types.str;
-    };
-    availableKernelModules = mkOption {
-      type = types.nonEmptyListOf types.str;
-      default = ["uas" "nvme" "ahci"];
-    };
-    kernelParams = mkOption {
-      type = types.listOf types.str;
-      default = [];
-    };
-    immutable = mkOption {
-      description = "Enable root on ZFS immutable root support";
-      type = types.bool;
-      default = false;
-    };
-    removableEfi = mkOption {
-      description = "install bootloader to fallback location";
-      type = types.bool;
-      default = true;
-    };
-    partitionScheme = mkOption {
-      default = {
-        biosBoot = "-part5";
-        efiBoot = "-part1";
-        swap = "-part4";
-        bootPool = "-part2";
-        rootPool = "-part3";
-      };
-      description = "Describe on disk partitions";
-      type = types.attrsOf types.str;
-    };
-    sshUnlock = {
+  options = {
+    zfs-root.boot = {
       enable = mkOption {
+        description = "Enable root on ZFS support";
+        type = types.bool;
+        default = true;
+      };
+      devNodes = mkOption {
+        description = "Specify where to discover ZFS pools";
+        type = types.str;
+        apply = x:
+          assert (strings.hasSuffix "/" x
+            || abort "devNodes '${x}' must have trailing slash!"); x;
+        default = "/dev/disk/by-id/";
+      };
+      bootDevices = mkOption {
+        description = "Specify boot devices";
+        type = types.nonEmptyListOf types.str;
+      };
+      availableKernelModules = mkOption {
+        type = types.nonEmptyListOf types.str;
+        default = ["uas" "nvme" "ahci"];
+      };
+      kernelParams = mkOption {
+        type = types.listOf types.str;
+        default = [];
+      };
+      immutable = mkOption {
+        description = "Enable root on ZFS immutable root support";
         type = types.bool;
         default = false;
       };
-      authorizedKeys = mkOption {
-        type = types.listOf types.str;
-        default = [];
+      removableEfi = mkOption {
+        description = "install bootloader to fallback location";
+        type = types.bool;
+        default = true;
+      };
+      partitionScheme = mkOption {
+        default = {
+          biosBoot = "-part5";
+          efiBoot = "-part1";
+          swap = "-part4";
+          bootPool = "-part2";
+          rootPool = "-part3";
+        };
+        description = "Describe on disk partitions";
+        type = types.attrsOf types.str;
+      };
+      sshUnlock = {
+        enable = mkOption {
+          type = types.bool;
+          default = false;
+        };
+        authorizedKeys = mkOption {
+          type = types.listOf types.str;
+          default = [];
+        };
       };
     };
   };
