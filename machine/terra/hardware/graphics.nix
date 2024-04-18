@@ -40,6 +40,13 @@ in {
         vulkan-validation-layers
       ];
     };
+
+    boot = {
+      kernelParams = [
+        "drm.debug=14"
+        "log_buf_len=16M"
+      ];
+    };
   };
   meta = {};
 }

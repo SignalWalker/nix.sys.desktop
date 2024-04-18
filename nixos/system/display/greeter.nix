@@ -7,7 +7,7 @@
 with builtins; let
   std = pkgs.lib;
 
-  runSway = pkgs.writeShellScript "run-sway" (readFile ./display/compositor/sway/run-sway.sh);
+  runSway = pkgs.writeShellScript "run-sway" (readFile ./compositor/sway/run-sway.sh);
 
   sway-session = let
     writeSession = name: text:
