@@ -36,7 +36,10 @@ in {
 
     networking.hostId = "8ffb526d";
 
-    boot.zfs.extraPools = ["elysium"];
+    boot.zfs = {
+      package = pkgs.zfs_unstable;
+      extraPools = ["elysium"];
+    };
   };
   meta = {};
 }
