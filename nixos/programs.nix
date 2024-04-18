@@ -21,9 +21,15 @@ in {
     users.groups.${guix.group}.members = ["ash"];
 
     environment.systemPackages = with pkgs; [
+      fastfetch
+
       wineWowPackages.waylandFull
       winetricks
     ];
+
+    programs.nix-ld = {
+      enable = true;
+    };
   };
   meta = {};
 }
