@@ -12,6 +12,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./compositor;
   config = {
     environment.variables = {
+      NIXOS_OZONE_WL = "1";
       WLR_RENDERER = "vulkan";
       WINIT_UNIX_BACKEND = "wayland";
       QT_QPA_PLATFORM = "wayland;xcb";

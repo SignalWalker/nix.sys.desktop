@@ -30,13 +30,17 @@ in {
       extraPortals = [pkgs.xdg-desktop-portal-gtk];
     };
 
-    fonts.packages = let
-      fonts = config.home-manager.users.ash.signal.desktop.theme.font.fonts;
-    in
-      foldl' (acc: font:
-        if (fonts.${font}.package != null)
-        then (acc ++ [fonts.${font}.package])
-        else acc) [] (attrNames fonts);
+    fonts.packages =
+      (let
+        fonts = config.home-manager.users.ash.signal.desktop.theme.font.fonts;
+      in
+        foldl' (acc: font:
+          if (fonts.${font}.package != null)
+          then (acc ++ [fonts.${font}.package])
+          else acc) [] (attrNames fonts))
+      ++ (with pkgs; [
+        (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
+      ]);
   };
   meta = {};
 }
