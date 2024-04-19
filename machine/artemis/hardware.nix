@@ -71,6 +71,11 @@ in {
     services.xserver.xkb = {
       model = "pc104";
     };
+
+    programs.gamescope.args = [
+      "-w 2256"
+      "-h 1504"
+    ];
   };
   meta = {};
 }

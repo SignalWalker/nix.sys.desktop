@@ -36,6 +36,10 @@ in {
   disabledModules = [];
   imports = [];
   config = {
+    programs.regreet = {
+      enable = false;
+    };
+
     services.xserver.displayManager.sessionPackages = [sway-session];
     services.greetd = let
       greetd = config.services.greetd;

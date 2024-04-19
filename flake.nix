@@ -237,8 +237,7 @@
 
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
-            # using nouveau instead
-            # inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
 
             inputs.minecraft.nixosModules.default
 
@@ -267,7 +266,7 @@
               gamescope = pkgs.gamescope.override {wlroots = pkgs.wlroots_0_17;};
             };
             nixpkgs.config.permittedInsecurePackages = [
-              "nix-2.16.2" # FIX :: why
+              # "nix-2.16.2" # FIX :: why
               # "electron-25.9.0"
             ];
           }

@@ -6,29 +6,31 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  nvidiaEnabled = lib.elem "nvidia" config.services.xserver.videoDrivers;
 in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
   config = {
-    environment.sessionVariables = {
+    environment.variables = lib.mkIf nvidiaEnabled {
+      EXTRA_SWAY_ARGS = "--unsupported-gpu";
+      WLR_NO_HARDWARE_CURSORS = toString 1;
     };
-    # environment.variables."EXTRA_SWAY_ARGS" = "--unsupported-gpu";
 
-    # hardware.nvidia = {
-    #   modesetting.enable = true;
-    #   open = false;
-    #   nvidiaSettings = true;
-    #   package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
-    #   nvidiaPersistenced = false;
-    # };
+    hardware.nvidia = lib.mkIf nvidiaEnabled {
+      modesetting.enable = true;
+      open = false; # causes issues with sway
+      nvidiaSettings = true;
+      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      nvidiaPersistenced = false;
+    };
 
     nixpkgs.config.packageOverrides = pkgs: {
       vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
     };
 
     virtualisation.containers = {
-      # cdi.dynamic.nvidia.enable = true;
+      cdi.dynamic.nvidia.enable = nvidiaEnabled;
     };
 
     hardware.opengl = {
@@ -36,15 +38,20 @@ in {
       driSupport = true;
       driSupport32Bit = true;
       extraPackages = with pkgs; [
-        vaapiVdpau
         vulkan-validation-layers
       ];
     };
 
-    boot = {
+    boot = lib.mkIf (!nvidiaEnabled) {
+      kernelModules = [
+        "nouveau"
+      ];
       kernelParams = [
-        "drm.debug=14"
-        "log_buf_len=16M"
+        "nouveau.config=NvGspRM=1"
+        "nouveau.debug=info,VBIOS=info,gsp=debug"
+        # "module_blacklist=i915" # fixes black screen issue?
+        # "drm.debug=14"
+        # "log_buf_len=16M"
       ];
     };
   };

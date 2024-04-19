@@ -11,11 +11,62 @@ in {
   disabledModules = [];
   imports = [];
   config = {
+    programs.gamescope = {
+      enable = true;
+      capSysNice = false;
+      args = [
+        "--filter pixel"
+        # "--rt"
+        "--mangoapp"
+        "--hdr-enabled"
+        # "--expose-wayland"
+      ];
+    };
+
+    users.extraGroups."gamemode".members = ["ash"];
+    programs.gamemode = {
+      enable = true;
+      enableRenice = true;
+      settings = {
+        general = {
+          renice = 10;
+        };
+        custom = let
+          notify = "${pkgs.libnotify}/bin/notify-send";
+        in {
+          start = "${notify} 'Game Mode Enabled'";
+          end = "${notify} 'Game Mode Disabled'";
+        };
+      };
+    };
+
     programs.steam = {
       enable = true;
       remotePlay.openFirewall = true; # tcp 27036, udp 27031-27035
       localNetworkGameTransfers.openFirewall = true; # tcp 27040, udp 27036
-      package = pkgs.steam;
+      package = pkgs.steam.override {
+        extraEnv = {
+          MANGOHUD = true;
+        };
+        # fix gamescope launch from within steam
+        extraLibraries = p:
+          with p; [
+            xorg.libXcursor
+            xorg.libXi
+            xorg.libXinerama
+            xorg.libXScrnSaver
+            libpng
+            libpulseaudio
+            libvorbis
+            stdenv.cc.cc.lib
+            libkrb5
+            keyutils
+          ];
+      };
+      extest.enable = false;
+      extraCompatPackages = with pkgs; [
+        proton-ge-bin
+      ];
       gamescopeSession = {
         enable = true;
       };

@@ -11,14 +11,25 @@ in {
   disabledModules = [];
   imports = [];
   config = {
-    # essentially a file manager interface to udisks
+    # programs.thunar = {
+    #   enable = true;
+    #   plugins = with pkgs.xfce; [
+    #     thunar-archive-plugin
+    #     thunar-volman
+    #     thunar-media-tags-plugin
+    #   ];
+    # };
+
+    # mount, trash, etc.
     services.gvfs = {
       enable = true;
     };
+
+    # dbus thumbnail service
     services.tumbler = {
-      # dbus thumbnail service
       enable = true;
     };
+
     environment.systemPackages = [
       # .odf
       pkgs.libgsf

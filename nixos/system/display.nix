@@ -12,6 +12,11 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./display;
   config = {
+    environment.systemPackages = with pkgs; [
+      vulkan-tools
+      mesa-demos
+    ];
+
     programs.dconf.enable = true;
 
     services.xserver.enable = lib.mkDefault false;
