@@ -6,31 +6,7 @@
 }:
 with builtins; let
   std = pkgs.lib;
-
-  runSway = pkgs.writeShellScript "run-sway" (readFile ./compositor/sway/run-sway.sh);
-
-  sway-session = let
-    writeSession = name: text:
-      (pkgs.writeTextFile {
-        name = "${name}.desktop";
-        text = ''
-          [Desktop Entry]
-          Version=1.0
-          Name=${name}
-          Type=Application
-          ${text}
-        '';
-        destination = "/share/wayland-sessions/${name}.desktop";
-      })
-      // {
-        providedSessions = [name];
-      };
-  in (writeSession "SwayWrapped" ''
-    DesktopNames=sway
-    Comment=Sway with extra features
-    TryExec=sway
-    Exec=${runSway}
-  '');
+  sessionPkgs = config.services.displayManager.sessionPackages;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -40,19 +16,22 @@ in {
       enable = false;
     };
 
-    services.xserver.displayManager.sessionPackages = [sway-session];
     services.greetd = let
       greetd = config.services.greetd;
       sessions = {
-        wayland = std.concatStringsSep ":" ["/usr/share/wayland-sessions" "${sway-session}/share/wayland-sessions"];
-        x11 = std.concatStringsSep ":" ["/usr/share/xsessions"];
+        wayland =
+          std.concatStringsSep ":" (["/usr/share/wayland-sessions"]
+            ++ (map (pkg: "${pkg}/share/wayland-sessions") sessionPkgs));
+        x11 =
+          std.concatStringsSep ":" (["/usr/share/xsessions"]
+            ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs));
       };
     in {
       enable = true;
       settings = {
         default_session = {
           user = "greeter";
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}";
+          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland} --xsessions ${sessions.x11}";
         };
       };
     };
