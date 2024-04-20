@@ -1,0 +1,59 @@
+#! /usr/bin/env zsh
+
+set -e
+
+autoload colors; colors
+
+printerr() { printf "${fg[yellow]}[.list-inputs]${reset_color} %s\n" "$@" 1>&2; }
+
+if [[ ! -v HOME ]]; then
+	printerr '$HOME not set'
+	exit 1
+fi
+
+PROJECTS=${XDG_PROJECTS_DIR:-$HOME/projects}
+
+if [[ ! -d "$PROJECTS" ]]; then
+	printerr "$PROJECTS is inaccessible || not a directory"
+	exit 1
+fi
+
+sys=$PROJECTS/nix/sys
+hm=$PROJECTS/nix/home
+
+typeset -A INPUTS
+INPUTS=( \
+	[homelib]="$hm/lib" \
+	[homebase]="$hm/base" \
+	[homedev]="$hm/dev" \
+	[homedev/ashvim]="$PROJECTS/cfg/neovim" \
+	[homedesk]="$hm/desktop" \
+	[homedesk/ash-scripts]="$PROJECTS/system/scripts/rust" \
+	[homemedia]="$hm/media" \
+	[sysbase]="$sys/base" \
+	[syshome]="$sys/home"
+)
+
+for INPUT PATH in ${(kv)INPUTS}; do
+	if [[ ! -d "$PATH" ]]; then
+		printerr "$PATH is inaccessible || not a directory"
+		exit 1
+	fi
+	if [[ ! -e "$PATH/flake.nix" ]]; then
+		printerr "$PATH does not contain flake.nix"
+		exit 1
+	fi
+done
+
+if [[ (! -v 1) || $1 == "paths" ]]; then
+	print -r -- ${(v)INPUTS}
+elif [[ $1 == "overrides" ]]; then
+	for INPUT PATH in ${(kv)INPUTS}; do
+		printf "--override-input %q %q " $INPUT $PATH
+	done
+else
+	printerr "expected one of [\"paths\", \"overrides\"], got: \"$1\""
+	exit 1
+fi
+
+

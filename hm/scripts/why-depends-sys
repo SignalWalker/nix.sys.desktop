@@ -1,19 +1,9 @@
 #! /usr/bin/env zsh
-host=`hostname`
 
-projects=$HOME/projects
-sys=$projects/nix/sys
-hm=$projects/nix/home
+typeset -a OVERRIDES
+./sys-inputs overrides | read -r -A OVERRIDES
 
 nix why-depends \
-	--override-input homelib $hm/lib \
-	--override-input homebase $hm/base \
-	--override-input homedev $hm/dev \
-	--override-input 'homedev/ashvim' "$projects/cfg/neovim" \
-	--override-input homedesk $hm/desktop \
-	--override-input 'homedesk/ash-scripts' "$projects/system/scripts/rust" \
-	--override-input homemedia $hm/media \
-	--override-input sysbase $sys/base \
-	--override-input syshome $sys/home \
-	"$sys/desktop#nixosConfigurations.${host}.config.system.build.toplevel" \
+	${OVERRIDES} \
+	"${XDG_PROJECTS_DIR:-$HOME/projects}/nix/sys/desktop#nixosConfigurations.$(hostname).config.system.build.toplevel" \
 	${argv[1,-1]}

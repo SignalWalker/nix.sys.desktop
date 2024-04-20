@@ -6,35 +6,11 @@ autoload colors; colors
 
 printerr() { printf "${fg[yellow]}[for-sys]${fg[blue]}[$(date +%T)]${reset_color} %s\n" "$@" 1>&2; }
 
-if [[ "$HOME" = "" ]]; then
-	printerr '$HOME not set'
-	exit 1
-fi
+typeset -a DIRS
+./sys-inputs paths | read -r -A DIRS
 
-PROJECTS=${XDG_PROJECTS_DIR:-$HOME/projects}
-
-if [[ ! -d "$PROJECTS" ]]; then
-	printerr "$PROJECTS is inaccessible || not a directory"
-	exit 1
-fi
-
-declare -a DIRS
-DIRS=("$PROJECTS/nix/home/lib" "$PROJECTS/nix/home/base" "$PROJECTS/cfg/neovim" "$PROJECTS/nix/home/dev" "$PROJECTS/system/scripts/rust" "$PROJECTS/nix/home/desktop" "$PROJECTS/nix/home/media" "$PROJECTS/nix/sys/base" "$PROJECTS/nix/sys/home" "$PROJECTS/nix/sys/desktop")
-declare -r DIRS
-
-for flake in $DIRS; do
-	if [[ ! -d "$flake" ]]; then
-		printerr "$flake is inaccessible || not a directory"
-		exit 1
-	fi
-	if [[ ! -e "$flake/flake.nix" ]]; then
-		printerr "$flake does not contain flake.nix"
-		exit 1
-	fi
-done
-
-for flake in $DIRS; do
-	printerr "$flake :: $argv"
+for flake in ${DIRS}; do
+	printerr "$(print -D -- $flake) :: $argv"
 	pushd "$flake"
 		xargs -I{} "$@" <<< "$flake"
 	popd
