@@ -206,7 +206,13 @@
           overlays = [self.overlays.default];
         };
       in {
-        inherit (pkgs) cross-seed autobrr mylar3 kaizoku;
+        # inherit
+        #   (pkgs)
+        #   cross-seed
+        #   autobrr
+        #   mylar3
+        #   kaizoku
+        #   ;
       };
       nixosModules = std.genAttrs machines (machine: {
         lib,
@@ -214,6 +220,7 @@
         ...
       }: {
         options = {};
+
         imports =
           [
             inputs.sysbase.nixosModules.default
@@ -243,6 +250,7 @@
 
             inputs.simple-nixos-mailserver.nixosModules.default
           ]);
+
         config = lib.mkMerge [
           {
             networking.hostName = machine;
@@ -285,6 +293,7 @@
           })
         ];
       });
+
       homeConfigurations.ash = {
         config,
         lib,
@@ -315,6 +324,7 @@
           signal.desktop.wayland.taskbar.enable = true;
         };
       };
+
       nixosConfigurations = std.mapAttrs (machine: module:
         std.nixosSystem {
           system = null; # set in `config.nixpkgs.hostPlatform`
@@ -336,22 +346,26 @@
         })
       self.nixosModules;
 
-      apps = inputs.nixinate.nixinate.x86_64-linux self;
-
-      deploy.nodes = {
-        "terra" = {
-          hostname = "terra.ashwalker.net";
-          remoteBuild = true;
-          profiles.system = {
-            user = "root";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."terra";
+      deploy = {
+        nodes = {
+          "terra" = {
+            hostname = "terra.ashwalker.net";
+            remoteBuild = true;
+            profiles = {
+              system = {
+                user = "root";
+                path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."terra";
+              };
+            };
           };
-        };
-        "artemis" = {
-          hostname = "artemis.ashwalker.net";
-          profiles.system = {
-            user = "root";
-            path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."artemis";
+          "artemis" = {
+            hostname = "artemis.ashwalker.net";
+            profiles = {
+              system = {
+                user = "root";
+                path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations."artemis";
+              };
+            };
           };
         };
       };
