@@ -211,11 +211,11 @@
     "autobrr": {
       "flake": false,
       "locked": {
-        "lastModified": 1713528538,
-        "narHash": "sha256-IvidvQ7mJsX9mQtj1xiDlvdo1XAYRyZRLCv5fuNxxyw=",
+        "lastModified": 1713639277,
+        "narHash": "sha256-ooCH3Kn5p813x7G4UBQ9smgNXCSu0QZFa9WUG+gnRpc=",
         "owner": "autobrr",
         "repo": "autobrr",
-        "rev": "575944de1ebc27f70cb41bcf4fe815c84c4dfe1f",
+        "rev": "4311341b03a9c98d0973365e7baf937f93e185ea",
         "type": "github"
       },
       "original": {
@@ -1241,11 +1241,11 @@
         "yofi": "yofi"
       },
       "locked": {
-        "lastModified": 1713634509,
-        "narHash": "sha256-8kx9+fGQ+oQUN7/ECAGm+l3XwzGztJFRYWaev/J93uA=",
+        "lastModified": 1713640425,
+        "narHash": "sha256-o5hYlwpEDm07fQQH6b+Xi33tugwrpuBSc0WLkWOLAZI=",
         "owner": "signalwalker",
         "repo": "nix.home.desktop",
-        "rev": "2e3fc5ec1c2baae5adb45e62512a2e7c6e7fedc4",
+        "rev": "405a496f5531f2d765095587bf54c735af549e91",
         "type": "github"
       },
       "original": {
@@ -1276,11 +1276,11 @@
         "statix": "statix"
       },
       "locked": {
-        "lastModified": 1713634499,
-        "narHash": "sha256-IbJ7NlPddQbC2uh5EVGzKUbmWg9otiYB7k7dXay/WL4=",
+        "lastModified": 1713640409,
+        "narHash": "sha256-TscoWLf4EbBbsPgn0jsbaJtrwJCAWCJgc0MFqgifNOA=",
         "owner": "signalwalker",
         "repo": "nix.home.dev",
-        "rev": "57a388e609e4834b5eaa7d2a0e1dd7828eb39a2e",
+        "rev": "1bdc32585217c142c0aa67cd960d546146ad3a69",
         "type": "github"
       },
       "original": {
@@ -2065,11 +2065,11 @@
     "swww": {
       "flake": false,
       "locked": {
-        "lastModified": 1713466435,
-        "narHash": "sha256-XeKYKbN6RMytSLpVSX/s+LQqT7vcy25JxholKzebxKk=",
+        "lastModified": 1713632309,
+        "narHash": "sha256-JtEw2YVYmkL2dTYhwmEN6ejNk+cGb2ebgyKWfIc8sug=",
         "owner": "horus645",
         "repo": "swww",
-        "rev": "2b4a436fbbd91c6a1399c93651c023f32dcea318",
+        "rev": "dae79fef168bd95741c246dcf8dc92cac183a38c",
         "type": "github"
       },
       "original": {
@@ -2089,11 +2089,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1713637097,
-        "narHash": "sha256-vFqMm4ma/O5HaJ9xDR0JHyATtx2FOb7KC/Vce+PVlGI=",
+        "lastModified": 1713640427,
+        "narHash": "sha256-w9IcBpCHBccX7o+8xBrh7BTvHVzm3QhNQZSyj0BQ/8E=",
         "owner": "signalwalker",
         "repo": "nix.sys.base",
-        "rev": "b3baf10241ba81fb344c0484428d3d6e022bdd99",
+        "rev": "315cba466d7ffca42eecbae7940f8478ce2a06eb",
         "type": "github"
       },
       "original": {
