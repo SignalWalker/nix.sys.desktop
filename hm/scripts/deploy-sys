@@ -4,9 +4,10 @@ projects=/home/ash/projects
 sys=$projects/nix/sys
 hm=$projects/nix/home
 
-printf "Deploying from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$projects" "$sys" "$hm"
 
 flake="$sys/desktop#$1"
+
+printf "Deploying \`%s\` from directories:\n\tProjects :: %s\n\tSystem :: %s\n\tHome :: %s\n" "$flake" "$projects" "$sys" "$hm"
 
 deploy \
 	-- \

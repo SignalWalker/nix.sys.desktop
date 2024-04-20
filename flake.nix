@@ -347,6 +347,7 @@
       self.nixosModules;
 
       deploy = {
+        sshUser = "root";
         nodes = {
           "terra" = {
             hostname = "terra.ashwalker.net";
