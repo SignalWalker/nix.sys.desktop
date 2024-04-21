@@ -45,12 +45,12 @@ for INPUT PATH in ${(kv)INPUTS}; do
 	fi
 done
 
-if [[ (! -v 1) || $1 == "paths" ]]; then
-	print -r -- ${(v)INPUTS}
-elif [[ $1 == "overrides" ]]; then
+if [[ (! -v 1) || $1 == "overrides" ]]; then
 	for INPUT PATH in ${(kv)INPUTS}; do
-		printf "--override-input %q %q " $INPUT $PATH
+		printf "--override-input\n%q\n%q\n" $INPUT $PATH
 	done
+elif [[ $1 == "paths" ]]; then
+	print -r -- ${(v)INPUTS}
 else
 	printerr "expected one of [\"paths\", \"overrides\"], got: \"$1\""
 	exit 1

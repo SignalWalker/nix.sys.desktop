@@ -1,19 +1,21 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env fish
 
-set -e
+function printerr
+	printf "$(set_color green)[..][for-sys]$(set_color yellow)[..][$(date '+%T')]$(set_color normal) %s\n" $argv 1>&2
+end
 
-autoload colors; colors
+set -l dirs
+sys-inputs paths | read -l -a dirs
 
-printerr() { printf "${fg[yellow]}[for-sys]${fg[blue]}[$(date +%T)]${reset_color} %s\n" "$@" 1>&2; }
+set -l cmd_hl (echo "$argv" | fish_indent --ansi --no-indent)
 
-typeset -a DIRS
-./sys-inputs paths | read -r -A DIRS
+printerr "Command: $cmd_hl"
 
-for flake in ${DIRS}; do
-	printerr "$(print -D -- $flake) :: $argv"
+for flake in $dirs
+	printerr "$(set_color blue)$flake$(set_color normal)"
 	pushd "$flake"
-		xargs -I{} "$@" <<< "$flake"
+		echo $flake | xargs -I{} $argv
 	popd
-done
+end
 
-printerr "done"
+printerr "Done ($cmd_hl)"
