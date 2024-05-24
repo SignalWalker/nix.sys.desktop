@@ -32,7 +32,7 @@ in {
 
     fonts.packages =
       (let
-        fonts = config.home-manager.users.ash.signal.desktop.theme.font.fonts;
+        fonts = config.home-manager.users.ash.desktop.theme.font.fonts;
       in
         foldl' (acc: font:
           if (fonts.${font}.package != null)

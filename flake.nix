@@ -2,6 +2,24 @@
   description = "Nix configuration - personal desktop computer";
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nix = {
+      type = "github";
+      owner = "NixOS";
+      repo = "nix";
+      ref = "2.21.2";
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    lix = {
+      url = "git+https://git@git.lix.systems/lix-project/lix?ref=refs/tags/2.90-beta.1";
+      flake = false;
+    };
+    lix-module = {
+      url = "git+https://git.lix.systems/lix-project/nixos-module";
+      inputs.lix.follows = "lix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     alejandra = {
       url = "github:kamadorueda/alejandra";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -46,9 +64,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.alejandra.follows = "alejandra";
       inputs.mozilla.follows = "mozilla";
-      inputs.ash-scripts.follows = "ash-scripts";
-      inputs.polybar-scripts.follows = "polybar-scripts";
-      inputs.wired.follows = "wired";
+      # inputs.wired.follows = "wired";
     };
     homedev = {
       url = "github:signalwalker/nix.home.dev";
@@ -71,20 +87,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     # desk
-    ash-scripts = {
-      url = "github:signalwalker/scripts-rs";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.mozilla.follows = "mozilla";
-    };
     ## x11
-    polybar-scripts = {
-      url = "github:polybar/polybar-scripts";
-      flake = false;
-    };
-    wired = {
-      url = "github:Toqozz/wired-notify";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # wired = {
+    #   url = "github:Toqozz/wired-notify";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     foundryvtt = {
       url = "github:reckenrode/nix-foundryvtt";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -169,6 +176,11 @@
       url = "gitlab:simple-nixos-mailserver/nixos-mailserver";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    websurfx = {
+      url = "github:neon-mmd/websurfx";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -215,6 +227,7 @@
         #   ;
       };
       nixosModules = std.genAttrs machines (machine: {
+        config,
         lib,
         pkgs,
         ...
@@ -225,6 +238,8 @@
           [
             inputs.sysbase.nixosModules.default
             inputs.syshome.nixosModules.default
+
+            inputs.lix-module.nixosModules.default
 
             inputs.nix-index-database.nixosModules.nix-index
             inputs.foundryvtt.nixosModules.foundryvtt
@@ -253,6 +268,17 @@
 
         config = lib.mkMerge [
           {
+            assertions = [
+              # {
+              #   assertion = config.nix.package.version >= pkgs.nix.version;
+              #   message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
+              # }
+            ];
+            warnings = [
+              "using lix instead of nix"
+            ];
+            # nix.package = inputs.nix.packages.${pkgs.system}.nix;
+
             networking.hostName = machine;
             networking.domain = lib.mkDefault "local";
             home-manager = {
@@ -271,11 +297,9 @@
               # inputs.eww.overlays.default
             ];
             nixpkgs.config.packageOverrides = pkgs: {
-              gamescope = pkgs.gamescope.override {wlroots = pkgs.wlroots_0_17;};
+              gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
             };
             nixpkgs.config.permittedInsecurePackages = [
-              # "nix-2.16.2" # FIX :: why
-              # "electron-25.9.0"
             ];
           }
           (lib.mkIf (machine == "artemis") {
@@ -287,6 +311,8 @@
             };
           })
           (lib.mkIf (machine == "terra") {
+            services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
+
             # networking.domain = "home.ashwalker.net";
             # networking.fqdn = "home.ashwalker.net";
             # services.mylar3.package = inputs.mylar3.packages.${pkgs.system}.mylar3;
@@ -318,10 +344,8 @@
 
           programs.guix.enable = false;
 
-          signal.desktop.x11.enable = false;
-
-          signal.desktop.wayland.compositor.sway.enable = true;
-          signal.desktop.wayland.taskbar.enable = true;
+          desktop.wayland.compositor.sway.enable = true;
+          desktop.wayland.taskbar.enable = true;
         };
       };
 

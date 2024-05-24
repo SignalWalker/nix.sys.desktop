@@ -7,6 +7,8 @@
 }:
 with builtins; let
   std = pkgs.lib;
+
+  use_pstate = !(elem "intel_pstate=disable" config.boot.kernelParams);
 in {
   options = with lib; {};
   disabledModules = [];
@@ -16,21 +18,35 @@ in {
     ]
     ++ (lib.signal.fs.path.listFilePaths ./hardware);
   config = {
+    environment.systemPackages = with pkgs; [
+      # intel-gpu-tools
+    ];
+
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
     # handled by nixos-hardware#framework
     # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
+
+    # boot.kernelParams = lib.mkIf config.services.auto-cpufreq.enable [
+    #   "intel_pstate=disable"
+    # ];
     services.auto-cpufreq = {
       enable = true;
       settings = {
         battery = {
-          governor = "powersave";
-          energy_performance_preference = "balance_power";
+          governor =
+            if use_pstate
+            then "powersave"
+            else "schedutil";
+          energy_performance_preference = "balance";
           turbo = "auto";
         };
         charger = {
-          governor = "performance";
+          governor =
+            if use_pstate
+            then "performance"
+            else "schedutil";
           energy_performance_preference = "performance";
           turbo = "auto";
         };
@@ -38,7 +54,6 @@ in {
     };
 
     services.tlp.enable = false;
-
     services.thermald.enable = false;
 
     powerManagement = {

@@ -29,7 +29,7 @@ in {
         configurationLimit = config.boot.loader.configurationLimit;
         theme = lib.mkDefault pkgs.nixos-grub2-theme;
         useOSProber = lib.mkDefault false;
-        default = "saved";
+        default = 0;
       };
     };
   };

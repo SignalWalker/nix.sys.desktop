@@ -28,10 +28,11 @@ INPUTS=( \
 	[homedev]="$hm/dev" \
 	[homedev/ashvim]="$PROJECTS/cfg/neovim" \
 	[homedesk]="$hm/desktop" \
-	[homedesk/ash-scripts]="$PROJECTS/system/scripts/rust" \
+	[homedesk/watch-battery]="$PROJECTS/misc/batwatch" \
 	[homemedia]="$hm/media" \
 	[sysbase]="$sys/base" \
-	[syshome]="$sys/home"
+	[syshome]="$sys/home" \
+	[sysdesk]="$sys/desktop"
 )
 
 for INPUT PATH in ${(kv)INPUTS}; do

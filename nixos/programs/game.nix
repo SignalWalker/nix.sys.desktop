@@ -30,6 +30,9 @@ in {
       settings = {
         general = {
           renice = 10;
+          desiredgov = "performance";
+          defaultgov = "schedutil";
+          igpu_desiredgov = "performance";
         };
         custom = let
           notify = "${pkgs.libnotify}/bin/notify-send";
