@@ -311,7 +311,7 @@
             };
           })
           (lib.mkIf (machine == "terra") {
-            services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
+            # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
 
             # networking.domain = "home.ashwalker.net";
             # networking.fqdn = "home.ashwalker.net";

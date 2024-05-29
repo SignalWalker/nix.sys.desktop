@@ -10,7 +10,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFileNames ./search;
+  imports = lib.signal.fs.path.listFilePaths ./search;
   config = {
     services.searx = {
       enable = false;
