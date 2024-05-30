@@ -29,8 +29,12 @@ in {
       vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
     };
 
-    virtualisation.containers = {
-      cdi.dynamic.nvidia.enable = nvidiaEnabled;
+    # virtualisation.containers = {
+    #   cdi.dynamic.nvidia.enable = nvidiaEnabled;
+    # };
+
+    hardware.nvidia-container-toolkit = {
+      enable = nvidiaEnabled;
     };
 
     hardware.opengl = {

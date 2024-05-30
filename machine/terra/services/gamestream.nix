@@ -10,10 +10,12 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./gamestream;
+  imports = [];
   config = {
     services.sunshine = {
-      enable = true;
+      enable = false;
+      capSysAdmin = true;
+      openFirewall = lib.mkForce false;
     };
     # services.x2goserver = {
     #   enable = true;
