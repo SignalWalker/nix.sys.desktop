@@ -46,11 +46,21 @@ for INPUT PATH in ${(kv)INPUTS}; do
 	fi
 done
 
+
 if [[ (! -v 1) || $1 == "overrides" ]]; then
+	prefix=""
+	if [[ -v 2 ]]; then
+		prefix="git+ssh://$2.ashwalker.net"
+		printerr "using prefix: $prefix"
+	fi
 	for INPUT PATH in ${(kv)INPUTS}; do
-		printf "--override-input\n%q\n%q\n" $INPUT $PATH
+		printf "--override-input\n%q\n%q\n" "$INPUT" "$prefix$PATH"
 	done
 elif [[ $1 == "paths" ]]; then
+	if [[ -v 2 ]]; then
+		printerr "unexpected prefix argument: \`$2\`"
+		exit 1
+	fi
 	print -r -- ${(v)INPUTS}
 else
 	printerr "expected one of [\"paths\", \"overrides\"], got: \"$1\""
