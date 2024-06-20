@@ -11,7 +11,7 @@
     };
 
     lix = {
-      url = "git+https://git@git.lix.systems/lix-project/lix?ref=refs/tags/2.90-beta.1";
+      url = "git+https://git@git.lix.systems/lix-project/lix?ref=refs/tags/2.90.0-rc1";
       flake = false;
     };
     lix-module = {
@@ -300,6 +300,7 @@
               gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
             };
             nixpkgs.config.permittedInsecurePackages = [
+              "electron-27.3.11"
             ];
           }
           (lib.mkIf (machine == "artemis") {

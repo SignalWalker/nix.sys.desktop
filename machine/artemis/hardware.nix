@@ -28,6 +28,15 @@ in {
     # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     # boot.kernelPackages = pkgs.linuxPackages_latest;
 
+    hardware.intelgpu = {
+      driver = "xe";
+      loadInInitrd = true;
+    };
+
+    boot.kernelParams = [
+      "i915.force_probe=a7a0"
+    ];
+
     # boot.kernelParams = lib.mkIf config.services.auto-cpufreq.enable [
     #   "intel_pstate=disable"
     # ];
@@ -76,11 +85,7 @@ in {
       enable = true;
       driSupport = true;
       driSupport32Bit = true;
-      extraPackages = with pkgs; [
-        # vaapiVdpau # hardware video acceleration
-        # intel-compute-runtime
-        # vulkan-validation-layers
-      ];
+      extraPackages = with pkgs; [];
     };
 
     services.xserver.xkb = {

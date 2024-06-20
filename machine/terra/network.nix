@@ -39,51 +39,43 @@ in {
           publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
           presharedKeyFile = "/run/wireguard/wg-torrent.psk";
           # airvpn hercules
-          endpoint = "64.42.179.61:1637";
+          endpoint = "199.189.27.125:1637"; # "64.42.179.61:1637";
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
         activationPolicy = "up";
-        routingPolicyRules = foldl' (acc: user:
+        routingPolicyRules = map (acc: user:
           acc
           ++ [
             {
-              routingPolicyRuleConfig = {
-                User = user;
-                Table = table;
-                Priority = 10;
-                Family = "both";
-              };
+              User = user;
+              Table = table;
+              Priority = 10;
+              Family = "both";
             }
             {
-              routingPolicyRuleConfig = {
-                Table = "main";
-                User = user;
-                Priority = 9;
-                SuppressPrefixLength = 0;
-                Family = "both";
-              };
+              Table = "main";
+              User = user;
+              Priority = 9;
+              SuppressPrefixLength = 0;
+              Family = "both";
             }
             # exempt local addresses
             {
-              routingPolicyRuleConfig = {
-                To = "192.168.0.0/16";
-                User = user;
-                Priority = 6;
-              };
+              To = "192.168.0.0/16";
+              User = user;
+              Priority = 6;
             }
+            # {
+            #   routingPolicyRuleConfig = {
+            #     To = "10.0.0.0/24";
+            #     User = user;
+            #     Priority = 6;
+            #   };
+            # }
             {
-              routingPolicyRuleConfig = {
-                To = "10.0.0.0/24";
-                User = user;
-                Priority = 6;
-              };
-            }
-            {
-              routingPolicyRuleConfig = {
-                To = "127.0.0.0/8";
-                User = user;
-                Priority = 6;
-              };
+              To = "127.0.0.0/8";
+              User = user;
+              Priority = 6;
             }
             # {
             #   routingPolicyRuleConfig = {

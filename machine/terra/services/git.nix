@@ -42,7 +42,9 @@ in {
         user = forgejo.user;
         passwordFile = secrets.gitDbPassword.path;
       };
-      mailerPasswordFile = secrets.gitMailerPassword.path;
+      secrets = {
+        mailer.PASSWD = secrets.gitMailerPassword.path;
+      };
       dump = {
         enable = true;
         type = "tar.zst";

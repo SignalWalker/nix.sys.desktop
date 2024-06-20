@@ -14,12 +14,12 @@ in {
   disabledModules = [];
   imports = [];
   config = {
-    services.homepage-dashboard = {
-      enable = false;
-      listenPort = 30801;
-      openFirewall = lib.mkForce false;
-      startUrl = "http://${domain}";
-    };
+    # services.homepage-dashboard = {
+    #   enable = false;
+    #   listenPort = 30801;
+    #   openFirewall = lib.mkForce false;
+    #   startUrl = "http://${domain}";
+    # };
   };
   meta = {};
 }

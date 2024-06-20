@@ -76,21 +76,17 @@ in {
                   type = types.listOf types.anything;
                   default = [
                     {
-                      routingPolicyRuleConfig = {
-                        FirewallMark = config.fwMark;
-                        InvertRule = true;
-                        Table = config.table;
-                        Priority = config.priority + 1;
-                        Family = "both";
-                      };
+                      FirewallMark = config.fwMark;
+                      InvertRule = true;
+                      Table = config.table;
+                      Priority = config.priority + 1;
+                      Family = "both";
                     }
                     {
-                      routingPolicyRuleConfig = {
-                        Table = "main";
-                        Priority = config.priority;
-                        SuppressPrefixLength = 0;
-                        Family = "both";
-                      };
+                      Table = "main";
+                      Priority = config.priority;
+                      SuppressPrefixLength = 0;
+                      Family = "both";
                     }
                   ];
                 };
@@ -134,11 +130,9 @@ in {
           inherit (tunnel) routingPolicyRules;
           routes =
             map (dest: {
-              routeConfig = {
-                Destination = dest;
-                Table = tunnel.table;
-                Scope = "link";
-              };
+              Destination = dest;
+              Table = tunnel.table;
+              Scope = "link";
             })
             tunnel.peer.allowedIps;
         };
