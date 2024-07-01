@@ -41,18 +41,33 @@ in {
         type = types.str;
         default = "/";
       };
-		qbittorrent = {
-			enable = mkEnableOption "qbittorrent integration";
-			url = mkOption {
-				type = types.str;
-			};
-			user = mkOption {
-				type = types.str;
-			};
-			passwordFile = mkOption {
-				type = types.str;
-			};
-		}
+      qbittorrent = {
+        enable = mkEnableOption "qbittorrent integration";
+        url = mkOption {
+          type = types.str;
+        };
+        user = mkOption {
+          type = types.str;
+        };
+        passwordFile = mkOption {
+          type = types.str;
+        };
+      };
+      deluge = {
+        enable = mkEnableOption "deluge integration";
+        hostName = mkOption {
+          type = types.str;
+        };
+        port = mkOption {
+          type = types.port;
+        };
+        user = mkOption {
+          type = types.str;
+        };
+        passwordFile = mkOption {
+          type = types.str;
+        };
+      };
     };
   };
   disabledModules = [];
@@ -72,6 +87,13 @@ in {
       wantedBy = ["multi-user.target"];
       path = [flood.package];
       serviceConfig = {
+        EnvironmentFile =
+          (std.optionals flood.qbittorrent.enable [
+            flood.qbittorrent.passwordFile
+          ])
+          ++ (std.optionals flood.deluge.enable [
+            flood.deluge.passwordFile
+          ]);
         ConfigurationDirectory = flood.user;
         StateDirectory = flood.user;
         Type = "simple";

@@ -69,6 +69,15 @@ in {
       };
     };
 
+    services.flood = {
+      enable = false;
+      hostName = qbit.webui.hostName;
+      baseUri = "/flood";
+      qbittorrent = {
+        enable = true;
+      };
+    };
+
     services.jackett = {
       enable = qbit.enable;
       openFirewall = false;

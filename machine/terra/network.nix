@@ -43,7 +43,7 @@ in {
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
         activationPolicy = "up";
-        routingPolicyRules = map (acc: user:
+        routingPolicyRules = foldl' (acc: user:
           acc
           ++ [
             {

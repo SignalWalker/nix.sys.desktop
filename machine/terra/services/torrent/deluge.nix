@@ -15,7 +15,7 @@ in {
     services.deluge = let
       deluge = config.services.deluge;
     in {
-      enable = true;
+      enable = false;
       # authFile = null; # todo
       declarative = false; # todo
       openFirewall = false;
@@ -33,7 +33,7 @@ in {
       };
     };
 
-    terra.network.tunnel.users = [
+    terra.network.tunnel.users = lib.mkIf deluge.enable [
       deluge.user
     ];
   };
