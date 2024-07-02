@@ -18,7 +18,7 @@ in {
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-    services.auto-cpufreq = {
+    programs.auto-cpufreq = {
       enable = true;
       settings = {
         battery = {

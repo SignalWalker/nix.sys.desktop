@@ -181,6 +181,11 @@
       url = "github:neon-mmd/websurfx";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    auto-cpufreq = {
+      url = "github:AdnanHodzic/auto-cpufreq";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs = inputs @ {
     self,
@@ -246,6 +251,8 @@
             inputs.musnix.nixosModules.musnix
             inputs.agenix.nixosModules.age
 
+            inputs.auto-cpufreq.nixosModules.default
+
             ./machine/${machine}.nix
           ]
           ++ (lib.signal.fs.path.listFilePaths ./nixos)
@@ -255,7 +262,8 @@
           ++ (std.optionals (machine == "terra") [
             inputs.nixos-hardware.nixosModules.common-pc
             inputs.nixos-hardware.nixosModules.common-pc-ssd
-            inputs.nixos-hardware.nixosModules.common-pc-hdd
+            # this module was removed
+            # inputs.nixos-hardware.nixosModules.common-pc-hdd
 
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 

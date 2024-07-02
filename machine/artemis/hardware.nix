@@ -40,7 +40,7 @@ in {
     # boot.kernelParams = lib.mkIf config.services.auto-cpufreq.enable [
     #   "intel_pstate=disable"
     # ];
-    services.auto-cpufreq = {
+    programs.auto-cpufreq = {
       enable = true;
       settings = {
         battery = {
@@ -48,7 +48,7 @@ in {
             if use_pstate
             then "powersave"
             else "schedutil";
-          energy_performance_preference = "balance";
+          energy_performance_preference = "balance_power";
           turbo = "auto";
         };
         charger = {
@@ -81,10 +81,9 @@ in {
     # nixpkgs.config.packageOverrides = pkgs: {
     #   vaapiIntel = pkgs.vaapiIntel.override {enableHybridCodec = true;};
     # };
-    hardware.opengl = {
+    hardware.graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [];
     };
 

@@ -37,10 +37,9 @@ in {
       enable = nvidiaEnabled;
     };
 
-    hardware.opengl = {
+    hardware.graphics = {
       enable = true;
-      driSupport = true;
-      driSupport32Bit = true;
+      enable32Bit = true;
       extraPackages = with pkgs; [
         vulkan-validation-layers
       ];
