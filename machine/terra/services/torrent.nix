@@ -44,13 +44,6 @@ in {
         default = 8686;
       };
     };
-    services.readarr = {
-      port = mkOption {
-        type = types.port;
-        readOnly = true;
-        default = 8787;
-      };
-    };
     services.prowlarr = {
       port = mkOption {
         type = types.port;
@@ -94,11 +87,6 @@ in {
     };
 
     services.lidarr = {
-      enable = jackett.enable;
-      openFirewall = false;
-    };
-
-    services.readarr = {
       enable = jackett.enable;
       openFirewall = false;
     };
