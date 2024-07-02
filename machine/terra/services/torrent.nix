@@ -75,7 +75,7 @@ in {
     };
 
     services.lidarr = {
-      enable = jackett.enable;
+      enable = false;
       openFirewall = false;
     };
 
