@@ -25,6 +25,19 @@ in {
       enable = jackett.enable;
       openFirewall = false;
     };
+    # NOTE :: make sure to edit ${readarr.dataDir}/config.xml as per https://wiki.servarr.com/readarr/postgres-setup#schema-creation
+    services.postgresql = {
+      ensureDatabases = [
+        "readarr-main"
+        "readarr-log"
+        "readarr-cache"
+      ];
+      ensureUsers = [
+        {
+          name = "readarr";
+        }
+      ];
+    };
   };
   meta = {};
 }
