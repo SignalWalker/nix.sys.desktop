@@ -27,7 +27,7 @@ in {
     };
     # NOTE :: make sure to edit ${readarr.dataDir}/config.xml as per https://wiki.servarr.com/readarr/postgres-setup#schema-creation
     # NOTE :: and to set the password & db ownership
-    services.postgresql = {
+    services.postgresql = lib.mkIf readarr.enable {
       ensureDatabases = [
         "readarr-main"
         "readarr-log"
