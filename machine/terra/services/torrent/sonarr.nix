@@ -7,35 +7,34 @@
 with builtins; let
   std = pkgs.lib;
   jackett = config.services.jackett;
-  readarr = config.services.readarr;
+  sonarr = config.services.sonarr;
 in {
   options = with lib; {
-    services.readarr = {
+    services.sonarr = {
       port = mkOption {
         type = types.port;
         readOnly = true;
-        default = 8787;
+        default = 8989;
       };
     };
   };
   disabledModules = [];
   imports = [];
   config = {
-    services.readarr = {
+    services.sonarr = {
       enable = jackett.enable;
       openFirewall = false;
     };
-    # NOTE :: make sure to edit ${readarr.dataDir}/config.xml as per https://wiki.servarr.com/readarr/postgres-setup#schema-creation
+    # NOTE :: make sure to edit ${sonarr.dataDir}/config.xml as per https://wiki.servarr.com/sonarr/postgres-setup#schema-creation
     # NOTE :: and to set the password & db ownership
-    services.postgresql = {
+    services.postgresql = lib.mkIf sonarr.enable {
       ensureDatabases = [
-        "readarr-main"
-        "readarr-log"
-        "readarr-cache"
+        "sonarr-main"
+        "sonarr-log"
       ];
       ensureUsers = [
         {
-          name = "readarr";
+          name = "sonarr";
         }
       ];
     };

@@ -30,13 +30,6 @@ in {
         default = 7878;
       };
     };
-    services.sonarr = {
-      port = mkOption {
-        type = types.port;
-        readOnly = true;
-        default = 8989;
-      };
-    };
     services.lidarr = {
       port = mkOption {
         type = types.port;
@@ -77,11 +70,6 @@ in {
     };
 
     services.radarr = {
-      enable = jackett.enable;
-      openFirewall = false;
-    };
-
-    services.sonarr = {
       enable = jackett.enable;
       openFirewall = false;
     };
