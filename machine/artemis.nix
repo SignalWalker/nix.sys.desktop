@@ -38,7 +38,7 @@ in {
       '';
     };
 
-    environment.variables."EXTRA_SWAY_ARGS" = "-Dlegacy-wl-drm";
+    # environment.variables."EXTRA_SWAY_ARGS" = "-Dlegacy-wl-drm";
 
     services.xserver.enable = false;
 

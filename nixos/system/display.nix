@@ -51,6 +51,19 @@ in {
       ++ (with pkgs; [
         (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
       ]);
+
+    # tty/console
+    services.kmscon = let
+      fontCfg = config.home-manager.users.ash.desktop.theme.font;
+    in {
+      enable = true;
+      hwRender = true;
+      useXkbConfig = true;
+      fonts = map (font: {
+        name = font.name;
+        package = font.package;
+      }) (fontCfg.terminal ++ fontCfg.symbols);
+    };
   };
   meta = {};
 }

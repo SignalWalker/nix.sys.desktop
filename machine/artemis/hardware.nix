@@ -34,12 +34,11 @@ in {
     };
 
     boot.kernelParams = [
-      "i915.force_probe=a7a0"
+      # intel graphics (a7a0 not officially supported by xe as of 2024-07-03)
+      "i915.force_probe='!a7a0'"
+      "xe.force_probe='a7a0'"
     ];
 
-    # boot.kernelParams = lib.mkIf config.services.auto-cpufreq.enable [
-    #   "intel_pstate=disable"
-    # ];
     programs.auto-cpufreq = {
       enable = true;
       settings = {
