@@ -6,19 +6,16 @@
 }:
 with builtins; let
   std = pkgs.lib;
-  river = config.programs.river;
+  hypr = config.programs.hyprland;
 in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = lib.mkIf (config.services.desktopManager.manager == "river") {
-    programs.river = {
+  config = lib.mkIf (config.services.desktopManager.manager == "hyprland") {
+    programs.hyprland = {
       enable = true;
+      systemd.setPath.enable = true;
       xwayland.enable = true;
-      extraPackages = with pkgs; [
-        swaylock
-        swayidle
-      ];
     };
   };
   meta = {};

@@ -36,7 +36,7 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = {
+  config = lib.mkIf (config.services.desktopManager.manager == "sway") {
     services.displayManager.sessionPackages = [sway-session];
 
     programs.sway = {

@@ -27,7 +27,7 @@ in {
             ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs));
       };
     in {
-      enable = false;
+      enable = config.services.desktopManager.manager != "plasma6";
       settings = {
         default_session = {
           user = "greeter";

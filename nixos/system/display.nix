@@ -7,8 +7,14 @@
 with builtins; let
   std = pkgs.lib;
   xserver = config.services.xserver;
+  manager = config.services.desktopManager.manager;
 in {
-  options = with lib; {};
+  options = with lib; {
+    services.desktopManager.manager = mkOption {
+      type = types.enum ["plasma6" "sway" "river" "hyprland"];
+      default = "hyprland";
+    };
+  };
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./display;
   config = {
@@ -23,7 +29,7 @@ in {
 
     programs.light.enable = true;
 
-    xdg.portal = {
+    xdg.portal = lib.mkIf (manager != "plasma6" && manager != "hyprland") {
       enable = true;
       xdgOpenUsePortal = true;
       wlr.enable = true;
