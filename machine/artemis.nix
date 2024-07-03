@@ -40,8 +40,6 @@ in {
 
     # environment.variables."EXTRA_SWAY_ARGS" = "-Dlegacy-wl-drm";
 
-    services.xserver.enable = false;
-
     signal.machines."terra" = {
       nix.build.sshKey = "/run/nix/remote-build.sign";
     };

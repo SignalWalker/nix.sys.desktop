@@ -27,7 +27,7 @@ in {
             ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs));
       };
     in {
-      enable = true;
+      enable = false;
       settings = {
         default_session = {
           user = "greeter";
