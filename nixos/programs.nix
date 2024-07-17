@@ -14,11 +14,22 @@ in {
   config = {
     services.guix = {
       enable = true;
+      extraArgs = [
+        "--discover=yes"
+        "--substitute-urls=https://bordeaux.guix.gnu.org https://ci.guix.gnu.org https://substitutes.nonguix.org"
+      ];
       gc = {
         enable = true;
       };
+      publish = {
+        enable = true;
+        port = 40340;
+        extraArgs = [
+          "--advertise"
+          "--compression=zstd:3"
+        ];
+      };
     };
-    users.groups.${guix.group}.members = ["ash"];
 
     environment.systemPackages = with pkgs; [
       fastfetch
@@ -26,6 +37,10 @@ in {
       wineWowPackages.waylandFull
       winetricks
     ];
+
+    services.gnome.gnome-keyring = {
+      enable = true;
+    };
 
     programs.nix-ld = {
       enable = true;

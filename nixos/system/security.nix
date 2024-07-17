@@ -27,6 +27,21 @@ in {
       };
     };
 
+    security.pam.loginLimits = [
+      {
+        domain = "ash";
+        item = "nofile";
+        type = "hard";
+        value = 524288;
+      }
+      {
+        domain = "ash";
+        item = "nofile";
+        type = "soft";
+        value = 524288;
+      }
+    ];
+
     security.polkit = {
       enable = true;
 

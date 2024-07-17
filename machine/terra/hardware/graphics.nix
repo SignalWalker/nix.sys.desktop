@@ -15,13 +15,14 @@ in {
     environment.variables = lib.mkIf nvidiaEnabled {
       EXTRA_SWAY_ARGS = "--unsupported-gpu";
       WLR_NO_HARDWARE_CURSORS = toString 1;
+      XWAYLAND_NO_GLAMOR = toString 1; # supposed to help with flickering under xwayland windows
     };
 
     hardware.nvidia = lib.mkIf nvidiaEnabled {
       modesetting.enable = true;
-      open = false; # causes issues with sway
+      open = false; # doesn't support wayland
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.vulkan_beta;
+      package = config.boot.kernelPackages.nvidiaPackages.beta;
       nvidiaPersistenced = false;
     };
 
@@ -50,6 +51,7 @@ in {
         "nouveau"
       ];
       kernelParams = [
+        # TODO :: why?
         "nouveau.config=NvGspRM=1"
         "nouveau.debug=info,VBIOS=info,gsp=debug"
         # "module_blacklist=i915" # fixes black screen issue?

@@ -108,11 +108,11 @@
       url = "github:musnix/musnix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    wayland = {
-      url = "github:nix-community/nixpkgs-wayland";
-      # url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # wayland = {
+    #   url = "github:nix-community/nixpkgs-wayland";
+    #   # url = "github:Scrumplex/nixpkgs-wayland/remove-spdlog-override";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
     # hardware-specific
     nixos-hardware = {
       url = "github:NixOS/nixos-hardware";
@@ -186,6 +186,11 @@
       url = "github:AdnanHodzic/auto-cpufreq";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # hyprland = {
+    #   url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
   outputs = inputs @ {
     self,
@@ -262,11 +267,10 @@
           ++ (std.optionals (machine == "terra") [
             inputs.nixos-hardware.nixosModules.common-pc
             inputs.nixos-hardware.nixosModules.common-pc-ssd
-            # this module was removed
-            # inputs.nixos-hardware.nixosModules.common-pc-hdd
 
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
+            # TODO :: switch to nouveau
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
 
             inputs.minecraft.nixosModules.default
@@ -297,7 +301,7 @@
 
               inputs.mozilla.overlays.rust
               inputs.mozilla.overlays.firefox
-              inputs.wayland.overlays.default
+              # inputs.wayland.overlays.default
               inputs.agenix.overlays.default
 
               inputs.thaw.overlays."package/thaw"
@@ -305,7 +309,7 @@
               # inputs.eww.overlays.default
             ];
             nixpkgs.config.packageOverrides = pkgs: {
-              gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
+              # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
             };
             nixpkgs.config.permittedInsecurePackages = [
               "electron-27.3.11"

@@ -18,6 +18,18 @@ in {
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+    fileSystems."/windows" = {
+      device = "/dev/disk/by-uuid/B050B49B50B46A2C";
+      fsType = "ntfs";
+      mountPoint = "/windows";
+      options = [
+        "uid=ash"
+        "gid=users"
+        "umask=227"
+        "ro"
+      ];
+    };
+
     programs.auto-cpufreq = {
       enable = true;
       settings = {
@@ -41,7 +53,7 @@ in {
       enable = true;
     };
 
-    boot.supportedFilesystems = ["ntfs"];
+    boot.supportedFilesystems = ["ntfs" "bcachefs"];
 
     boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 

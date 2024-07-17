@@ -37,6 +37,8 @@ in {
   disabledModules = [];
   imports = [];
   config = lib.mkIf (config.services.desktopManager.manager == "sway") {
+    environment.systemPackages = [(pkgs.writeShellScriptBin "run-sway" (readFile ./sway/run-sway.sh))];
+
     services.displayManager.sessionPackages = [sway-session];
 
     programs.sway = {

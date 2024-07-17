@@ -20,7 +20,7 @@ in {
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
     systemd.network.wait-online.enable = false;
 
-    boot.supportedFilesystems = ["ntfs"];
+    boot.supportedFilesystems = ["ntfs" "bcachefs"];
 
     musnix = {
       enable = true;

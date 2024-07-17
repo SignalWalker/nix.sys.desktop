@@ -5,4 +5,4 @@ if [[ -f $session_vars_file ]]; then
 	. $session_vars_file
 fi
 
-exec systemd-cat --identifier=sway sway --debug $EXTRA_SWAY_ARGS
+exec systemd-cat --identifier=sway sway $EXTRA_SWAY_ARGS

@@ -13,11 +13,12 @@ in {
   config = {
     programs.gamescope = {
       enable = true;
-      capSysNice = false;
+      capSysNice = false; # FIX :: https://github.com/NixOS/nixpkgs/issues/208936
       args = [
+        "--scaler fit"
         "--filter pixel"
-        # "--rt"
-        "--mangoapp"
+        "--rt"
+        # "--mangoapp"
         "--hdr-enabled"
         # "--expose-wayland"
       ];
@@ -35,7 +36,7 @@ in {
           igpu_desiredgov = "performance";
         };
         custom = let
-          notify = "${pkgs.libnotify}/bin/notify-send";
+          notify = "${pkgs.libnotify}/bin/notify-send -a Gamemode -c system";
         in {
           start = "${notify} 'Game Mode Enabled'";
           end = "${notify} 'Game Mode Disabled'";
@@ -49,7 +50,7 @@ in {
       localNetworkGameTransfers.openFirewall = true; # tcp 27040, udp 27036
       package = pkgs.steam.override {
         extraEnv = {
-          MANGOHUD = true;
+          # MANGOHUD = true;
         };
         # fix gamescope launch from within steam
         extraLibraries = p:
