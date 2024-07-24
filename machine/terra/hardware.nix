@@ -55,7 +55,7 @@ in {
 
     boot.supportedFilesystems = ["ntfs" "bcachefs"];
 
-    boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
+    # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
     boot.loader.grub.useOSProber = true;
 
