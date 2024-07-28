@@ -215,7 +215,7 @@ in {
       in ''
         # location ~ ^(${locRules}) {
         if ($http_user_agent ~* "(${agentRules})") {
-          return 403; # little more polite than normal
+          return 444; # drop connection
         }
         # }
       '';

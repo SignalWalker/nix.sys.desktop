@@ -42,7 +42,8 @@ in {
               agentRules = std.concatStringsSep "|" nginx.agentBlockList;
             in ''
               if ($http_user_agent ~* "(${agentRules})") {
-                return 307 https://ash-speed.hetzner.com/10GB.bin;
+                # return 307 https://ash-speed.hetzner.com/10GB.bin;
+                return 444; # drop connection
               }
             '';
           };
@@ -57,6 +58,8 @@ in {
       enable = true;
 
       logError = "stderr warn";
+
+      statusPage = true;
 
       recommendedBrotliSettings = true;
       recommendedGzipSettings = true;
@@ -101,8 +104,8 @@ in {
         ];
         logFormatStr = std.concatStringsSep ",'\n" (map (field: "'\"${field}\":\"\$${field}\"") logFormatFields);
       in ''
-        map $status$http_user_agent $not_caught_by_agent_list {
-          ~*^307.*(${agentRules}) 0;
+        map $status $not_caught_by_agent_list {
+          444 0;
           default 1;
         }
         map $not_caught_by_agent_list$remote_addr $should_log {

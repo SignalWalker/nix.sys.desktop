@@ -6,7 +6,7 @@
       type = "github";
       owner = "NixOS";
       repo = "nix";
-      ref = "2.21.2";
+      ref = "2.23.3";
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -249,7 +249,7 @@
             inputs.sysbase.nixosModules.default
             inputs.syshome.nixosModules.default
 
-            inputs.lix-module.nixosModules.default
+            # inputs.lix-module.nixosModules.default
 
             inputs.nix-index-database.nixosModules.nix-index
             inputs.foundryvtt.nixosModules.foundryvtt
@@ -281,15 +281,15 @@
         config = lib.mkMerge [
           {
             assertions = [
-              # {
-              #   assertion = config.nix.package.version >= pkgs.nix.version;
-              #   message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
-              # }
+              {
+                assertion = config.nix.package.version >= pkgs.nix.version;
+                message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
+              }
             ];
             warnings = [
-              "using lix instead of nix"
+              # "using lix instead of nix"
             ];
-            # nix.package = inputs.nix.packages.${pkgs.system}.nix;
+            nix.package = inputs.nix.packages.${pkgs.system}.nix;
 
             networking.hostName = machine;
             networking.domain = lib.mkDefault "local";

@@ -38,13 +38,19 @@ in {
           ];
           openFirewall = false;
         };
+        systemd = {
+          enable = true;
+        };
       };
       scrapeConfigs = [
         {
-          job_name = "node";
+          job_name = "terra";
           static_configs = [
             {
-              targets = ["localhost:${toString config.services.prometheus.exporters.node.port}"];
+              targets = [
+                "localhost:${toString exporters.node.port}"
+                "localhost:${toString exporters.systemd.port}"
+              ];
             }
           ];
         }
