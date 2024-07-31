@@ -17,11 +17,11 @@ with builtins; let
 in {
   options = with lib; {
     services.jackett = {
-      port = mkOption {
-        type = types.port;
-        readOnly = true;
-        default = 9117;
-      };
+      # port = mkOption {
+      #   type = types.port;
+      #   readOnly = true;
+      #   default = 9117;
+      # };
     };
     services.radarr = {
       port = mkOption {

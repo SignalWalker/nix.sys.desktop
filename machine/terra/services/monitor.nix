@@ -8,6 +8,8 @@ with builtins; let
   std = pkgs.lib;
   prom = config.services.prometheus;
   exporters = prom.exporters;
+  grafana = config.services.grafana;
+  ntopng = config.services.ntopng;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -55,6 +57,32 @@ in {
           ];
         }
       ];
+    };
+    services.nginx.virtualHosts."${grafana.settings.server.domain}" = {
+      locations."/" = {
+        proxyPass = "http://${toString grafana.settings.server.http_addr}:${toString grafana.settings.server.http_port}";
+        proxyWebsockets = true;
+        recommendedProxySettings = true;
+      };
+    };
+    services.ntopng = {
+      enable = true;
+      httpPort = 46504;
+      interfaces = [
+        "enp4s0"
+        "wg-airvpn"
+        "wg-signal"
+        "wg-torrent"
+      ];
+    };
+    # IPFIX
+    networking.firewall.allowedUDPPorts = [4739];
+    services.nginx.virtualHosts."bandwidth.monitor.terra.ashwalker.net" = {
+      locations."/" = {
+        proxyPass = "http://localhost:${toString ntopng.httpPort}";
+        proxyWebsockets = true;
+        recommendedProxySettings = true;
+      };
     };
   };
   meta = {};

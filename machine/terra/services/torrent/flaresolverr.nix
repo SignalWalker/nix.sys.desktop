@@ -9,25 +9,25 @@ with builtins; let
   flare = config.services.flaresolverr;
 in {
   options = with lib; {
-    services.flaresolverr = {
-      enable = mkEnableOption "flaresolverr";
-      chromium = mkOption {
-        type = types.package;
-        default = pkgs.ungoogled-chromium;
-      };
-      package = mkOption {
-        type = types.package;
-        default = pkgs.flaresolverr;
-      };
-      user = mkOption {
-        type = types.str;
-        default = "flaresolverr";
-      };
-      group = mkOption {
-        type = types.str;
-        default = "flaresolverr";
-      };
-    };
+    # services.flaresolverr = {
+    #   enable = mkEnableOption "flaresolverr";
+    #   chromium = mkOption {
+    #     type = types.package;
+    #     default = pkgs.ungoogled-chromium;
+    #   };
+    #   package = mkOption {
+    #     type = types.package;
+    #     default = pkgs.flaresolverr;
+    #   };
+    #   user = mkOption {
+    #     type = types.str;
+    #     default = "flaresolverr";
+    #   };
+    #   group = mkOption {
+    #     type = types.str;
+    #     default = "flaresolverr";
+    #   };
+    # };
   };
   disabledModules = [];
   imports = [];

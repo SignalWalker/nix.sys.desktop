@@ -129,6 +129,7 @@ in {
         "facebookcatalog"
         "meta-externalagent"
         "meta-externalfetcher"
+        "DotBot"
         # from the above repo:
         "Amazonbot"
         "anthropic-ai"
