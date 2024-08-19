@@ -13,7 +13,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./programs;
   config = {
     services.guix = {
-      enable = true;
+      enable = false; # FIX :: build failure as of 2024-08-19
       extraArgs = [
         "--discover=yes"
         "--substitute-urls=https://bordeaux.guix.gnu.org https://ci.guix.gnu.org https://substitutes.nonguix.org"
