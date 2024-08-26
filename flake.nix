@@ -313,6 +313,7 @@
             };
             nixpkgs.config.permittedInsecurePackages = [
               "electron-27.3.11"
+              "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
             ];
           }
           (lib.mkIf (machine == "artemis") {
