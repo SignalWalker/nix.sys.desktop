@@ -30,7 +30,10 @@ in {
       in {
         enable = true;
         # TODO :: figure out a good way to keep this out of public repos
-        addresses = ["10.159.66.94/32" "fd7d:76ee:e68f:a993:b560:c12b:27ba:5557/128"];
+        addresses = [
+          "10.171.122.61/32"
+          "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"
+        ];
         privateKeyFile = "/run/wireguard/wg-torrent.sign";
         dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
         inherit table;
@@ -38,8 +41,8 @@ in {
         peer = {
           publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
           presharedKeyFile = "/run/wireguard/wg-torrent.psk";
-          # airvpn hercules
-          endpoint = "199.189.27.125:1637"; # "64.42.179.61:1637";
+          # airvpn musca
+          endpoint = "64.42.179.61:1637";
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
         activationPolicy = "up";

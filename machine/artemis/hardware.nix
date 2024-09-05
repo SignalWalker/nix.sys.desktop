@@ -18,6 +18,9 @@ in {
     ]
     ++ (lib.signal.fs.path.listFilePaths ./hardware);
   config = {
+    warnings = [
+      "force-enabling hardware.intelgpu.loadInInitrd"
+    ];
     environment.systemPackages = with pkgs; [
       # intel-gpu-tools
     ];
@@ -30,7 +33,7 @@ in {
 
     hardware.intelgpu = {
       driver = "xe";
-      loadInInitrd = true;
+      loadInInitrd = lib.mkForce true;
     };
 
     boot.kernelParams = [

@@ -10,6 +10,10 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./zfs;
-  config = {};
+  config = {
+    boot.zfs = {
+      package = pkgs.zfs_unstable;
+    };
+  };
   meta = {};
 }
