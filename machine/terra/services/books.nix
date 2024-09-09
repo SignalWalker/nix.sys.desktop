@@ -12,9 +12,12 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = lib.mkIf false {
+  config = {
     services.calibre-server = {
       enable = true;
+      package = pkgs.calibre.override {
+        unrarSupport = true;
+      };
       libraries = ["/elysium/media/text/book"];
       host = "127.0.0.1";
       port = 40507;
