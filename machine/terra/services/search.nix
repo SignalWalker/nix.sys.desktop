@@ -7,11 +7,28 @@
 with builtins; let
   std = pkgs.lib;
   searx = config.services.searx;
+  meili = config.services.meilisearch;
+  secrets = config.age.secrets;
 in {
   options = with lib; {};
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./search;
   config = {
+    age.secrets = {
+      meilisearchMasterKey = {
+        file = ./search/secrets/meilisearchMasterKey.age;
+      };
+    };
+
+    services.meilisearch = {
+      enable = true;
+      listenAddress = "0.0.0.0";
+      listenPort = 46782;
+      masterKeyEnvironmentFile = secrets.meilisearchMasterKey.path;
+      maxIndexSize = "25GiB";
+      environment = "production";
+    };
+
     services.searx = {
       enable = false;
       package = pkgs.searxng;

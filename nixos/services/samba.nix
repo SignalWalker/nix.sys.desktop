@@ -21,23 +21,23 @@ in {
     services.samba = {
       enable = false;
       openFirewall = true;
-      extraConfig = ''
-        workgroup = ${wsdd.workgroup}
-        server string = ${config.networking.hostName}
-        netbios name = ${config.networking.hostName}
+      settings = {
+        "workgroup" = wsdd.workgroup;
+        "server string" = config.networking.hostName;
+        "netbios name" = config.networking.hostName;
 
-        server min protocol = SMB2_02
-        hosts allow = 192.168.0. 127.0.0.1 localhost
-        hosts deny = 0.0.0.0/0
+        "server min protocol" = "SMB2_02";
+        "hosts allow" = ["192.168.0." "127.0.0.1" "localhost"];
+        "hosts deny" = "0.0.0.0/0";
 
-        guest account = nobody
-        map to guest = bad user
+        "guest account" = "nobody";
+        "map to guest" = "bad user";
 
-        usershare path = /var/lib/samba/usershares
-        usershare max shares = 100
-        usershare allow guests = yes
-        usershare owner only = yes
-      '';
+        "usershare path" = "/var/lib/samba/usershares";
+        "usershare max shares" = 100;
+        "usershare allow guests" = true;
+        "usershare owner only" = true;
+      };
     };
 
     networking.firewall.allowPing = lib.mkDefault samba.enable;
