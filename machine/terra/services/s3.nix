@@ -12,7 +12,7 @@ in {
   imports = [];
   config = {
     services.minio = {
-      enable = true;
+      enable = false;
     };
   };
   meta = {};

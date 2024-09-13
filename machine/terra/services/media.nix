@@ -22,6 +22,7 @@ in {
   config = {
     services.jellyfin = {
       enable = true;
+      package = pkgs.jellyfin;
       openFirewall = false;
     };
 
