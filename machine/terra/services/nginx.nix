@@ -50,7 +50,6 @@ in {
       ];
 
       commonHttpConfig = let
-        agentRules = std.concatStringsSep "|" nginx.agentBlockList;
         logFormatFields = [
           "http_host"
           "status"

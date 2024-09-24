@@ -10,6 +10,7 @@ with builtins; let
   domain = "git.ashwalker.net";
   secrets = config.age.secrets;
   redis = config.services.redis.servers."forgejo";
+  nginx = config.services.nginx;
 in {
   options = with lib; {
   };
@@ -102,123 +103,16 @@ in {
     services.nginx.virtualHosts.${domain} = {
       enableACME = true;
       forceSSL = true;
-      listenAddresses = config.services.nginx.publicListenAddresses;
-      locations."=/robots.txt" = {
-        alias = let
-          agents = std.concatStringsSep "\n" (map (agent: "User-agent: ${agent}") (config.services.nginx.agentBlockList
-            ++ [
-              "Googlebot"
-            ]));
-        in
-          # from https://codeberg.org/robots.txt
-          pkgs.writeText "robots.txt" ''
-            ${agents}
-            Disallow: /
-
-            User-agent: *
-            Disallow: /api/*
-            Disallow: /avatars
-            Disallow: /user/*
-            Disallow: /*/*/src/commit/*
-            Disallow: /*/*/commit/*
-            Disallow: /*/*/*/refs/*
-            Disallow: /*/*/*/star
-            Disallow: /*/*/*/watch
-            Disallow: /*/*/labels
-            Disallow: /*/*/activity/*
-            Disallow: /vendor/*
-            Disallow: /swagger.*.json
-
-            Disallow: /explore/*?*
-
-            Disallow: /repo/create
-            Disallow: /repo/migrate
-            Disallow: /org/create
-            Disallow: /*/*/fork
-
-            Disallow: /*/*/watchers
-            Disallow: /*/*/stargazers
-            Disallow: /*/*/forks
-
-            Disallow: /*/*/activity
-            Disallow: /*/*/projects
-            Disallow: /*/*/commits/
-            Disallow: /*/*/branches
-            Disallow: /*/*/tags
-            Disallow: /*/*/compare
-
-            Disallow: /*/*/issues/new
-            Disallow: /*/*/issues/?*
-            Disallow: /*/*/pulls/?*
-
-            Disallow: /*/tree/
-            Disallow: /*/download
-            Disallow: /*/revisions
-            Disallow: /*/commits/*?author
-            Disallow: /*/commits/*?path
-            Disallow: /*/comments
-            Disallow: /*/blame/
-            Disallow: /*/raw/
-            Disallow: /*/cache/
-            Disallow: /.git/
-            Disallow: */.git/
-            Disallow: /*.git
-            Disallow: /*.atom
-            Disallow: /*.rss
-
-            Disallow: /*/*/archive/
-            Disallow: *.bundle
-            Disallow: */commit/*.patch
-            Disallow: */commit/*.diff
-
-            Disallow: /*lang=*
-            Disallow: /*source=*
-            Disallow: /*ref_cta=*
-            Disallow: /*plan=*
-            Disallow: /*return_to=*
-            Disallow: /*ref_loc=*
-            Disallow: /*setup_organization=*
-            Disallow: /*source_repo=*
-            Disallow: /*ref_page=*
-            Disallow: /*source=*
-            Disallow: /*referrer=*
-            Disallow: /*report=*
-            Disallow: /*author=*
-            Disallow: /*since=*
-            Disallow: /*until=*
-            Disallow: /*commits?author=*
-            Disallow: /*tab=*
-            Disallow: /*q=*
-            Disallow: /*repo-search-archived=*
-          '';
+      listenAddresses = nginx.publicListenAddresses;
+      blockAgents = {
+        agents = lib.mkOptionDefault ["Googlebot"];
       };
-      extraConfig = let
-        locBlockList = [
-          "/api/"
-          "/.*/.*/commit"
-          "/.*/.*/tags"
-          "/.*/.*/branches"
-          "/.*/.*/actions"
-          "/.*/.*/activity"
-          "/.*/.*/projects"
-          "/.*/.*/compare"
-          "/.*/.*/issues"
-          "/.*/.*/archive"
-          "/.*/.*/pulls"
-          "/.*/.*/.*/commit/"
-        ];
-        locRules = std.concatStringsSep "|" locBlockList;
-        agentBlockList = [
-          "Googlebot"
-        ];
-        agentRules = std.concatStringsSep "|" agentBlockList;
-      in ''
-        # location ~ ^(${locRules}) {
-        if ($http_user_agent ~* "(${agentRules})") {
-          return 444; # drop connection
-        }
-        # }
-      '';
+      locations."=/robots.txt" = {
+        alias = pkgs.writeText "robots.txt" ''
+          User-agent: *
+          Disallow: /
+        '';
+      };
       locations."/" = {
         proxyPass = "http://unix:${forgejo.settings.server.HTTP_ADDR}";
         extraConfig = ''

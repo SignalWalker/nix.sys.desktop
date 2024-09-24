@@ -53,7 +53,7 @@ in {
       enable = true;
     };
 
-    boot.supportedFilesystems = ["ntfs" "bcachefs"];
+    boot.supportedFilesystems = ["ntfs"];
 
     # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
