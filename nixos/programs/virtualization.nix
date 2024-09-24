@@ -19,7 +19,7 @@ in {
     ];
 
     virtualisation.waydroid = {
-      enable = true;
+      enable = false;
     };
 
     environment.systemPackages = lib.mkIf config.virtualisation.containers.enable (with pkgs; [
