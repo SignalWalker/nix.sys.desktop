@@ -26,7 +26,7 @@ in {
 
       logError = "stderr warn";
 
-      statusPage = true;
+      statusPage = false;
 
       recommendedBrotliSettings = true;
       recommendedGzipSettings = true;
@@ -70,14 +70,9 @@ in {
         ];
         logFormatStr = std.concatStringsSep ",'\n" (map (field: "'\"${field}\":\"\$${field}\"") logFormatFields);
       in ''
-        map $status $not_caught_by_agent_list {
-          444 0;
-          default 1;
-        }
-        map $not_caught_by_agent_list$remote_addr $should_log {
-          ~^0 0;
-          1172.24.86.1 0;
-          1fd24:fad3:8246::1 0;
+        map $remote_addr $should_log {
+          172.24.86.1 0;
+          fd24:fad3:8246::1 0;
           default 1;
         }
 

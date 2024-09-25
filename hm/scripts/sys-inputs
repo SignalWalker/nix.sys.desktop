@@ -20,6 +20,7 @@ fi
 
 sys=$PROJECTS/nix/sys
 hm=$PROJECTS/nix/home
+nixmod=$PROJECTS/nix/mod
 
 typeset -A INPUTS
 INPUTS=( \
@@ -31,6 +32,7 @@ INPUTS=( \
 	[homedesk/watch-battery]="$PROJECTS/misc/batwatch" \
 	[homemedia]="$hm/media" \
 	[sysbase]="$sys/base" \
+	[sysbase/nginx-vhost-defaults]="$nixmod/nginx-vhost-defaults"
 	[syshome]="$sys/home" \
 	[sysdesk]="$sys/desktop"
 )

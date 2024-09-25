@@ -10,14 +10,15 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # lix = {
-    #   url = "git+https://git@git.lix.systems/lix-project/lix?ref=refs/tags/2.90.0-rc1";
-    #   flake = false;
-    # };
+    lix = {
+      url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
+      flake = false;
+    };
+
     lix-module = {
-      url = "git+https://git.lix.systems/lix-project/nixos-module";
-      # inputs.lix.follows = "lix";
+      url = "https://git.lix.systems/lix-project/nixos-module/archive/main.tar.gz";
       inputs.nixpkgs.follows = "nixpkgs";
+      inputs.lix.follows = "lix";
     };
 
     alejandra = {
@@ -249,7 +250,7 @@
             inputs.sysbase.nixosModules.default
             inputs.syshome.nixosModules.default
 
-            # inputs.lix-module.nixosModules.default
+            inputs.lix-module.nixosModules.default
 
             inputs.nix-index-database.nixosModules.nix-index
             inputs.foundryvtt.nixosModules.foundryvtt
@@ -280,14 +281,14 @@
 
         config = lib.mkMerge [
           {
-            assertions = [
-              {
-                assertion = config.nix.package.version >= pkgs.nix.version;
-                message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
-              }
-            ];
+            # assertions = [
+            #   {
+            #     assertion = config.nix.package.version >= pkgs.nix.version;
+            #     message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
+            #   }
+            # ];
             warnings = [
-              # "using lix instead of nix"
+              "using lix instead of nix"
             ];
             nix.package = inputs.nix.packages.${pkgs.system}.nix;
 

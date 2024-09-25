@@ -54,10 +54,10 @@ in {
     #   append = true;
     # });
 
-    services.nginx.virtualHosts."library.books.home.ashwalker.net" = {
-      enableACME = true;
-      forceSSL = true;
-      listenAddresses = config.services.nginx.publicListenAddresses;
+    services.nginx.virtualHosts."library.books.terra.ashwalker.net" = {
+      # enableACME = true;
+      # forceSSL = true;
+      # listenAddresses = config.services.nginx.publicListenAddresses;
       extraConfig = ''
         client_max_body_size 64M;
       '';
@@ -65,10 +65,10 @@ in {
         proxyPass = "http://127.0.0.1:${toString calibre.port}";
       };
     };
-    services.nginx.virtualHosts."books.home.ashwalker.net" = {
-      enableACME = true;
-      forceSSL = true;
-      listenAddresses = config.services.nginx.publicListenAddresses;
+    services.nginx.virtualHosts."books.terra.ashwalker.net" = {
+      # enableACME = true;
+      # forceSSL = true;
+      # listenAddresses = config.services.nginx.publicListenAddresses;
       extraConfig = ''
         client_max_body_size 64M;
       '';

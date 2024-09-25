@@ -11,6 +11,9 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./terra;
   config = {
+    networking.publicAddresses = [
+      "24.98.17.92"
+    ];
   };
   meta = {};
 }
