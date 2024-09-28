@@ -6,7 +6,7 @@
 }:
 with builtins; let
   std = pkgs.lib;
-  udpt = config.service.udpt;
+  udpt = config.services.udpt;
   toml = pkgs.formats.toml {};
 in {
   options = with lib; {
@@ -15,12 +15,12 @@ in {
       package = mkPackageOption pkgs "updt" {};
       user = mkOption {
         type = types.str;
-        readonly = true;
+        readOnly = true;
         default = "udpt";
       };
       group = mkOption {
         type = types.str;
-        readonly = true;
+        readOnly = true;
         default = "udpt";
       };
       port = mkOption {
