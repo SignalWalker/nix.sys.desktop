@@ -108,8 +108,21 @@ in {
           map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices;
       };
       boot = {
-        kernelPackages =
-          config.boot.zfs.package.latestCompatibleLinuxPackages;
+        kernelPackages = let
+          latestZfsCompatibleLinuxPackages = lib.pipe pkgs.linuxKernel.packages [
+            builtins.attrValues
+            (builtins.filter (
+              kPkgs:
+                (builtins.tryEval kPkgs).success
+                && kPkgs ? kernel
+                && kPkgs.kernel.pname == "linux"
+                && !kPkgs.zfs.meta.broken
+            ))
+            (builtins.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)))
+            lib.last
+          ];
+        in
+          latestZfsCompatibleLinuxPackages;
         initrd.availableKernelModules = cfg.availableKernelModules;
         kernelParams = cfg.kernelParams;
         supportedFilesystems = ["zfs"];

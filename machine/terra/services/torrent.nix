@@ -14,6 +14,7 @@ with builtins; let
   readarr = config.services.readarr;
   prowlarr = config.services.prowlarr;
   jseer = config.services.jellyseerr;
+  udpt = config.services.udpt;
 in {
   options = with lib; {
     services.jackett = {
@@ -140,6 +141,20 @@ in {
       # jackett.user
       # radarr.user
     ];
+
+    services.udpt = {
+      enable = false;
+      settings = {
+        mode = "dynamic";
+        udp = {
+          bind_address = "0.0.0.0:${toString udpt.port}";
+          announce_interval = 60 * 15; # this is in seconds
+        };
+        # http = {
+        #   bind_address = "127.0.0.1:${toString (udpt.port + 1)}";
+        # };
+      };
+    };
 
     services.nginx.virtualHosts = let
       # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];

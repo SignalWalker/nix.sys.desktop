@@ -52,16 +52,16 @@ in {
       commonHttpConfig = let
         logFormatFields = [
           "http_host"
-          "status"
-          "remote_addr"
+          "server_port"
           "request_uri"
+          "remote_addr"
           "http_user_agent"
+          "request_method"
+          "request_length"
+          "status"
           "body_bytes_sent"
           "bytes_sent"
           "msec"
-          "request_length"
-          "request_method"
-          "server_port"
           "server_protocol"
           "ssl_protocol"
           "upstream_response_time"
@@ -82,6 +82,19 @@ in {
 
         access_log /var/log/nginx/access.log logger_json_log if=$should_log;
       '';
+
+      # virtualHosts."files.home.ashwalker.net" = {
+      #   enableACME = true;
+      #   forceSSL = true;
+      #   listenAddresses = nginx.publicListenAddresses;
+      #   locations."/" = {
+      #     root = "/var/lib/nginx-files";
+      #     basicAuthFile = "/etc/nginx/files.home.ashwalker.net";
+      #     extraConfig = ''
+      #       autoindex on;
+      #     '';
+      #   };
+      # };
     };
     networking.firewall.allowedTCPPorts = [80 443];
   };
