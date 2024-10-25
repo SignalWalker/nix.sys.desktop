@@ -295,7 +295,7 @@
             networking.hostName = machine;
             networking.domain = lib.mkDefault "local";
             home-manager = {
-              users = self.homeConfigurations;
+              users = self.homeConfigurations.${machine};
             };
             nixpkgs.overlays = [
               self.overlays.default
@@ -335,13 +335,13 @@
         ];
       });
 
-      homeConfigurations.ash = {
-        config,
-        lib,
-        ...
-      }: {
-        imports =
-          [
+      homeConfigurations = std.genAttrs machines (machine: {
+        ash = {
+          config,
+          lib,
+          ...
+        }: {
+          imports = [
             inputs.homebase.homeManagerModules.default
             inputs.homedev.homeManagerModules.default
             inputs.homedesk.homeManagerModules.default
@@ -349,20 +349,23 @@
 
             inputs.nix-index-database.hmModules.nix-index
             inputs.agenix.homeManagerModules.age
-          ]
-          ++ (lib.signal.fs.path.listFilePaths ./hm);
-        config = {
-          nixpkgs.overlays = [
-            inputs.mozilla.overlays.rust
-            inputs.mozilla.overlays.firefox
+
+            ./hm/shared.nix
+            ./hm/${machine}.nix
           ];
+          config = {
+            nixpkgs.overlays = [
+              inputs.mozilla.overlays.rust
+              inputs.mozilla.overlays.firefox
+            ];
 
-          programs.guix.enable = false;
+            programs.guix.enable = false;
 
-          desktop.wayland.compositor.sway.enable = true;
-          desktop.wayland.taskbar.enable = true;
+            desktop.wayland.compositor.sway.enable = true;
+            desktop.wayland.taskbar.enable = true;
+          };
         };
-      };
+      });
 
       nixosConfigurations = std.mapAttrs (machine: module:
         std.nixosSystem {

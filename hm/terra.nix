@@ -11,7 +11,6 @@ in {
   disabledModules = [];
   imports = [];
   config = {
-    home.packages = [pkgs.godot_4];
   };
   meta = {};
 }
