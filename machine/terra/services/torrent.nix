@@ -56,6 +56,8 @@ in {
       };
     };
 
+    // TODO :: set up bitmagnet
+
     # services.flood = {
     #   enable = false;
     #   hostName = qbit.webui.hostName;
