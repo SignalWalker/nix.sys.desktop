@@ -56,7 +56,7 @@ in {
       };
     };
 
-    // TODO :: set up bitmagnet
+    # TODO :: set up bitmagnet
 
     # services.flood = {
     #   enable = false;
