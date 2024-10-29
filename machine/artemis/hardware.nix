@@ -27,6 +27,11 @@ in {
 
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
+    system.linuxKernel.filter = name: kp:
+      ((match "linux(_rt)?_([0-9]+_[0-9]+|zen|xanmod|lqx)(_latest)?" name) != null)
+      # for xe driver
+      && lib.versionAtLeast kp.kernel.version "6.8";
+
     # handled by nixos-hardware#framework
     # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
     # boot.kernelPackages = pkgs.linuxPackages_latest;

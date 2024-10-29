@@ -7,6 +7,11 @@
   cfg = config.zfs-root.boot;
   inherit (lib) mkIf types mkDefault mkOption mkMerge strings;
   inherit (builtins) head toString map tail;
+  filterFn = lib.mkOptionType {
+    name = "filter function";
+    check = builtins.isFunction;
+    merge = loc: defs: builtins.foldl' (acc: def: (name: kp: (acc name kp) && (def.value name kp))) (name: kp: true) defs;
+  };
 in {
   options = {
     zfs-root.boot = {
@@ -100,6 +105,10 @@ in {
       '';
     })
     {
+      system.linuxKernel.filter = let
+        unstable = config.boot.zfs.package == pkgs.zfsUnstable || config.boot.zfs.package == pkgs.zfs_unstable;
+      in
+        name: kp: (!unstable && !kp.zfs.meta.broken) || (unstable && !kp.zfs_unstable.meta.broken);
       zfs-root.fileSystems = {
         efiSystemPartitions =
           map (diskName: diskName + cfg.partitionScheme.efiBoot)
@@ -108,21 +117,6 @@ in {
           map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices;
       };
       boot = {
-        kernelPackages = let
-          latestZfsCompatibleLinuxPackages = lib.pipe pkgs.linuxKernel.packages [
-            builtins.attrValues
-            (builtins.filter (
-              kPkgs:
-                (builtins.tryEval kPkgs).success
-                && kPkgs ? kernel
-                && kPkgs.kernel.pname == "linux"
-                && !kPkgs.zfs.meta.broken
-            ))
-            (builtins.sort (a: b: (lib.versionOlder a.kernel.version b.kernel.version)))
-            lib.last
-          ];
-        in
-          latestZfsCompatibleLinuxPackages;
         initrd.availableKernelModules = cfg.availableKernelModules;
         kernelParams = cfg.kernelParams;
         supportedFilesystems = ["zfs"];

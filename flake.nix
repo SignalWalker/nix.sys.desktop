@@ -1,7 +1,8 @@
 {
   description = "Nix configuration - personal desktop computer";
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # TODO :: switch to nixos-unstable
+    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     nix = {
       type = "github";
       owner = "NixOS";
@@ -290,7 +291,7 @@
             warnings = [
               "using lix instead of nix"
             ];
-            nix.package = inputs.nix.packages.${pkgs.system}.nix;
+            # nix.package = inputs.nix.packages.${pkgs.system}.nix;
 
             networking.hostName = machine;
             networking.domain = lib.mkDefault "local";

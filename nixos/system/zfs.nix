@@ -12,7 +12,7 @@ in {
   imports = lib.signal.fs.path.listFilePaths ./zfs;
   config = {
     boot.zfs = {
-      package = pkgs.zfs_unstable;
+      package = pkgs.zfsUnstable;
     };
   };
   meta = {};
