@@ -33,7 +33,7 @@ in {
         type = types.raw;
         readOnly = true;
         default =
-          lib.last (lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (builtins.attrValues cfg.kernelPackages.compatible));
+          lib.last (lib.sort (a: b: lib.versionOlder a.kernel.version b.kernel.version) (builtins.attrValues kernel.allowed));
       };
     };
   };

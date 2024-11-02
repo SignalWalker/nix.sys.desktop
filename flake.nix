@@ -296,7 +296,7 @@
             networking.hostName = machine;
             networking.domain = lib.mkDefault "local";
             home-manager = {
-              users = self.homeConfigurations.${machine};
+              users = self.homeConfigurations;
             };
             nixpkgs.overlays = [
               self.overlays.default
@@ -336,7 +336,7 @@
         ];
       });
 
-      homeConfigurations = std.genAttrs machines (machine: {
+      homeConfigurations = {
         ash = {
           config,
           lib,
@@ -352,7 +352,8 @@
             inputs.agenix.homeManagerModules.age
 
             ./hm/shared.nix
-            ./hm/${machine}.nix
+            # TODO :: per-machine homeconfig
+            # ./hm/${machine}.nix
           ];
           config = {
             nixpkgs.overlays = [
@@ -366,7 +367,7 @@
             desktop.wayland.taskbar.enable = true;
           };
         };
-      });
+      };
 
       nixosConfigurations = std.mapAttrs (machine: module:
         std.nixosSystem {
