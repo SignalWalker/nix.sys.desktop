@@ -12,7 +12,7 @@ in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
-  config = lib.mkIf false {
+  config = {
     # FIX :: calibre build error
     services.calibre-server = {
       enable = true;
