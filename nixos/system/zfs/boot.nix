@@ -7,11 +7,6 @@
   cfg = config.zfs-root.boot;
   inherit (lib) mkIf types mkDefault mkOption mkMerge strings;
   inherit (builtins) head toString map tail;
-  filterFn = lib.mkOptionType {
-    name = "filter function";
-    check = builtins.isFunction;
-    merge = loc: defs: builtins.foldl' (acc: def: (name: kp: (acc name kp) && (def.value name kp))) (name: kp: true) defs;
-  };
 in {
   options = {
     zfs-root.boot = {
