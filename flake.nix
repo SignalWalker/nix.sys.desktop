@@ -2,7 +2,7 @@
   description = "Nix configuration - personal desktop computer";
   inputs = {
     # TODO :: switch to nixos-unstable
-    nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
     nix = {
       type = "github";
       owner = "NixOS";

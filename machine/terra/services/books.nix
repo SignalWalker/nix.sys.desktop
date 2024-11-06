@@ -67,9 +67,9 @@ in {
       };
     };
     services.nginx.virtualHosts."books.terra.ashwalker.net" = {
-      # enableACME = true;
-      # forceSSL = true;
-      # listenAddresses = config.services.nginx.publicListenAddresses;
+      enableACME = true;
+      forceSSL = true;
+      listenAddresses = config.services.nginx.publicListenAddresses;
       extraConfig = ''
         client_max_body_size 64M;
       '';
