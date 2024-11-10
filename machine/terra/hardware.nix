@@ -59,6 +59,10 @@ in {
 
     boot.loader.grub.useOSProber = true;
 
+    # HACK :: I think this is fine since we have a ton of swap?
+    boot.tmp.tmpfsSize = "100%";
+    # TODO :: runSize? devSize?
+
     # VFIO (doesn't work on terra atm)
     # boot.kernelModules = ["vfio" "vfio_iommu_type1" "vfio_pci" "vfio_virqfd"];
     # boot.kernelParams = [
