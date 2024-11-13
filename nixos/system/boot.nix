@@ -32,6 +32,11 @@ in {
         default = 0;
       };
     };
+
+    boot.plymouth = {
+      enable = false;
+      theme = "tribar";
+    };
   };
   meta = {};
 }
