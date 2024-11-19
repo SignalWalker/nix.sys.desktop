@@ -6,6 +6,8 @@
 }:
 with builtins; let
   std = pkgs.lib;
+  gnupg = config.programs.gnupg;
+  agent = gnupg.agent;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -13,6 +15,28 @@ in {
   config = {
     services.gnome.gnome-keyring = {
       enable = true;
+    };
+
+    programs.gnupg = {
+      agent = {
+        enable = true;
+        enableSSHSupport = true;
+        enableBrowserSocket = true;
+        enableExtraSocket = true;
+        pinentryPackage = pkgs.pinentry-qt;
+        settings = let
+          ttl = 7200; # 2 hours
+        in {
+          "max-cache-ttl" = ttl;
+          "default-cache-ttl" = ttl;
+          "max-cache-ttl-ssh" = ttl;
+          "default-cache-ttl-ssh" = ttl;
+          "allow-preset-passphrase" = true;
+        };
+      };
+      dirmngr = {
+        enable = true;
+      };
     };
 
     security.pam.u2f = {
@@ -27,6 +51,10 @@ in {
       login = {
         u2fAuth = true;
         enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
+        gnupg = {
+          enable = true;
+          noAutostart = true;
+        };
       };
 
       sudo.u2fAuth = true;
