@@ -37,13 +37,13 @@ in {
         db_engine = "sqlite";
         # NOTE :: don't change this; see https://garagehq.deuxfleurs.fr/documentation/reference-manual/configuration/#replication_factor
         replication_factor = 1;
-        rpc_bind_addr = "[fd24:fad3:8246::1]:${toString garage.port}";
-        rpc_public_addr = "[fd24:fad3:8246::1]:${toString garage.port}";
+        rpc_bind_addr = "[fd24:fad3:8246::1]:${toString garage.port.rpc}";
+        rpc_public_addr = "[fd24:fad3:8246::1]:${toString garage.port.rpc}";
 
         s3_api = {
-          region = "home";
+          s3_region = "home";
           root_domain = "s3.ashwalker.net";
-          api_bind_addr = "unix:///run/garage/s3.sock";
+          api_bind_addr = "/run/garage/s3.sock";
         };
 
         # s3_web = {
@@ -51,7 +51,7 @@ in {
         # };
 
         admin = {
-          api_bind_addr = "unix:///run/garage/admin.sock";
+          api_bind_addr = "/run/garage/admin.sock";
         };
       };
     };
@@ -66,7 +66,7 @@ in {
       upstreams = {
         "s3_backend" = {
           servers = {
-            ${garage.settings.s3_api.api_bind_addr} = {};
+            "unix:${garage.settings.s3_api.api_bind_addr}" = {};
           };
         };
       };
@@ -74,7 +74,7 @@ in {
         "s3.ashwalker.net" = {
           enableACME = true;
           forceSSL = true;
-          listenAddresses = config.services.nginx.publicListenAddressess;
+          listenAddresses = config.services.nginx.publicListenAddresses;
           locations."/" = {
             proxyPass = "http://s3_backend";
             extraConfig = ''
