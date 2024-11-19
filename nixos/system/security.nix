@@ -11,6 +11,10 @@ in {
   disabledModules = [];
   imports = [];
   config = {
+    services.gnome.gnome-keyring = {
+      enable = true;
+    };
+
     security.pam.u2f = {
       enable = true;
       settings = {
@@ -18,9 +22,15 @@ in {
       };
       control = "sufficient";
     };
+
     security.pam.services = {
-      login.u2fAuth = true;
+      login = {
+        u2fAuth = true;
+        enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
+      };
+
       sudo.u2fAuth = true;
+
       swaylock = {
         u2fAuth = true;
         text = ''
