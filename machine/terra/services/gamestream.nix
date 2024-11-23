@@ -13,7 +13,7 @@ in {
   imports = [];
   config = {
     services.sunshine = {
-      enable = true;
+      enable = false;
       capSysAdmin = true;
       openFirewall = lib.mkForce false;
     };

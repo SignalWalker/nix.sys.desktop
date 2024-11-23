@@ -25,13 +25,17 @@ in {
         enableExtraSocket = true;
         pinentryPackage = pkgs.pinentry-qt;
         settings = let
-          ttl = 7200; # 2 hours
+          ttl = 43200; # 12 hours
         in {
           "max-cache-ttl" = ttl;
           "default-cache-ttl" = ttl;
           "max-cache-ttl-ssh" = ttl;
           "default-cache-ttl-ssh" = ttl;
+          # NOTE :: necessary for pam-gnupg
           "allow-preset-passphrase" = "";
+          # WARN :: automatically retrieve unknown keys from keyserver; potential privacy leak
+          "auto-key-retrieve" = "";
+          "keyserver" = "hkps://keys.openpgp.org";
         };
       };
       dirmngr = {
