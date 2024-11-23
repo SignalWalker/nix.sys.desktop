@@ -31,7 +31,7 @@ in {
           "default-cache-ttl" = ttl;
           "max-cache-ttl-ssh" = ttl;
           "default-cache-ttl-ssh" = ttl;
-          "allow-preset-passphrase" = true;
+          "allow-preset-passphrase" = "";
         };
       };
       dirmngr = {
