@@ -17,6 +17,12 @@ in {
       enable = true;
     };
 
+    # WARN :: automatically retrieve unknown keys from keyserver; potential privacy leak
+    environment.etc."gnupg/gpg.conf".text = ''
+      auto-key-retrieve
+      keyserver hkps://keys.openpgp.org
+    '';
+
     programs.gnupg = {
       agent = {
         enable = true;
@@ -33,9 +39,6 @@ in {
           "default-cache-ttl-ssh" = ttl;
           # NOTE :: necessary for pam-gnupg
           "allow-preset-passphrase" = "";
-          # WARN :: automatically retrieve unknown keys from keyserver; potential privacy leak
-          "auto-key-retrieve" = "";
-          "keyserver" = "hkps://keys.openpgp.org";
         };
       };
       dirmngr = {
