@@ -13,7 +13,7 @@ in {
   imports = [];
   config = {
     services.minecraft.driftingLeague = {
-      enable = false;
+      enable = true;
       java.memory = {
         initial = "1024M";
         max = "8912M";
