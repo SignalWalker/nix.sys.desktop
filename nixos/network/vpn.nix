@@ -6,22 +6,21 @@
 }:
 with builtins; let
   std = pkgs.lib;
-  airvpn = config.signal.network.wireguard.networks."wg-airvpn";
 in {
   options = with lib; {
   };
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./vpn;
+  imports = [];
   config = {
     services.mullvad-vpn = {
       enable = false;
     };
 
-    signal.network.wireguard.networks."wg-signal" = {
+    networking.wireguard.networks."wg-signal" = {
       privateKeyFile = "/run/wireguard/wg-signal.sign";
     };
 
-    signal.network.wireguard.tunnels = {
+    networking.wireguard.tunnels = {
       "wg-airvpn" = {
         enable = true;
         privateKeyFile = "/run/wireguard/wg-airvpn.sign";
@@ -33,8 +32,8 @@ in {
         peer = {
           publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
           presharedKeyFile = "/run/wireguard/wg-airvpn.psk";
-          # airvpn musca
-          endpoint = "64.42.179.45:1637";
+          # airvpn terrebellum
+          endpoint = "198.44.136.30:1637";
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
       };

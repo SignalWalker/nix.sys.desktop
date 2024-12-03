@@ -23,7 +23,7 @@ in {
         enable = true;
         hostName = "cloud.home.ashwalker.net";
         https = true;
-        package = pkgs.nextcloud29;
+        package = pkgs.nextcloud30;
         autoUpdateApps.enable = true;
         configureRedis = true;
         database.createLocally = true;

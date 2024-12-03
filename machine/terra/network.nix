@@ -21,7 +21,7 @@ in {
   config = {
     networking.wireless.iwd.enable = false;
 
-    signal.network.wireguard.tunnels = {
+    networking.wireguard.tunnels = {
       "wg-airvpn" = {
         addresses = ["10.156.31.29/32" "fd7d:76ee:e68f:a993:95cf:4056:9fb6:dc5a/128"];
       };
