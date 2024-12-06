@@ -41,6 +41,11 @@ in {
         type = types.str;
         default = "/";
       };
+      serveAssets = mkEnableOption "";
+      auth = mkOption {
+        type = types.enum ["default" "none"];
+        default = "default";
+      };
       qbittorrent = {
         enable = mkEnableOption "qbittorrent integration";
         url = mkOption {
@@ -80,6 +85,28 @@ in {
     };
     users.groups.${flood.group} = {};
 
+    services.nginx.virtualHosts."${flood.hostName}" = let
+      baseUri =
+        if flood.baseUri == "/"
+        then ""
+        else flood.baseUri;
+    in {
+      locations."${baseUri}/api" = {
+        proxyPass = "http://127.0.0.1:${toString flood.port}";
+        extraConfig = ''
+          proxy_buffering off;
+          proxy_cache off;
+        '';
+      };
+      locations."${baseUri}/" = {
+        alias = "${flood.package}/lib/node_modules/flood/dist/assets/";
+        tryFiles = "$uri /flood/index.html";
+      };
+      extraConfig = lib.mkIf (flood.baseUri != "/") ''
+        rewrite ^${flood.baseUri}$ ${flood.baseUri}/ permanent;
+      '';
+    };
+
     systemd.services.flood = {
       after = ["network-online.target" "nss-lookup.target"];
       wants = ["network-online.target"];
@@ -99,31 +126,59 @@ in {
         Type = "simple";
         KillMode = "process";
         ExecStart = let
-          opts = lib.mkMerge [
+          opts =
             {
               rundir = flood.dataDir;
               host = "127.0.0.1";
               port = flood.port;
               baseuri = flood.baseUri;
+              assets =
+                if flood.serveAssets
+                then "true"
+                else "false";
+              auth = flood.auth;
             }
-            (lib.mkIf flood.qbittorrent.enable {
+            // (std.optionalAttrs flood.qbittorrent.enable {
               qburl = flood.qbittorrent.url;
               qbuser = flood.qbittorrent.user;
               qbpass = "$FLOOD_QBITTORRENT_PASSWORD";
             })
-            (lib.mkIf flood.deluge.enable {
+            // (std.optionalAttrs flood.deluge.enable {
               dehost = flood.deluge.host;
               deport = flood.deluge.port;
               deuser = flood.deluge.user;
               depass = "$FLOOD_DELUGE_PASSWORD";
-            })
-          ];
+            });
+          optsArgs = map (key: "--${key}=${toString opts.${key}}") (attrNames opts);
         in
-          "${flood.package}/bin/flood" + (std.concatStringsSep " " (map (key: "--${key}=${toString opts.${key}}") (attrNames opts)));
+          "${flood.package}/bin/flood " + (std.concatStringsSep " " optsArgs);
         User = flood.user;
         Group = flood.group;
         Restart = "on-failure";
         RestartSec = 3;
+
+        # security
+        CapabilityBoundingSet = [""];
+        DynamicUser = true;
+        LockPersonality = true;
+        NoNewPrivileges = true;
+        PrivateDevices = true;
+        PrivateTmp = true;
+        ProtectClock = true;
+        ProtectControlGroups = true;
+        ProtectHome = true;
+        ProtectHostname = true;
+        ProtectKernelLogs = true;
+        ProtectKernelModules = true;
+        ProtectKernelTunables = true;
+        ProtectProc = "invisible";
+        ProtectSystem = "strict";
+        RestrictAddressFamilies = ["AF_UNIX" "AF_INET" "AF_INET6"];
+        RestrictNamespaces = true;
+        RestrictRealtime = true;
+        RestrictSUIDSGID = true;
+        SystemCallArchitectures = "native";
+        SystemCallFilter = ["@system-service" "@pkey" "~@privileged"];
       };
     };
   };

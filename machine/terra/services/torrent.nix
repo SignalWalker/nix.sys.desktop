@@ -7,6 +7,7 @@
 with builtins; let
   std = pkgs.lib;
   qbit = config.services.qbittorrent;
+  deluge = config.services.deluge;
   jackett = config.services.jackett;
   radarr = config.services.radarr;
   sonarr = config.services.sonarr;
@@ -15,6 +16,8 @@ with builtins; let
   prowlarr = config.services.prowlarr;
   jseer = config.services.jellyseerr;
   udpt = config.services.udpt;
+
+  secrets = config.age.secrets;
 in {
   options = with lib; {
     services.jackett = {
@@ -49,23 +52,50 @@ in {
   disabledModules = [];
   imports = lib.signal.fs.path.listFilePaths ./torrent;
   config = {
+    age.secrets = {
+      floodSecrets.file = ./torrent/secrets/floodSecrets.age;
+    };
+
     services.qbittorrent = {
-      enable = true;
+      enable = !config.services.deluge.enable;
       webui = {
         hostName = "torrent.terra.ashwalker.net";
       };
     };
 
+    systemd.services."update-dynamic-ip" = {
+      after = ["network-online.target" "nss-lookup.target"];
+      wants = ["network-online.target"];
+      wantedBy = ["multi-user.target"];
+      path = [pkgs.curl];
+      serviceConfig = {
+        Type = "oneshot";
+        ExecStart = let
+          cookiePath = "/elysium/torrent/mam.cookies";
+        in "${pkgs.curl}/bin/curl -c ${cookiePath} -b ${cookiePath} https://t.myanonamouse.net/json/dynamicSeedbox.php";
+        User = qbit.user;
+        Group = qbit.group;
+      };
+    };
+
     # TODO :: set up bitmagnet
 
-    # services.flood = {
-    #   enable = false;
-    #   hostName = qbit.webui.hostName;
-    #   baseUri = "/flood";
-    #   qbittorrent = {
-    #     enable = true;
-    #   };
-    # };
+    services.flood-ui = {
+      enable = true;
+      hostName = qbit.webui.hostName;
+      baseUri = "/flood";
+      auth = "none";
+      qbittorrent = {
+        enable = qbit.enable;
+        url = "http://${qbit.webui.hostName}";
+        user = "ash";
+        passwordFile = secrets.floodSecrets.path;
+      };
+      deluge = {
+        enable = deluge.enable;
+        passwordFile = secrets.floodSecrets.path;
+      };
+    };
 
     services.jackett = {
       enable = qbit.enable;

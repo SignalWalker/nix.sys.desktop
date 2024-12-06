@@ -64,21 +64,6 @@ in {
     networking.firewall.allowedTCPPorts = [qbit.torrent.port];
     networking.firewall.allowedUDPPorts = [qbit.torrent.port];
 
-    systemd.services."update-dynamic-ip" = {
-      after = ["network-online.target" "nss-lookup.target"];
-      wants = ["network-online.target"];
-      wantedBy = ["multi-user.target"];
-      path = [pkgs.curl];
-      serviceConfig = {
-        Type = "oneshot";
-        ExecStart = let
-          cookiePath = "/elysium/torrent/mam.cookies";
-        in "${pkgs.curl}/bin/curl -c ${cookiePath} -b ${cookiePath} https://t.myanonamouse.net/json/dynamicSeedbox.php";
-        User = qbit.user;
-        Group = qbit.group;
-      };
-    };
-
     systemd.services.qbittorrent = {
       after = ["network-online.target" "nss-lookup.target" "update-dynamic-ip.service"];
       wants = ["network-online.target" "update-dynamic-ip.service"];

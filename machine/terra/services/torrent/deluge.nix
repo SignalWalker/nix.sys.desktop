@@ -12,19 +12,15 @@ in {
   disabledModules = [];
   imports = [];
   config = {
-    services.deluge = let
-      deluge = config.services.deluge;
-    in {
+    services.deluge = {
       enable = false;
       # authFile = null; # todo
       declarative = false; # todo
       openFirewall = false;
       config = {
-        download_location = "${deluge.dataDir}/downloads";
-        share_ratio_limit = "2.0";
-        allow_remote = true;
+        download_location = "/elysium/torrent/downloads";
         daemon_port = 58846;
-        listen_ports = [6881 6889];
+        listen_ports = [18698];
       };
       web = {
         enable = false; # todo
@@ -36,6 +32,11 @@ in {
     terra.network.tunnel.users = lib.mkIf deluge.enable [
       deluge.user
     ];
+
+    networking.firewall = lib.mkIf deluge.enable {
+      allowedUDPPorts = deluge.config.listen_ports;
+      allowedTCPPorts = deluge.config.listen_ports;
+    };
   };
   meta = {};
 }
