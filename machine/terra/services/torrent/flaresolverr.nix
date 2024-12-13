@@ -9,52 +9,37 @@ with builtins; let
   flare = config.services.flaresolverr;
 in {
   options = with lib; {
-    # services.flaresolverr = {
-    #   enable = mkEnableOption "flaresolverr";
-    #   chromium = mkOption {
-    #     type = types.package;
-    #     default = pkgs.ungoogled-chromium;
-    #   };
-    #   package = mkOption {
-    #     type = types.package;
-    #     default = pkgs.flaresolverr;
-    #   };
-    #   user = mkOption {
-    #     type = types.str;
-    #     default = "flaresolverr";
-    #   };
-    #   group = mkOption {
-    #     type = types.str;
-    #     default = "flaresolverr";
-    #   };
-    # };
+    services.flaresolverr = {
+      chromium = mkOption {
+        type = types.package;
+        default = pkgs.ungoogled-chromium;
+      };
+      package = mkOption {
+        type = types.package;
+        default = pkgs.flaresolverr;
+      };
+    };
   };
   disabledModules = [];
   imports = [];
   config = lib.mkIf flare.enable {
-    users.users.${flare.user} = {
-      isSystemUser = true;
-      group = flare.group;
+    services.flaresolverr = {
+      openFirewall = false;
+      port = 46909;
     };
-    users.groups.${flare.group} = {};
     systemd.services."flaresolverr" = {
-      after = ["network.target"];
-      wantedBy = ["multi-user.target"];
       path = [flare.chromium];
       environment = {
         LOG_LEVEL = "info";
         CAPTCHA_SOLVER = "none";
       };
-      serviceConfig = {
-        SyslogIdentifier = "flaresolverr";
-        Restart = "always";
-        RestartSec = 5;
-        Type = "simple";
-        User = flare.user;
-        Group = flare.group;
-        WorkingDirectory = "/var/lib/${flare.user}";
-        StateDirectory = flare.user;
-        ExecStart = "${flare.package}/bin/flaresolverr";
+    };
+    services.nginx.virtualHosts."solverr.${config.services.qbittorrent.webui.hostName}" = {
+      enableACME = false;
+      forceSSL = false;
+
+      locations."/" = {
+        proxyPass = "http://127.0.0.1:${toString flare.port}";
       };
     };
   };

@@ -29,7 +29,7 @@ in {
         table = 51821;
       in {
         enable = true;
-        # TODO :: figure out a good way to keep this out of public repos
+        # FIX :: figure out a good way to keep this out of public repos
         addresses = [
           "10.159.66.94/32"
           "fd7d:76ee:e68f:a993:b560:c12b:27ba:5557/128"
@@ -41,8 +41,8 @@ in {
         peer = {
           publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
           presharedKeyFile = "/run/wireguard/wg-torrent.psk";
-          # airvpn musca
-          endpoint = "64.42.179.37:1637";
+          # TODO :: automatically switch between set of endpoints?
+          endpoint = "198.44.136.246:1637";
           allowedIps = ["0.0.0.0/0" "::/0"];
         };
         activationPolicy = "up";

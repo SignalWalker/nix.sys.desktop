@@ -54,9 +54,9 @@ in {
           if (fonts.${font}.package != null)
           then (acc ++ [fonts.${font}.package])
           else acc) [] (attrNames fonts))
-      ++ (with pkgs; [
-        (nerdfonts.override {fonts = ["NerdFontsSymbolsOnly"];})
-      ]);
+      ++ [
+        pkgs.nerd-fonts.symbols-only
+      ];
 
     # tty/console
     services.kmscon = let

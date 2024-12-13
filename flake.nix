@@ -314,8 +314,12 @@
               # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
             };
             nixpkgs.config.permittedInsecurePackages = [
-              "electron-27.3.11"
-              "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
+              "dotnet-sdk-6.0.428"
+              "aspnetcore-runtime-6.0.36"
+              "aspnetcore-runtime-wrapped-6.0.36"
+              "dotnet-sdk-wrapped-6.0.428"
+              # "electron-27.3.11"
+              # "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
             ];
           }
           (lib.mkIf (machine == "artemis") {
