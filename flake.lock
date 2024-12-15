@@ -1692,11 +1692,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1733444216,
-        "narHash": "sha256-Xs+HcLsnMy6Z1FpHr0ULsGMc1mI6ESq1dTBAYwlpuVY=",
+        "lastModified": 1734127708,
+        "narHash": "sha256-fXDr93nc3zUDCGS5qhrXAtwBJfiI40jIdoMncLAzbUY=",
         "owner": "musnix",
         "repo": "musnix",
-        "rev": "a38011b5b96624b7f6527c0bc6df530a263297ad",
+        "rev": "0a2bbd1e2ec78ef268698eb682f39015c1f3ca1d",
         "type": "github"
       },
       "original": {
@@ -2718,11 +2718,11 @@
         "utils": "utils_2"
       },
       "locked": {
-        "lastModified": 1733429341,
-        "narHash": "sha256-4c3H4mDaAAug0nYT83Kt9nAUd3OoyATM27Ha0bJw1T4=",
+        "lastModified": 1734122416,
+        "narHash": "sha256-gqwvv7haawGv8ro7egMe4+HAUp3VpX3R9u1+dIfGQxs=",
         "owner": "neon-mmd",
         "repo": "websurfx",
-        "rev": "2e64fd5cbcaaf753134fd71b667709ed8f966da5",
+        "rev": "ab126b9d7031cb193a0e5ecd2212182c69ebc603",
         "type": "github"
       },
       "original": {
