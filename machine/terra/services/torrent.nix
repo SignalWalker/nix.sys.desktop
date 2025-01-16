@@ -98,7 +98,7 @@ in {
     };
 
     services.jackett = {
-      enable = qbit.enable;
+      enable = false; # qbit.enable;
       openFirewall = false;
     };
 

@@ -189,6 +189,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    nix-alien = {
+      url = "github:thiagokokada/nix-alien";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # hyprland = {
     #   url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -309,6 +314,8 @@
               inputs.thaw.overlays."package/thaw"
 
               # inputs.eww.overlays.default
+
+              inputs.nix-alien.overlays.default
             ];
             nixpkgs.config.packageOverrides = pkgs: {
               # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};

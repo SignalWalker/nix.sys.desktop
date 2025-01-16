@@ -36,11 +36,21 @@ in {
 
       wineWowPackages.waylandFull
       winetricks
+
+      nix-alien
     ];
 
     programs.nix-ld = {
       enable = true;
       libraries = with pkgs; [
+        libGL
+        xorg.libX11
+        xorg.libXcursor
+        xorg.libXext
+        xorg.libXi
+        xorg.libXinerama
+        xorg.libXrandr
+        xorg.libXrender
         # for some games (like cataclysm:bn) to work
         SDL2
         SDL2_Pango
