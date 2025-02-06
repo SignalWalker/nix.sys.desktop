@@ -131,11 +131,6 @@ in {
       # configFilePath = "/home/ash/.config/cross-seed/config.js";
     };
 
-    services.autobrr = {
-      enable = false;
-      hostName = "autobrr.${qbit.webui.hostName}";
-    };
-
     services.mylar3 = {
       enable = false;
       hostName = "mylar3.${qbit.webui.hostName}";
