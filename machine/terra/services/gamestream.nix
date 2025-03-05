@@ -26,9 +26,9 @@ in {
       defaultWindowManager = "startplasma-x11";
     };
 
-    services.flatpak = {
-      enable = false;
-    };
+    # services.flatpak = {
+    #   enable = false;
+    # };
   };
   meta = {};
 }

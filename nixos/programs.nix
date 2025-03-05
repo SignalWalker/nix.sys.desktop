@@ -51,6 +51,12 @@ in {
         xorg.libXinerama
         xorg.libXrandr
         xorg.libXrender
+        xorg.libxcb
+        xorg.libXcomposite
+        xorg.libXdamage
+        xorg.libXfixes
+        xorg.libXtst
+        xorg.libXScrnSaver
         # for some games (like cataclysm:bn) to work
         SDL2
         SDL2_Pango
@@ -60,7 +66,24 @@ in {
         SDL2_net
         SDL2_sound
         SDL2_ttf
+        # rpgmaker
+        nss
+        glib
+        nspr
+        cups
+        dbus
+        expat
+        alsa-lib
+        pango
+        cairo
+        at-spi2-atk
+        gtk3
+        gdk-pixbuf
       ];
+    };
+
+    services.flatpak = {
+      enable = true;
     };
   };
   meta = {};

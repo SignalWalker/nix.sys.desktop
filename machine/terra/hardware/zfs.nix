@@ -25,7 +25,7 @@ in {
           "usbhid"
           "sd_mod"
         ];
-        removableEfi = false;
+        removableEfi = true;
         kernelParams = [];
         sshUnlock = {
           enable = false;
