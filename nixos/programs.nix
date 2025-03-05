@@ -81,10 +81,6 @@ in {
         gdk-pixbuf
       ];
     };
-
-    services.flatpak = {
-      enable = true;
-    };
   };
   meta = {};
 }
