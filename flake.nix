@@ -144,10 +144,10 @@
       url = "github:nix-community/napalm";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    cross-seed = {
-      url = "github:cross-seed/cross-seed";
-      flake = false;
-    };
+    # cross-seed = {
+    #   url = "github:cross-seed/cross-seed";
+    #   flake = false;
+    # };
     autobrr = {
       url = "github:autobrr/autobrr";
       flake = false;
@@ -211,10 +211,10 @@
     in {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       overlays.default = final: prev: {
-        cross-seed = import ./pkgs/cross-seed.nix {
-          inherit inputs;
-          pkgs = final;
-        };
+        # cross-seed = import ./pkgs/cross-seed.nix {
+        #   inherit inputs;
+        #   pkgs = final;
+        # };
         autobrr = import ./pkgs/autobrr.nix {
           inherit inputs;
           pkgs = final;
