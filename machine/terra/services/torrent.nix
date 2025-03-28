@@ -103,7 +103,7 @@ in {
     };
 
     services.radarr = {
-      enable = jackett.enable;
+      enable = true;
       openFirewall = false;
     };
 
@@ -113,7 +113,7 @@ in {
     };
 
     services.prowlarr = {
-      enable = jackett.enable;
+      enable = true;
       openFirewall = false;
     };
 

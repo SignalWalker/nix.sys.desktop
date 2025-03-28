@@ -367,11 +367,6 @@
             # ./hm/${machine}.nix
           ];
           config = {
-            nixpkgs.overlays = [
-              inputs.mozilla.overlays.rust
-              inputs.mozilla.overlays.firefox
-            ];
-
             programs.guix.enable = false;
 
             desktop.wayland.compositor.sway.enable = true;

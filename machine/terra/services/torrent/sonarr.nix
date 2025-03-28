@@ -22,7 +22,7 @@ in {
   imports = [];
   config = {
     services.sonarr = {
-      enable = jackett.enable;
+      enable = true;
       openFirewall = false;
     };
     # NOTE :: make sure to edit ${sonarr.dataDir}/config.xml as per https://wiki.servarr.com/sonarr/postgres-setup#schema-creation
