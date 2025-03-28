@@ -18,6 +18,10 @@ in {
       QT_QPA_PLATFORM = "wayland;xcb";
       MOZ_ENABLE_WAYLAND = toString 1;
     };
+
+    programs.uwsm = {
+      enable = true;
+    };
   };
   meta = {};
 }
