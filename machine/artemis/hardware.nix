@@ -18,9 +18,9 @@ in {
     ]
     ++ (lib.signal.fs.path.listFilePaths ./hardware);
   config = {
-    warnings = [
-      "force-enabling hardware.intelgpu.loadInInitrd"
-    ];
+    # warnings = [
+    #   "force-enabling hardware.intelgpu.loadInInitrd"
+    # ];
     environment.systemPackages = with pkgs; [
       # intel-gpu-tools
     ];
@@ -35,13 +35,13 @@ in {
 
     hardware.intelgpu = {
       driver = "xe";
-      loadInInitrd = lib.mkForce true;
+      # loadInInitrd = lib.mkForce true;
     };
 
     boot.kernelParams = [
       # intel graphics (a7a0 not officially supported by xe as of 2024-07-03)
-      "i915.force_probe='!a7a0'"
-      "xe.force_probe='a7a0'"
+      # "i915.force_probe='!a7a0'"
+      # "xe.force_probe='a7a0'"
     ];
 
     programs.auto-cpufreq = {

@@ -194,8 +194,14 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # hyprland = {
-    #   url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+    hyprland = {
+      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
+      url = "github:hyprwm/Hyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # nixgl = {
+    #   url = "github:nix-community/nixgl";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
   };
@@ -316,6 +322,8 @@
               # inputs.eww.overlays.default
 
               inputs.nix-alien.overlays.default
+
+              # inputs.nixgl.overlay
             ];
             nixpkgs.config.packageOverrides = pkgs: {
               # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
@@ -378,6 +386,7 @@
       nixosConfigurations = std.mapAttrs (machine: module:
         std.nixosSystem {
           system = null; # set in `config.nixpkgs.hostPlatform`
+          specialArgs = {inherit inputs;};
           modules = [
             module
             {
