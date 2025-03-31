@@ -5,42 +5,11 @@
   ...
 }:
 with builtins; let
-  std = pkgs.lib;
-  sway = config.programs.sway;
-
-  runSway = pkgs.writeShellScript "run-sway" (readFile ./sway/run-sway.sh);
-
-  sway-session = let
-    writeSession = name: text:
-      (pkgs.writeTextFile {
-        name = "${name}.desktop";
-        text = ''
-          [Desktop Entry]
-          Version=1.0
-          Name=${name}
-          Type=Application
-          ${text}
-        '';
-        destination = "/share/wayland-sessions/${name}.desktop";
-      })
-      // {
-        providedSessions = [name];
-      };
-  in (writeSession "SwayWrapped" ''
-    DesktopNames=sway
-    Comment=Sway with extra features
-    TryExec=sway
-    Exec=${runSway}
-  '');
 in {
   options = with lib; {};
   disabledModules = [];
   imports = [];
   config = lib.mkIf (config.services.desktopManager.manager == "sway") {
-    environment.systemPackages = [(pkgs.writeShellScriptBin "run-sway" (readFile ./sway/run-sway.sh))];
-
-    services.displayManager.sessionPackages = [sway-session];
-
     programs.sway = {
       enable = true;
       wrapperFeatures = {
@@ -52,6 +21,12 @@ in {
         # swaylock-effects
         swayidle
       ];
+    };
+
+    programs.uwsm.waylandCompositors.sway = {
+      prettyName = "Sway";
+      comment = "Sway compositor managed by UWSM";
+      binPath = "/run/current-system/sw/bin/sway";
     };
   };
   meta = {};

@@ -16,6 +16,7 @@ in {
       enable = true;
       systemd.setPath.enable = true;
       xwayland.enable = true;
+      withUWSM = true;
     };
   };
   meta = {};

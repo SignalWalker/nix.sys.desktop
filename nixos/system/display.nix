@@ -12,7 +12,7 @@ in {
   options = with lib; {
     services.desktopManager.manager = mkOption {
       type = types.enum ["plasma6" "sway" "river" "hyprland"];
-      default = "sway";
+      default = "hyprland";
     };
   };
   disabledModules = [];
