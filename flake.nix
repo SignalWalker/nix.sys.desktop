@@ -200,6 +200,11 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    pyprland = {
+      url = "github:hyprland-community/pyprland";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     # nixgl = {
     #   url = "github:nix-community/nixgl";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -359,6 +364,7 @@
         ash = {
           config,
           lib,
+          pkgs,
           ...
         }: {
           imports = [
@@ -377,8 +383,10 @@
           config = {
             programs.guix.enable = false;
 
-            desktop.wayland.compositor.sway.enable = true;
+            # desktop.wayland.compositor.sway.enable = true;
             desktop.wayland.taskbar.enable = true;
+
+            wayland.windowManager.hyprland.pyprland.package = inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
           };
         };
       };
