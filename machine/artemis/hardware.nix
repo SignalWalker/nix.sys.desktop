@@ -21,6 +21,12 @@ in {
     # warnings = [
     #   "force-enabling hardware.intelgpu.loadInInitrd"
     # ];
+
+    hardware.intelgpu = {
+      driver = "xe";
+      # loadInInitrd = lib.mkForce true;
+    };
+
     environment.systemPackages = with pkgs; [
       # intel-gpu-tools
     ];
@@ -29,14 +35,7 @@ in {
 
     system.linuxKernel.filter = name: kp: lib.versionAtLeast kp.kernel.version "6.8";
 
-    # handled by nixos-hardware#framework
-    # hardware.cpu.intel.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;
-    # boot.kernelPackages = pkgs.linuxPackages_latest;
-
-    hardware.intelgpu = {
-      driver = "xe";
-      # loadInInitrd = lib.mkForce true;
-    };
+    # NOTE :: cpu microcode updates handled by nixos-hardware#framework
 
     boot.kernelParams = [
       # intel graphics (a7a0 not officially supported by xe as of 2024-07-03)
