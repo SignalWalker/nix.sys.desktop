@@ -49,6 +49,13 @@ in {
         proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
       };
     };
+
+    # services.glance.monitorSites = [
+    #   {
+    #     title = "Nix Cache";
+    #     url = "http://nix-cache.terra.ashwalker.net";
+    #   }
+    # ];
   };
   meta = {};
 }

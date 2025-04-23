@@ -11,6 +11,7 @@ with builtins; let
   secrets = config.age.secrets;
   redis = config.services.redis.servers."forgejo";
   nginx = config.services.nginx;
+  anubis = config.services.anubis;
 in {
   options = with lib; {
   };
@@ -100,6 +101,16 @@ in {
       enable = true;
       user = forgejo.user;
     };
+
+    services.anubis.instances."forgejo" = {
+      target = "unix://${forgejo.settings.server.HTTP_ADDR}";
+      systemd.socketActivated = true;
+      domain = forgejo.settings.server.DOMAIN;
+      env = {
+        SOCKET_MODE = "0777"; # FIX :: does this really need to be 0777
+      };
+    };
+
     services.nginx.virtualHosts.${domain} = {
       enableACME = true;
       forceSSL = true;
@@ -107,14 +118,9 @@ in {
       blockAgents = {
         agents = lib.mkOptionDefault ["Googlebot"];
       };
-      locations."=/robots.txt" = {
-        alias = pkgs.writeText "robots.txt" ''
-          User-agent: *
-          Disallow: /
-        '';
-      };
       locations."/" = {
-        proxyPass = "http://unix:${forgejo.settings.server.HTTP_ADDR}";
+        # proxyPass = "http://unix:${forgejo.settings.server.HTTP_ADDR}";
+        proxyPass = "http://unix:${anubis.instances."forgejo".systemd.socketPath}";
         extraConfig = ''
           client_max_body_size 512M;
         '';
@@ -148,6 +154,13 @@ in {
         };
       };
     };
+
+    services.glance.monitorSites = [
+      {
+        title = "Forgejo";
+        url = "https://git.ashwalker.net";
+      }
+    ];
   };
   meta = {};
 }

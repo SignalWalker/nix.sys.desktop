@@ -15,7 +15,7 @@ in {
   config = lib.mkIf (config.services.desktopManager.manager == "hyprland") {
     programs.hyprland = {
       enable = true;
-      systemd.setPath.enable = true;
+      systemd.setPath.enable = false;
       xwayland.enable = true;
       withUWSM = true;
       package = inputs.hyprland.packages.${pkgs.stdenv.hostPlatform.system}.hyprland;

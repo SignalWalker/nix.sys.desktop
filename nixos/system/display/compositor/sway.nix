@@ -28,6 +28,21 @@ in {
       comment = "Sway compositor managed by UWSM";
       binPath = "/run/current-system/sw/bin/sway";
     };
+
+    xdg.portal = {
+      wlr.enable = true;
+      extraPortals = [
+        pkgs.xdg-desktop-portal-gtk
+      ];
+      config = {
+        common = {
+          default = [
+            "wlr"
+            "gtk"
+          ];
+        };
+      };
+    };
   };
   meta = {};
 }

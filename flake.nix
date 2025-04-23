@@ -205,6 +205,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    anubis = {
+      url = "github:signalwalker/nix.service.anubis";
+    };
+
     # nixgl = {
     #   url = "github:nix-community/nixgl";
     #   inputs.nixpkgs.follows = "nixpkgs";
@@ -275,6 +279,8 @@
             inputs.agenix.nixosModules.age
 
             inputs.auto-cpufreq.nixosModules.default
+
+            inputs.anubis.nixosModules.default
 
             ./machine/${machine}.nix
           ]

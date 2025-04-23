@@ -29,21 +29,9 @@ in {
 
     programs.light.enable = true;
 
-    xdg.portal = lib.mkIf (manager != "plasma6" && manager != "hyprland") {
+    xdg.portal = {
       enable = true;
       xdgOpenUsePortal = true;
-      wlr.enable = true;
-      extraPortals = [
-        pkgs.xdg-desktop-portal-gtk
-      ];
-      config = {
-        common = {
-          default = [
-            "wlr"
-            "gtk"
-          ];
-        };
-      };
     };
 
     fonts.packages =
@@ -62,8 +50,8 @@ in {
     services.kmscon = let
       fontCfg = config.home-manager.users.ash.desktop.theme.font;
     in {
-      enable = true;
-      hwRender = true;
+      enable = false; # FIX :: breaks display manager as of 2025-04-02
+      hwRender = false;
       useXkbConfig = true;
       fonts = map (font: {
         name = font.name;

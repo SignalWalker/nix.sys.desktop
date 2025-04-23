@@ -4,14 +4,36 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   gnupg = config.programs.gnupg;
   agent = gnupg.agent;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+  polkit = config.security.polkit;
+in
+{
+  options = with lib; {
+    security.polkit = {
+      allowedUserActions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+      allowedUserPrefixes = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+      allowedAdminActions = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+      allowedAdminPrefixes = mkOption {
+        type = types.listOf types.str;
+        default = [ ];
+      };
+    };
+  };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.gnome.gnome-keyring = {
       enable = true;
@@ -30,16 +52,18 @@ in {
         enableBrowserSocket = true;
         enableExtraSocket = true;
         pinentryPackage = pkgs.pinentry-qt;
-        settings = let
-          ttl = 43200; # 12 hours
-        in {
-          "max-cache-ttl" = ttl;
-          "default-cache-ttl" = ttl;
-          "max-cache-ttl-ssh" = ttl;
-          "default-cache-ttl-ssh" = ttl;
-          # NOTE :: necessary for pam-gnupg
-          "allow-preset-passphrase" = "";
-        };
+        settings =
+          let
+            ttl = 43200; # 12 hours
+          in
+          {
+            "max-cache-ttl" = ttl;
+            "default-cache-ttl" = ttl;
+            "max-cache-ttl-ssh" = ttl;
+            "default-cache-ttl-ssh" = ttl;
+            # NOTE :: necessary for pam-gnupg
+            "allow-preset-passphrase" = "";
+          };
       };
       dirmngr = {
         enable = true;
@@ -91,34 +115,65 @@ in {
 
     security.polkit = {
       enable = true;
-
-      # polkit.addRule(function(action, subject) {
-      #   if (
-      #     subject.isInGroup("wheel")
-      #       && (
-      #         action.id == "org.freedesktop.login1.reboot" ||
-      #         action.id == "org.freedesktop.login1.reboot-multiple-sessions" ||
-      #         action.id == "org.freedesktop.login1.power-off" ||
-      #         action.id == "org.freedesktop.login1.power-off-multiple-sessions" ||
-      #       )
-      #     )
-      #   {
-      #     return polkit.Result.YES;
-      #   }
-      # });
-      extraConfig = ''
-        polkit.addRule(function(action, subject) {
-          if (
-            subject.isInGroup("wheel")
-            && (
-              action.id == "org.libvirt.unix.manage"
-            )
-          ) {
-            return polkit.Result.YES;
-          }
-        });
-      '';
+      allowedAdminActions = [
+        "org.auto-cpufreq.pkexec"
+      ];
+      allowedAdminPrefixes = [
+        "org.libvirt."
+        "org.freedesktop.Flatpak."
+        "org.freedesktop.network1."
+      ];
+      allowedUserActions = [
+      ];
+      allowedUserPrefixes = [
+        "org.freedesktop.login1.reboot"
+        "org.freedesktop.login1.power-off"
+        "org.freedesktop.login1.hibernate"
+        "org.freedesktop.login1.suspend"
+        "com.feralinteractive.GameMode."
+        "org.freedesktop.NetworkManager."
+        "org.freedesktop.RealtimeKit1."
+      ];
+      extraConfig =
+        let
+          mkActionList = actions: lib.concatStringsSep ", " (map (action: "\"${action}\"") actions);
+          mkPrefixList =
+            prefixes:
+            lib.concatStringsSep " || " (map (prefix: "(action.id.indexOf(\"${prefix}\") == 0)") prefixes);
+          userActions = mkActionList polkit.allowedUserActions;
+          userPrefixes = mkPrefixList polkit.allowedUserPrefixes;
+          adminActions = mkActionList polkit.allowedAdminActions;
+          adminPrefixes = mkPrefixList polkit.allowedAdminPrefixes;
+        in
+        ''
+          polkit.addRule(function(action, subject) {
+            if (
+              subject.isInGroup("wheel")
+              && (
+                ([
+                  ${adminActions}
+                ].indexOf(action.id) !== -1)
+                || (${adminPrefixes})
+              )
+            ) {
+              return polkit.Result.YES;
+            }
+          });
+          polkit.addRule(function(action, subject) {
+            if (
+              subject.isInGroup("users")
+              && (
+                ([
+                  ${userActions}
+                ].indexOf(action.id) !== -1)
+                || (${userPrefixes})
+              )
+            ) {
+              return polkit.Result.YES;
+            }
+          });
+        '';
     };
   };
-  meta = {};
+  meta = { };
 }

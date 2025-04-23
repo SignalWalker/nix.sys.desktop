@@ -7,6 +7,8 @@
 with builtins; let
   std = pkgs.lib;
   navi = config.services.navidrome;
+  domain = "music.home.ashwalker.net";
+  anubis = config.services.anubis;
 in {
   options = with lib; {};
   disabledModules = [];
@@ -19,7 +21,7 @@ in {
     services.navidrome = {
       listen.port = 41457;
       settings = {
-        BaseUrl = "https://music.home.ashwalker.net";
+        BaseUrl = "https://${domain}";
         RecentlyAddedByModTime = true;
         CoverArtPriority = "embedded, cover.*, folder.*, front.*, external";
         EnableUserEditing = false;
@@ -30,14 +32,30 @@ in {
       dir.library = "/elysium/media/audio/library";
     };
 
+    services.anubis.instances."navidrome" = {
+      target = "http://${navi.listen.address}:${toString navi.listen.port}";
+      systemd.socketActivated = true;
+      domain = domain;
+      env = {
+        SOCKET_MODE = "0777"; # FIX :: does this really need to be 0777
+      };
+    };
+
     services.nginx.virtualHosts."music.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
-        proxyPass = "http://${navi.listen.address}:${toString navi.listen.port}";
+        proxyPass = "http://unix:${anubis.instances."navidrome".systemd.socketPath}";
       };
     };
+
+    services.glance.monitorSites = [
+      {
+        title = "Navidrome";
+        url = "https://music.home.ashwalker.net";
+      }
+    ];
   };
   meta = {};
 }

@@ -26,6 +26,15 @@ in {
       openFirewall = false;
     };
 
+    # services.anubis.instances."jellyfin" = {
+    #   target = "http://${navi.listen.address}:${toString navi.listen.port}";
+    #   systemd.socketActivated = true;
+    #   domain = domain;
+    #   env = {
+    #     SOCKET_MODE = "0777"; # FIX :: does this really need to be 0777
+    #   };
+    # };
+
     services.nginx.virtualHosts."media.home.ashwalker.net" = {
       enableACME = true;
       forceSSL = true;
@@ -76,6 +85,13 @@ in {
         '';
       };
     };
+
+    services.glance.monitorSites = [
+      {
+        title = "Jellyfin";
+        url = "https://media.home.ashwalker.net";
+      }
+    ];
   };
   meta = {};
 }

@@ -66,6 +66,14 @@ in {
         SDL2_net
         SDL2_sound
         SDL2_ttf
+        ## modloader64
+        glew
+        speexdsp
+        libsamplerate
+        sfml_2
+        openal
+        libvorbis
+        flac
         # rpgmaker
         nss
         glib
