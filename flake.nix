@@ -205,25 +205,36 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    anubis = {
-      url = "github:signalwalker/nix.service.anubis";
-    };
+    # anubis = {
+    #   url = "github:signalwalker/nix.service.anubis";
+    # };
 
     # nixgl = {
     #   url = "github:nix-community/nixgl";
     #   inputs.nixpkgs.follows = "nixpkgs";
     # };
+
+    openmw-nix = {
+      url = "git+https://codeberg.org/PopeRigby/openmw-nix.git";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
-  outputs = inputs @ {
-    self,
-    nixpkgs,
-    deploy-rs,
-    ...
-  }:
-    with builtins; let
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      deploy-rs,
+      ...
+    }:
+    with builtins;
+    let
       std = nixpkgs.lib;
-      machines = ["artemis" "terra"];
-    in {
+      machines = [
+        "artemis"
+        "terra"
+      ];
+    in
+    {
       formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
       overlays.default = final: prev: {
         # cross-seed = import ./pkgs/cross-seed.nix {
@@ -243,164 +254,187 @@
           pkgs = final;
         };
       };
-      packages."x86_64-linux" = let
-        pkgs = import nixpkgs {
-          localSystem = "x86_64-linux";
-          crossSystem = "x86_64-linux";
-          overlays = [self.overlays.default];
+      packages."x86_64-linux" =
+        let
+          pkgs = import nixpkgs {
+            localSystem = "x86_64-linux";
+            crossSystem = "x86_64-linux";
+            overlays = [ self.overlays.default ];
+          };
+        in
+        {
+          # inherit
+          #   (pkgs)
+          #   cross-seed
+          #   autobrr
+          #   mylar3
+          #   kaizoku
+          #   ;
         };
-      in {
-        # inherit
-        #   (pkgs)
-        #   cross-seed
-        #   autobrr
-        #   mylar3
-        #   kaizoku
-        #   ;
-      };
-      nixosModules = std.genAttrs machines (machine: {
-        config,
-        lib,
-        pkgs,
-        ...
-      }: {
-        options = {};
-
-        imports =
-          [
-            inputs.sysbase.nixosModules.default
-            inputs.syshome.nixosModules.default
-
-            inputs.lix-module.nixosModules.default
-
-            inputs.nix-index-database.nixosModules.nix-index
-            inputs.foundryvtt.nixosModules.foundryvtt
-            inputs.musnix.nixosModules.musnix
-            inputs.agenix.nixosModules.age
-
-            inputs.auto-cpufreq.nixosModules.default
-
-            inputs.anubis.nixosModules.default
-
-            ./machine/${machine}.nix
-          ]
-          ++ (lib.signal.fs.path.listFilePaths ./nixos)
-          ++ (std.optionals (machine == "artemis") [
-            inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
-          ])
-          ++ (std.optionals (machine == "terra") [
-            inputs.nixos-hardware.nixosModules.common-pc
-            inputs.nixos-hardware.nixosModules.common-pc-ssd
-
-            inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
-
-            # TODO :: switch to nouveau
-            inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-
-            inputs.minecraft.nixosModules.default
-
-            inputs.simple-nixos-mailserver.nixosModules.default
-          ]);
-
-        config = lib.mkMerge [
-          {
-            # assertions = [
-            #   {
-            #     assertion = config.nix.package.version >= pkgs.nix.version;
-            #     message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
-            #   }
-            # ];
-            warnings = [
-              "using lix instead of nix"
-            ];
-            # nix.package = inputs.nix.packages.${pkgs.system}.nix;
-
-            networking.hostName = machine;
-            networking.domain = lib.mkDefault "local";
-            home-manager = {
-              users = self.homeConfigurations;
-            };
-            nixpkgs.overlays = [
-              self.overlays.default
-
-              inputs.mozilla.overlays.rust
-              inputs.mozilla.overlays.firefox
-              # inputs.wayland.overlays.default
-              inputs.agenix.overlays.default
-
-              inputs.thaw.overlays."package/thaw"
-
-              # inputs.eww.overlays.default
-
-              inputs.nix-alien.overlays.default
-
-              # inputs.nixgl.overlay
-            ];
-            nixpkgs.config.packageOverrides = pkgs: {
-              # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
-            };
-            nixpkgs.config.permittedInsecurePackages = [
-              "dotnet-sdk-6.0.428"
-              "aspnetcore-runtime-6.0.36"
-              "aspnetcore-runtime-wrapped-6.0.36"
-              "dotnet-sdk-wrapped-6.0.428"
-              # "electron-27.3.11"
-              # "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
-            ];
-          }
-          (lib.mkIf (machine == "artemis") {
-            environment.systemPackages = [
-              inputs.fw-ectool.packages.${pkgs.system}.default
-            ];
-            boot.loader.grub = {
-              theme = "${inputs.grub-theme-yorha}/yorha-2256x1504";
-            };
-          })
-          (lib.mkIf (machine == "terra") {
-            # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
-
-            # networking.domain = "home.ashwalker.net";
-            # networking.fqdn = "home.ashwalker.net";
-            # services.mylar3.package = inputs.mylar3.packages.${pkgs.system}.mylar3;
-          })
-        ];
-      });
-
-      homeConfigurations = {
-        ash = {
+      nixosModules = std.genAttrs machines (
+        machine:
+        {
           config,
           lib,
           pkgs,
           ...
-        }: {
-          imports = [
-            inputs.homebase.homeManagerModules.default
-            inputs.homedev.homeManagerModules.default
-            inputs.homedesk.homeManagerModules.default
-            inputs.homemedia.homeManagerModules.default
+        }:
+        {
+          options = { };
 
-            inputs.nix-index-database.hmModules.nix-index
-            inputs.agenix.homeManagerModules.age
+          imports =
+            [
+              inputs.sysbase.nixosModules.default
+              inputs.syshome.nixosModules.default
 
-            ./hm/shared.nix
-            # TODO :: per-machine homeconfig
-            # ./hm/${machine}.nix
+              inputs.lix-module.nixosModules.default
+
+              inputs.nix-index-database.nixosModules.nix-index
+              inputs.foundryvtt.nixosModules.foundryvtt
+              inputs.musnix.nixosModules.musnix
+              inputs.agenix.nixosModules.age
+
+              inputs.auto-cpufreq.nixosModules.default
+
+              # inputs.anubis.nixosModules.default
+
+              ./machine/${machine}.nix
+            ]
+            ++ (lib.signal.fs.path.listFilePaths ./nixos)
+            ++ (std.optionals (machine == "artemis") [
+              inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
+            ])
+            ++ (std.optionals (machine == "terra") [
+              inputs.nixos-hardware.nixosModules.common-pc
+              inputs.nixos-hardware.nixosModules.common-pc-ssd
+
+              inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
+
+              # TODO :: switch to nouveau
+              inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+
+              inputs.minecraft.nixosModules.default
+
+              inputs.simple-nixos-mailserver.nixosModules.default
+            ]);
+
+          config = lib.mkMerge [
+            {
+              # assertions = [
+              #   {
+              #     assertion = config.nix.package.version >= pkgs.nix.version;
+              #     message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
+              #   }
+              # ];
+              warnings = [
+                "using lix instead of nix"
+              ];
+              # nix.package = inputs.nix.packages.${pkgs.system}.nix;
+
+              networking.hostName = machine;
+              networking.domain = lib.mkDefault "local";
+              home-manager = {
+                users = self.homeConfigurations;
+              };
+              nixpkgs.overlays = [
+                self.overlays.default
+
+                inputs.mozilla.overlays.rust
+                inputs.mozilla.overlays.firefox
+                # inputs.wayland.overlays.default
+                inputs.agenix.overlays.default
+
+                inputs.thaw.overlays."package/thaw"
+
+                # inputs.eww.overlays.default
+
+                inputs.nix-alien.overlays.default
+
+                # inputs.nixgl.overlay
+              ];
+              nixpkgs.config.packageOverrides = pkgs: {
+                # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
+              };
+              nixpkgs.config.permittedInsecurePackages = [
+                "dotnet-sdk-6.0.428"
+                "aspnetcore-runtime-6.0.36"
+                "aspnetcore-runtime-wrapped-6.0.36"
+                "dotnet-sdk-wrapped-6.0.428"
+                # "electron-27.3.11"
+                # "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
+              ];
+            }
+            (lib.mkIf (machine == "artemis") {
+              environment.systemPackages = [
+                inputs.fw-ectool.packages.${pkgs.system}.default
+              ];
+              boot.loader.grub = {
+                theme = "${inputs.grub-theme-yorha}/yorha-2256x1504";
+              };
+            })
+            (lib.mkIf (machine == "terra") {
+              # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
+
+              # networking.domain = "home.ashwalker.net";
+              # networking.fqdn = "home.ashwalker.net";
+              # services.mylar3.package = inputs.mylar3.packages.${pkgs.system}.mylar3;
+            })
           ];
-          config = {
-            programs.guix.enable = false;
+        }
+      );
 
-            # desktop.wayland.compositor.sway.enable = true;
-            desktop.wayland.taskbar.enable = true;
+      homeConfigurations = {
+        ash =
+          {
+            config,
+            lib,
+            pkgs,
+            ...
+          }:
+          {
+            imports = [
+              inputs.homebase.homeManagerModules.default
+              inputs.homedev.homeManagerModules.default
+              inputs.homedesk.homeManagerModules.default
+              inputs.homemedia.homeManagerModules.default
 
-            wayland.windowManager.hyprland.pyprland.package = inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
+              inputs.nix-index-database.hmModules.nix-index
+              inputs.agenix.homeManagerModules.age
+
+              ./hm/shared.nix
+              # TODO :: per-machine homeconfig
+              # ./hm/${machine}.nix
+            ];
+            config = {
+              programs.guix.enable = false;
+
+              # desktop.wayland.compositor.sway.enable = true;
+              desktop.wayland.taskbar.enable = true;
+
+              wayland.windowManager.hyprland.pyprland.package =
+                inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
+
+              home.packages =
+                [
+
+                ]
+                ++ (with inputs.openmw-nix.packages.${pkgs.system}; [
+                  openmw-dev
+                  openmw-validator
+                  plox
+                  umo
+                  delta-plugin
+                  groundcoverify
+                ]);
+            };
           };
-        };
       };
 
-      nixosConfigurations = std.mapAttrs (machine: module:
+      nixosConfigurations = std.mapAttrs (
+        machine: module:
         std.nixosSystem {
           system = null; # set in `config.nixpkgs.hostPlatform`
-          specialArgs = {inherit inputs;};
+          specialArgs = { inherit inputs; };
           modules = [
             module
             {
@@ -413,11 +447,13 @@
               };
             }
           ];
-          lib = std.extend (final: prev: {
-            signal = inputs.homelib.lib;
-          });
-        })
-      self.nixosModules;
+          lib = std.extend (
+            final: prev: {
+              signal = inputs.homelib.lib;
+            }
+          );
+        }
+      ) self.nixosModules;
 
       deploy = {
         sshUser = "root";

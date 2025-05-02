@@ -4,14 +4,16 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   navi = config.services.navidrome;
   domain = "music.home.ashwalker.net";
   anubis = config.services.anubis;
-in {
-  options = with lib; {};
-  disabledModules = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
   imports = lib.signal.fs.path.listFilePaths ./music;
   config = {
     services.navidrome = {
@@ -33,11 +35,11 @@ in {
     };
 
     services.anubis.instances."navidrome" = {
-      target = "http://${navi.listen.address}:${toString navi.listen.port}";
-      systemd.socketActivated = true;
-      domain = domain;
-      env = {
+      enable = true;
+      settings = {
+        TARGET = "http://${navi.listen.address}:${toString navi.listen.port}";
         SOCKET_MODE = "0777"; # FIX :: does this really need to be 0777
+        COOKIE_DOMAIN = domain;
       };
     };
 
@@ -46,7 +48,7 @@ in {
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
-        proxyPass = "http://unix:${anubis.instances."navidrome".systemd.socketPath}";
+        proxyPass = "http://unix:${anubis.instances."navidrome".settings.BIND}";
       };
     };
 
@@ -57,5 +59,5 @@ in {
       }
     ];
   };
-  meta = {};
+  meta = { };
 }

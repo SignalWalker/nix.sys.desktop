@@ -5,17 +5,19 @@
   options,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   anubis = config.services.anubis;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.anubis = {
-      instanceDefaults = {
-        env = {
+      defaultOptions = {
+        settings = {
           OG_PASSTHROUGH = true;
           WEBMASTER_EMAIL = "ash@ashwalker.net";
           SERVE_ROBOTS_TXT = true;
@@ -23,5 +25,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }

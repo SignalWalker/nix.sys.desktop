@@ -4,12 +4,14 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   guix = config.services.guix;
-in {
-  options = with lib; {};
-  disabledModules = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
   imports = lib.signal.fs.path.listFilePaths ./programs;
   config = {
     services.guix = {
@@ -40,6 +42,11 @@ in {
       nix-alien
     ];
 
+    programs.appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
     programs.nix-ld = {
       enable = true;
       libraries = with pkgs; [
@@ -57,6 +64,7 @@ in {
         xorg.libXfixes
         xorg.libXtst
         xorg.libXScrnSaver
+        xorg.libXxf86vm
         # for some games (like cataclysm:bn) to work
         SDL2
         SDL2_Pango
@@ -74,6 +82,8 @@ in {
         openal
         libvorbis
         flac
+        ## tes3cmd
+        libxcrypt-legacy
         # rpgmaker
         nss
         glib
@@ -90,5 +100,5 @@ in {
       ];
     };
   };
-  meta = {};
+  meta = { };
 }
