@@ -218,6 +218,10 @@
       url = "git+https://codeberg.org/PopeRigby/openmw-nix.git";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    openmw-src = {
+      url = "github:openmw/openmw";
+      flake = false;
+    };
   };
   outputs =
     inputs@{
@@ -419,7 +423,11 @@
 
                 ]
                 ++ (with inputs.openmw-nix.packages.${pkgs.system}; [
-                  openmw-dev
+                  (openmw-dev.overrideAttrs (
+                    final: prev: {
+                      src = inputs.openmw-src;
+                    }
+                  ))
                   openmw-validator
                   plox
                   umo
