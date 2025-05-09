@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+TERM_EXEC="uwsm-app -T"
+
+if [ $# -ne 4 ]; then
+    echo "USAGE: $0 <project> <file> <line> <column>"
+    exit 1
+fi
+
+RUNTIME_DIR="$XDG_RUNTIME_DIR/godot/editor"
+
+mkdir -p $RUNTIME_DIR
+
+SOCKET="$RUNTIME_DIR/$(basename $1).socket"
+FILE="$2"
+LINE="$3"
+COL="$4"
+
+[ -S "$SOCKET" ] &&
+    # Connect to running nvim server if socket exists
+    nvim --server "$SOCKET" --remote-send ":n +call\ cursor($LINE,$COL) $FILE<CR>" || (
+    # Create new server if socket doesn't exist
+    tty -s && # Test if shell session is interactive, or a terminal should be opened
+        nvim --listen "$SOCKET" "+call cursor($LINE,$COL)" "$FILE" || (
+        nohup $TERM_EXEC nvim --listen "$SOCKET" "+call cursor($LINE,$COL)" "$FILE" > /dev/null 2>&1 & ) )
