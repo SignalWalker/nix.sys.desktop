@@ -5,30 +5,30 @@
   modulesPath,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports =
-    [
-      (modulesPath + "/installer/scan/not-detected.nix")
-    ]
-    ++ lib.signal.fs.path.listFilePaths ./hardware;
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ] ++ lib.signal.fs.path.listFilePaths ./hardware;
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
-    fileSystems."/windows" = {
-      device = "/dev/disk/by-uuid/B050B49B50B46A2C";
-      fsType = "ntfs";
-      mountPoint = "/windows";
-      options = [
-        "uid=ash"
-        "gid=users"
-        "umask=227"
-        "ro"
-      ];
-    };
+    # fileSystems."/windows" = {
+    #   device = "/dev/disk/by-uuid/B050B49B50B46A2C";
+    #   fsType = "ntfs";
+    #   mountPoint = "/windows";
+    #   options = [
+    #     "uid=ash"
+    #     "gid=users"
+    #     "umask=227"
+    #     "ro"
+    #   ];
+    # };
 
     programs.auto-cpufreq = {
       enable = true;
@@ -53,7 +53,10 @@ in {
       enable = true;
     };
 
-    boot.supportedFilesystems = ["ntfs"];
+    boot.supportedFilesystems = [
+      "bcachefs"
+      "ntfs"
+    ];
 
     # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
 
@@ -70,5 +73,5 @@ in {
     #   "iommu=pt"
     # ];
   };
-  meta = {};
+  meta = { };
 }
