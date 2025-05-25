@@ -4,12 +4,14 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     # programs.thunar = {
     #   enable = true;
@@ -40,12 +42,12 @@ in {
       # epub / mobi
       pkgs.gnome-epub-thumbnailer
       # various 3D formats
-      pkgs.f3d
+      # pkgs.f3d # FIX :: build failure 2025-05-24
       # video
       pkgs.ffmpegthumbnailer
       # .raw
       pkgs.nufraw-thumbnailer
     ];
   };
-  meta = {};
+  meta = { };
 }
