@@ -4,14 +4,16 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
-    home.packages = [pkgs.godot_4];
+    home.packages = [ pkgs.godot_4-mono ];
     desktop.windows = [
       {
         criteria = {
@@ -22,5 +24,5 @@ in {
       }
     ];
   };
-  meta = {};
+  meta = { };
 }
