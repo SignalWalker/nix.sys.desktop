@@ -4,12 +4,14 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     programs.gamescope = {
       enable = true;
@@ -24,7 +26,7 @@ in {
       ];
     };
 
-    users.extraGroups."gamemode".members = ["ash"];
+    users.extraGroups."gamemode".members = [ "ash" ];
     programs.gamemode = {
       enable = true;
       enableRenice = true;
@@ -35,12 +37,14 @@ in {
           defaultgov = "schedutil";
           igpu_desiredgov = "performance";
         };
-        custom = let
-          notify = "${pkgs.libnotify}/bin/notify-send -a Gamemode -c system";
-        in {
-          start = "${notify} 'Game Mode Enabled'";
-          end = "${notify} 'Game Mode Disabled'";
-        };
+        custom =
+          let
+            notify = "${pkgs.libnotify}/bin/notify-send -a Gamemode -c system";
+          in
+          {
+            start = "${notify} 'Game Mode Enabled'";
+            end = "${notify} 'Game Mode Disabled'";
+          };
       };
     };
 
@@ -53,8 +57,8 @@ in {
           # MANGOHUD = true;
         };
         # fix gamescope launch from within steam
-        extraLibraries = p:
-          with p; [
+        extraLibraries =
+          p: with p; [
             xorg.libXcursor
             xorg.libXi
             xorg.libXinerama
@@ -76,11 +80,11 @@ in {
       };
     };
 
-    users.extraGroups."fusee".members = ["ash"];
+    users.extraGroups."fusee".members = [ "ash" ];
     services.udev.extraRules = ''
       SUBSYSTEMS=="usb", ATTRS{manufacturer}=="NVIDIA Corp.", ATTRS{product}=="APX", GROUP="fusee"
       SUBSYSTEMS=="usb", ATTRS{idVendor}=="057e", ATTRS{idProduct}=="3000", GROUP="fusee"
     '';
   };
-  meta = {};
+  meta = { };
 }
