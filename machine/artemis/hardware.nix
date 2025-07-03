@@ -5,18 +5,18 @@
   modulesPath,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
 
   use_pstate = !(elem "intel_pstate=disable" config.boot.kernelParams);
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports =
-    [
-      (modulesPath + "/installer/scan/not-detected.nix")
-    ]
-    ++ (lib.signal.fs.path.listFilePaths ./hardware);
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [
+    (modulesPath + "/installer/scan/not-detected.nix")
+  ] ++ (lib.signal.fs.path.listFilePaths ./hardware);
   config = {
     # warnings = [
     #   "force-enabling hardware.intelgpu.loadInInitrd"
@@ -47,18 +47,12 @@ in {
       enable = true;
       settings = {
         battery = {
-          governor =
-            if use_pstate
-            then "powersave"
-            else "schedutil";
+          governor = if use_pstate then "powersave" else "schedutil";
           energy_performance_preference = "balance_power";
           turbo = "auto";
         };
         charger = {
-          governor =
-            if use_pstate
-            then "performance"
-            else "schedutil";
+          governor = if use_pstate then "performance" else "schedutil";
           energy_performance_preference = "performance";
           turbo = "auto";
         };
@@ -74,7 +68,10 @@ in {
 
     services.fwupd = {
       enable = true;
-      extraRemotes = ["lvfs-testing"];
+      extraRemotes = [ "lvfs-testing" ];
+      uefiCapsuleSettings = {
+        "DisableCapsuleUpdateOnDisk" = true;
+      };
     };
 
     hardware.bluetooth = {
@@ -87,7 +84,7 @@ in {
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [];
+      extraPackages = with pkgs; [ ];
     };
 
     services.xserver.xkb = {
@@ -99,5 +96,5 @@ in {
       "-h 1504"
     ];
   };
-  meta = {};
+  meta = { };
 }

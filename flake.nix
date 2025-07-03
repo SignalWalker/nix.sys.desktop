@@ -414,8 +414,8 @@
               # desktop.wayland.compositor.sway.enable = true;
               desktop.wayland.taskbar.enable = true;
 
-              wayland.windowManager.hyprland.pyprland.package =
-                inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
+              # wayland.windowManager.hyprland.pyprland.package =
+              #   inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
 
               home.packages =
                 [
