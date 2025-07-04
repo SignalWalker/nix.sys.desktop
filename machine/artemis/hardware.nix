@@ -43,6 +43,8 @@ in
       # "xe.force_probe='a7a0'"
     ];
 
+    # 2 al pastor, 2 pollo asada tacos
+
     programs.auto-cpufreq = {
       enable = true;
       settings = {

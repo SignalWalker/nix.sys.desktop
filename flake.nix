@@ -428,7 +428,7 @@
                     }
                   ))
                   openmw-validator
-                  plox
+                  # plox
                   # umo # build failure 2025-05-24
                   delta-plugin
                   groundcoverify
