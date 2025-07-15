@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  # imports = lib.signal.fs.path.listFilePaths ./zfs;
+  # imports = lib.listFilePaths ./zfs;
   imports = [];
   config = {
     zfs-root = {

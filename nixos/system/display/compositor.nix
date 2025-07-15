@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./compositor;
+  imports = lib.listFilePaths ./compositor;
   config = {
     environment.variables = {
       NIXOS_OZONE_WL = "1";

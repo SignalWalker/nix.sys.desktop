@@ -16,7 +16,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./display;
+  imports = lib.listFilePaths ./display;
   config = {
     environment.systemPackages = with pkgs; [
       vulkan-tools

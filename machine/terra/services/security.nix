@@ -10,7 +10,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./security;
+  imports = lib.listFilePaths ./security;
   config = {
     services.crowdsec = {
       enable = false; # there aren't any bouncers packaged yet.......

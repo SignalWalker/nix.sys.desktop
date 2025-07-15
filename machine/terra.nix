@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./terra;
+  imports = lib.listFilePaths ./terra;
   config = {
     networking.publicAddresses = [
       "24.98.17.92"

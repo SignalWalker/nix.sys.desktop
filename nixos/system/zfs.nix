@@ -11,7 +11,7 @@ in
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = lib.signal.fs.path.listFilePaths ./zfs;
+  imports = lib.listFilePaths ./zfs;
   config = {
     boot.zfs = {
       package = pkgs.zfsUnstable;

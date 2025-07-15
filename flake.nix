@@ -22,10 +22,6 @@
       inputs.lix.follows = "lix";
     };
 
-    alejandra = {
-      url = "github:kamadorueda/alejandra";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -41,43 +37,18 @@
     sysbase = {
       url = "github:signalwalker/nix.sys.base";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
-    };
-    syshome = {
-      url = "github:signalwalker/nix.sys.home";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
-    };
-    homelib = {
-      url = "github:signalwalker/nix.home.lib";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
       inputs.home-manager.follows = "home-manager";
     };
     homebase = {
       url = "github:signalwalker/nix.home.base";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
-      inputs.homelib.follows = "homelib";
       inputs.home-manager.follows = "home-manager";
     };
     homedesk = {
       url = "github:signalwalker/nix.home.desktop";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
       inputs.mozilla.follows = "mozilla";
       # inputs.wired.follows = "wired";
-    };
-    homedev = {
-      url = "github:signalwalker/nix.home.dev";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
-      inputs.mozilla.follows = "mozilla";
-    };
-    homemedia = {
-      url = "github:signalwalker/nix.home.media";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.alejandra.follows = "alejandra";
     };
     # base
     # multi
@@ -233,13 +204,27 @@
     with builtins;
     let
       std = nixpkgs.lib;
+      systems = [
+        "aarch64-darwin"
+        "aarch64-linux"
+        "x86_64-darwin"
+        "x86_64-linux"
+      ];
+      nixpkgsFor = std.genAttrs systems (
+        system:
+        import nixpkgs {
+          localSystem = builtins.currentSystem or system;
+          crossSystem = system;
+          overlays = [ ];
+        }
+      );
       machines = [
         "artemis"
         "terra"
       ];
     in
     {
-      formatter = std.mapAttrs (system: pkgs: pkgs.default) inputs.alejandra.packages;
+      formatter = std.mapAttrs (system: pkgs: pkgs.nixfmt-rfc-style) nixpkgsFor;
       overlays.default = final: prev: {
         # cross-seed = import ./pkgs/cross-seed.nix {
         #   inherit inputs;
@@ -289,7 +274,6 @@
           imports =
             [
               inputs.sysbase.nixosModules.default
-              inputs.syshome.nixosModules.default
 
               inputs.lix-module.nixosModules.default
 
@@ -304,7 +288,7 @@
 
               ./machine/${machine}.nix
             ]
-            ++ (lib.signal.fs.path.listFilePaths ./nixos)
+            ++ (lib.listFilePaths ./nixos)
             ++ (std.optionals (machine == "artemis") [
               inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
             ])
@@ -366,6 +350,7 @@
                 # "electron-27.3.11"
                 # "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
               ];
+              nixpkgs.config.nvidia.acceptLicense = true;
             }
             (lib.mkIf (machine == "artemis") {
               environment.systemPackages = [
@@ -397,9 +382,7 @@
           {
             imports = [
               inputs.homebase.homeManagerModules.default
-              inputs.homedev.homeManagerModules.default
               inputs.homedesk.homeManagerModules.default
-              inputs.homemedia.homeManagerModules.default
 
               inputs.nix-index-database.hmModules.nix-index
               inputs.agenix.homeManagerModules.age
@@ -441,7 +424,9 @@
         machine: module:
         std.nixosSystem {
           system = null; # set in `config.nixpkgs.hostPlatform`
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs;
+          };
           modules = [
             module
             {
@@ -456,7 +441,7 @@
           ];
           lib = std.extend (
             final: prev: {
-              signal = inputs.homelib.lib;
+              inherit (import "${inputs.homebase}/lib.nix") listFilePaths;
             }
           );
         }
@@ -490,3 +475,4 @@
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
+

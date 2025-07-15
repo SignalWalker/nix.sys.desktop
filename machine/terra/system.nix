@@ -37,6 +37,10 @@ in
         };
       };
     };
+
+    musnix = {
+      soundcardPciId = "00:1f.3";
+    };
   };
   meta = { };
 }

@@ -10,7 +10,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./irc;
+  imports = lib.listFilePaths ./irc;
   config = {
     services.irc.bouncer = {
       enable = true;

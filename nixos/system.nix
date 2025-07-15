@@ -4,12 +4,24 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./system;
-  config = {};
-  meta = {};
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = lib.listFilePaths ./system;
+  config = {
+    musnix = {
+      enable = true;
+      alsaSeq.enable = true;
+      rtcqs.enable = true;
+      kernel = {
+        realtime = false;
+        packages = pkgs.linuxPkacages_latest_rt;
+      };
+    };
+  };
+  meta = { };
 }

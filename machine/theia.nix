@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./theia;
+  imports = lib.listFilePaths ./theia;
   config = {};
   meta = {};
 }

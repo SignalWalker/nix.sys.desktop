@@ -14,7 +14,7 @@ in
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = lib.signal.fs.path.listFilePaths ./music;
+  imports = lib.listFilePaths ./music;
   config = {
     services.navidrome = {
       enable = true;

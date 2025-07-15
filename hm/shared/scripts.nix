@@ -4,17 +4,19 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  imports = [];
-  config = let
-    scripts = lib.signal.fs.path.listFileNames ./scripts;
-  in {
-    xdg.binFile = std.genAttrs scripts (script: {
+in
+{
+  options = with lib; { };
+  imports = [ ];
+  config = {
+    xdg.binFile = lib.genAttrs (lib.listFilePaths ./scripts) (script: {
+      target = baseNameOf script;
       executable = true;
-      source = ./scripts/${script};
+      source = script;
     });
   };
 }
+

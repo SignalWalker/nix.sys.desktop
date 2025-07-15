@@ -4,12 +4,14 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./artemis;
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = lib.listFilePaths ./artemis;
   config = {
     warnings = [
       "disabling systemd.network.wait-online"
@@ -20,16 +22,10 @@ in {
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
     systemd.network.wait-online.enable = false;
 
-    boot.supportedFilesystems = ["ntfs"];
+    boot.supportedFilesystems = [ "ntfs" ];
 
     musnix = {
-      enable = true;
-      alsaSeq.enable = true;
       soundcardPciId = "00:1f.3";
-      kernel = {
-        realtime = false;
-        packages = pkgs.linuxPackages_latest_rt;
-      };
     };
 
     nix = {
@@ -52,7 +48,10 @@ in {
 
     networking.wireguard.tunnels."wg-airvpn" = {
       # TODO :: figure out a good way to keep this out of public repos
-      addresses = ["10.171.122.61/32" "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"];
+      addresses = [
+        "10.171.122.61/32"
+        "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"
+      ];
     };
 
     programs.kdeconnect = {
@@ -62,7 +61,7 @@ in {
 
     programs.weylus = {
       enable = true;
-      users = ["ash"];
+      users = [ "ash" ];
       openFirewall = true;
     };
 
@@ -70,25 +69,38 @@ in {
       enable = false;
     };
 
-    services.clight = let
-      backlight_curve = point_scale: bl_max: let
-        xs = map (p: p / (point_scale * 1.0)) (std.lists.range 0 point_scale);
-      in (map (x: x * x * bl_max) xs);
-    in {
-      enable = false;
-      settings = {
-        verbose = true;
-        inhibit = {disabled = true;};
-        screen = {disabled = true;};
-        dpms = {disabled = true;};
-        dimmer = {disabled = true;};
-        sensor = {
-          devname = "iio:device0";
-          ac_regression_points = backlight_curve 10 0.5;
-          batt_regression_points = backlight_curve 10 0.5;
+    services.clight =
+      let
+        backlight_curve =
+          point_scale: bl_max:
+          let
+            xs = map (p: p / (point_scale * 1.0)) (std.lists.range 0 point_scale);
+          in
+          (map (x: x * x * bl_max) xs);
+      in
+      {
+        enable = false;
+        settings = {
+          verbose = true;
+          inhibit = {
+            disabled = true;
+          };
+          screen = {
+            disabled = true;
+          };
+          dpms = {
+            disabled = true;
+          };
+          dimmer = {
+            disabled = true;
+          };
+          sensor = {
+            devname = "iio:device0";
+            ac_regression_points = backlight_curve 10 0.5;
+            batt_regression_points = backlight_curve 10 0.5;
+          };
         };
       };
-    };
   };
-  meta = {};
+  meta = { };
 }

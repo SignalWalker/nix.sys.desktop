@@ -50,7 +50,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./torrent;
+  imports = lib.listFilePaths ./torrent;
   config = {
     age.secrets = {
       floodSecrets.file = ./torrent/secrets/floodSecrets.age;

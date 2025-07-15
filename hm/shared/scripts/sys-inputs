@@ -24,16 +24,12 @@ nixmod=$PROJECTS/nix/mod
 
 typeset -A INPUTS
 INPUTS=( \
-	[homelib]="$hm/lib" \
 	[homebase]="$hm/base" \
-	[homedev]="$hm/dev" \
-	[homedev/ashvim]="$PROJECTS/cfg/neovim" \
-	[homedesk]="$hm/desktop" \
 	[homedesk/watch-battery]="$PROJECTS/misc/batwatch" \
-	[homemedia]="$hm/media" \
-	[sysbase]="$sys/base" \
+	[homedesk/ashvim]="$PROJECTS/cfg/neovim" \
+	[homedesk]="$hm/desktop" \
 	[sysbase/nginx-vhost-defaults]="$nixmod/nginx-vhost-defaults"
-	[syshome]="$sys/home" \
+	[sysbase]="$sys/base" \
 	[sysdesk]="$sys/desktop"
 )
 

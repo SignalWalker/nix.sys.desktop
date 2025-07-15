@@ -9,7 +9,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./services;
+  imports = lib.listFilePaths ./services;
   config = {
     services.dbus = {
       enable = true;

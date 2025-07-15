@@ -14,7 +14,7 @@ in
   disabledModules = [ ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-  ] ++ lib.signal.fs.path.listFilePaths ./hardware;
+  ] ++ lib.listFilePaths ./hardware;
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 

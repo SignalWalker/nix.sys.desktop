@@ -12,7 +12,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = lib.signal.fs.path.listFilePaths ./search;
+  imports = lib.listFilePaths ./search;
   config = {
     age.secrets = {
       meilisearchMasterKey = {

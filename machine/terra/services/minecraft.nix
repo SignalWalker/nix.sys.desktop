@@ -4,16 +4,18 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   driftingLeague = config.services.minecraft.driftingLeague;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.minecraft.driftingLeague = {
-      enable = true;
+      enable = false;
       java.memory = {
         initial = "1024M";
         max = "8912M";
@@ -30,5 +32,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }
