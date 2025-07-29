@@ -4,10 +4,12 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   nginx = config.services.nginx;
-in {
+in
+{
   options = with lib; {
     services.nginx = {
       publicListenAddresses = mkOption {
@@ -18,8 +20,8 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.nginx = {
       enable = true;
@@ -33,11 +35,10 @@ in {
       recommendedOptimisation = true;
       recommendedProxySettings = true;
       recommendedTlsSettings = true;
-      recommendedZstdSettings = true;
 
       publicListenAddresses = [
-        "192.168.0.2"
-        "[fd24:fad3:9137::2]"
+        "0.0.0.0"
+        "[::]"
       ];
 
       defaultListenAddresses = [
@@ -49,39 +50,43 @@ in {
         "[fd24:fad3:8246::1]"
       ];
 
-      commonHttpConfig = let
-        logFormatFields = [
-          "http_host"
-          "server_port"
-          "request_uri"
-          "remote_addr"
-          "http_user_agent"
-          "request_method"
-          "request_length"
-          "status"
-          "body_bytes_sent"
-          "bytes_sent"
-          "msec"
-          "server_protocol"
-          "ssl_protocol"
-          "upstream_response_time"
-          "upstream_addr"
-          "upstream_connect_time"
-        ];
-        logFormatStr = std.concatStringsSep ",'\n" (map (field: "'\"${field}\":\"\$${field}\"") logFormatFields);
-      in ''
-        map $remote_addr $should_log {
-          172.24.86.1 0;
-          fd24:fad3:8246::1 0;
-          default 1;
-        }
+      commonHttpConfig =
+        let
+          logFormatFields = [
+            "http_host"
+            "server_port"
+            "request_uri"
+            "remote_addr"
+            "http_user_agent"
+            "request_method"
+            "request_length"
+            "status"
+            "body_bytes_sent"
+            "bytes_sent"
+            "msec"
+            "server_protocol"
+            "ssl_protocol"
+            "upstream_response_time"
+            "upstream_addr"
+            "upstream_connect_time"
+          ];
+          logFormatStr = std.concatStringsSep ",'\n" (
+            map (field: "'\"${field}\":\"\$${field}\"") logFormatFields
+          );
+        in
+        ''
+          map $remote_addr $should_log {
+            172.24.86.1 0;
+            fd24:fad3:8246::1 0;
+            default 1;
+          }
 
-        log_format logger_json_log escape=json '{'
-          ${logFormatStr}'
-        '}';
+          log_format logger_json_log escape=json '{'
+            ${logFormatStr}'
+          '}';
 
-        access_log /var/log/nginx/access.log logger_json_log if=$should_log;
-      '';
+          access_log /var/log/nginx/access.log logger_json_log if=$should_log;
+        '';
 
       # virtualHosts."files.home.ashwalker.net" = {
       #   enableACME = true;
@@ -96,7 +101,10 @@ in {
       #   };
       # };
     };
-    networking.firewall.allowedTCPPorts = [80 443];
+    networking.firewall.allowedTCPPorts = [
+      80
+      443
+    ];
   };
-  meta = {};
+  meta = { };
 }

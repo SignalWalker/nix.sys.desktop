@@ -81,7 +81,7 @@ in
     security.pam.services = {
       login = {
         u2fAuth = true;
-        enableGnomeKeyring = config.services.gnome.gnome-keyring.enable;
+        enableGnomeKeyring = true;
         gnupg = {
           enable = true;
           noAutostart = true;

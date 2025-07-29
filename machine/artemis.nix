@@ -17,7 +17,7 @@ in
       "disabling systemd.network.wait-online"
     ];
     networking.networkmanager = {
-      enable = true;
+      enable = false;
     };
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
     systemd.network.wait-online.enable = false;
@@ -104,3 +104,4 @@ in
   };
   meta = { };
 }
+

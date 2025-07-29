@@ -4,37 +4,37 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   pg = config.services.postgresql;
   pgbck = config.services.postgresqlBackup;
   shouldUpgrade = pg.package.psqlSchema != pkgs.postgresql.psqlSchema;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     warnings = lib.mkIf shouldUpgrade [
       "postgresql upgrade available (${pg.package.psqlSchema} -> ${pkgs.postgresql.psqlSchema}); use `sudo upgrade-pg-cluster` to upgrade"
     ];
     services.postgresql = {
       enable = true;
-      package = pkgs.postgresql_16;
-      extraPlugins = ps: with ps; [];
+      package = pkgs.postgresql_17;
+      extensions = ps: with ps; [ ];
     };
     services.postgresqlBackup = {
       enable = pg.enable;
       location = "/elysium/backup/postgres";
       compression = "zstd";
-      compressionLevel =
-        if pgbck.compression == "zstd"
-        then 19
-        else 9;
+      compressionLevel = if pgbck.compression == "zstd" then 19 else 9;
     };
     environment.systemPackages = lib.mkIf shouldUpgrade [
-      (let
-        newPg = pkgs.postgresql.withPackages pg.extraPlugins;
-      in
+      (
+        let
+          newPg = pkgs.postgresql.withPackages pg.extensions;
+        in
         pkgs.writeScriptBin "upgrade-pg-cluster" ''
           set -eux
           # XXX it's perhaps advisable to stop all services that depend on postgresql
@@ -57,8 +57,9 @@ in {
             --jobs $(nproc) \
             --link \
             "$@"
-        '')
+        ''
+      )
     ];
   };
-  meta = {};
+  meta = { };
 }

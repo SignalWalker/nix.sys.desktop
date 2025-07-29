@@ -4,13 +4,15 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   sessionPkgs = config.services.displayManager.sessionPackages;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     # programs.regreet = {
     #   enable = false;
@@ -36,25 +38,27 @@ in {
     #   };
     # };
 
-    services.greetd = let
-      greetd = config.services.greetd;
-      sessions = {
-        wayland =
-          std.concatStringsSep ":" (["/usr/share/wayland-sessions"]
-            ++ (map (pkg: "${pkg}/share/wayland-sessions") sessionPkgs));
-        x11 =
-          std.concatStringsSep ":" (["/usr/share/xsessions"]
-            ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs));
-      };
-    in {
-      enable = config.services.desktopManager.manager != "plasma6";
-      settings = {
-        default_session = {
-          user = "greeter";
-          command = "${pkgs.greetd.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}:${sessions.x11}";
+    services.greetd =
+      let
+        greetd = config.services.greetd;
+        sessions = {
+          wayland = std.concatStringsSep ":" (
+            [ "/usr/share/wayland-sessions" ] ++ (map (pkg: "${pkg}/share/wayland-sessions") sessionPkgs)
+          );
+          x11 = std.concatStringsSep ":" (
+            [ "/usr/share/xsessions" ] ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs)
+          );
+        };
+      in
+      {
+        enable = config.services.desktopManager.manager != "plasma6";
+        settings = {
+          default_session = {
+            user = "greeter";
+            command = "${pkgs.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}:${sessions.x11}";
+          };
         };
       };
-    };
   };
-  meta = {};
+  meta = { };
 }

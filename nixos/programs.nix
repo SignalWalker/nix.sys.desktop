@@ -97,8 +97,16 @@ in
         at-spi2-atk
         gtk3
         gdk-pixbuf
+        libxkbcommon
+        libgbm
+        gnome2.GConf
+        fontconfig
+        freetype
+        gtk2
+        libnotify
       ];
     };
   };
   meta = { };
 }
+

@@ -4,14 +4,16 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   searx = config.services.searx;
   meili = config.services.meilisearch;
   secrets = config.age.secrets;
-in {
-  options = with lib; {};
-  disabledModules = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
   imports = lib.listFilePaths ./search;
   config = {
     age.secrets = {
@@ -24,15 +26,17 @@ in {
       enable = true;
       listenAddress = "0.0.0.0";
       listenPort = 46782;
-      masterKeyEnvironmentFile = secrets.meilisearchMasterKey.path;
-      maxIndexSize = "25GiB";
-      environment = "production";
+      masterKeyFile = secrets.meilisearchMasterKey.path;
+      settings = {
+        max_index_size = "25GiB";
+        env = "production";
+      };
     };
 
     services.searx = {
       enable = false;
       package = pkgs.searxng;
-      runInUwsgi = true;
+      configureUwsgi = true;
       settings = {
         server = {
           # port = 40524;
@@ -67,5 +71,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }

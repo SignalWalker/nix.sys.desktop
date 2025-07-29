@@ -31,9 +31,10 @@ in
     };
 
     networking.networkmanager = {
-      enable = lib.mkDefault (!config.systemd.network.enable);
+      enable = false; # lib.mkDefault (!config.systemd.network.enable);
       wifi.backend = "iwd";
     };
   };
   meta = { };
 }
+

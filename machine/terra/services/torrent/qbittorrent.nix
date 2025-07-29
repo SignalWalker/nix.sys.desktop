@@ -4,10 +4,12 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   qbit = config.services.qbittorrent;
-in {
+in
+{
   options = with lib; {
     services.qbittorrent = {
       enable = mkEnableOption "qbittorrent";
@@ -51,25 +53,32 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ "services/torrent/qbittorrent.nix" ];
+  imports = [ ];
   config = lib.mkIf qbit.enable {
     users.users.${qbit.user} = {
       isSystemUser = true;
       group = qbit.group;
       home = qbit.dataDir;
     };
-    users.groups.${qbit.group} = {};
+    users.groups.${qbit.group} = { };
 
-    networking.firewall.allowedTCPPorts = [qbit.torrent.port];
-    networking.firewall.allowedUDPPorts = [qbit.torrent.port];
+    networking.firewall.allowedTCPPorts = [ qbit.torrent.port ];
+    networking.firewall.allowedUDPPorts = [ qbit.torrent.port ];
 
     systemd.services.qbittorrent = {
-      after = ["network-online.target" "nss-lookup.target" "update-dynamic-ip.service"];
-      wants = ["network-online.target" "update-dynamic-ip.service"];
+      after = [
+        "network-online.target"
+        "nss-lookup.target"
+        "update-dynamic-ip.service"
+      ];
+      wants = [
+        "network-online.target"
+        "update-dynamic-ip.service"
+      ];
       description = "QBitTorrent Daemon";
-      wantedBy = ["multi-user.target"];
-      path = [qbit.package];
+      wantedBy = [ "multi-user.target" ];
+      path = [ qbit.package ];
       serviceConfig = {
         ConfigurationDirectory = qbit.user;
         StateDirectory = qbit.user;
@@ -77,7 +86,7 @@ in {
         Type = "exec";
         User = qbit.user;
         Group = qbit.group;
-        AmbientCapabilities = ["CAP_NET_RAW"];
+        AmbientCapabilities = [ "CAP_NET_RAW" ];
       };
     };
 
@@ -118,5 +127,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }

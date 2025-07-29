@@ -22,6 +22,11 @@
       inputs.lix.follows = "lix";
     };
 
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     deploy-rs = {
       url = "github:serokell/deploy-rs";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -47,7 +52,7 @@
     homedesk = {
       url = "github:signalwalker/nix.home.desktop";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.mozilla.follows = "mozilla";
+      inputs.stylix.follows = "stylix";
       # inputs.wired.follows = "wired";
     };
     # base
@@ -157,7 +162,7 @@
 
     auto-cpufreq = {
       url = "github:AdnanHodzic/auto-cpufreq";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     nix-alien = {
@@ -271,39 +276,40 @@
         {
           options = { };
 
-          imports =
-            [
-              inputs.sysbase.nixosModules.default
+          imports = [
+            inputs.sysbase.nixosModules.default
 
-              inputs.lix-module.nixosModules.default
+            inputs.lix-module.nixosModules.default
 
-              inputs.nix-index-database.nixosModules.nix-index
-              inputs.foundryvtt.nixosModules.foundryvtt
-              inputs.musnix.nixosModules.musnix
-              inputs.agenix.nixosModules.age
+            inputs.nix-index-database.nixosModules.nix-index
+            inputs.foundryvtt.nixosModules.foundryvtt
+            inputs.musnix.nixosModules.musnix
+            inputs.agenix.nixosModules.age
 
-              inputs.auto-cpufreq.nixosModules.default
+            inputs.auto-cpufreq.nixosModules.default
 
-              # inputs.anubis.nixosModules.default
+            inputs.stylix.nixosModules.stylix
 
-              ./machine/${machine}.nix
-            ]
-            ++ (lib.listFilePaths ./nixos)
-            ++ (std.optionals (machine == "artemis") [
-              inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
-            ])
-            ++ (std.optionals (machine == "terra") [
-              inputs.nixos-hardware.nixosModules.common-pc
-              inputs.nixos-hardware.nixosModules.common-pc-ssd
+            # inputs.anubis.nixosModules.default
 
-              inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
+            ./machine/${machine}.nix
+          ]
+          ++ (lib.listFilePaths ./nixos)
+          ++ (std.optionals (machine == "artemis") [
+            inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
+          ])
+          ++ (std.optionals (machine == "terra") [
+            inputs.nixos-hardware.nixosModules.common-pc
+            inputs.nixos-hardware.nixosModules.common-pc-ssd
 
-              inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
-              inputs.minecraft.nixosModules.default
+            inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
 
-              inputs.simple-nixos-mailserver.nixosModules.default
-            ]);
+            inputs.minecraft.nixosModules.default
+
+            inputs.simple-nixos-mailserver.nixosModules.default
+          ]);
 
           config = lib.mkMerge [
             {
@@ -343,14 +349,15 @@
                 # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
               };
               nixpkgs.config.permittedInsecurePackages = [
-                "dotnet-sdk-6.0.428"
-                "aspnetcore-runtime-6.0.36"
-                "aspnetcore-runtime-wrapped-6.0.36"
-                "dotnet-sdk-wrapped-6.0.428"
-                # "electron-27.3.11"
-                # "jitsi-meet-1.0.8043" # FIX :: https://github.com/NixOS/nixpkgs/pull/334638#issuecomment-2289025802
+                "libsoup-2.74.3"
+                "qtwebengine-5.15.19"
+                # "dotnet-sdk-6.0.428"
+                # "aspnetcore-runtime-6.0.36"
+                # "aspnetcore-runtime-wrapped-6.0.36"
+                # "dotnet-sdk-wrapped-6.0.428"
               ];
               nixpkgs.config.nvidia.acceptLicense = true;
+
             }
             (lib.mkIf (machine == "artemis") {
               environment.systemPackages = [
@@ -359,6 +366,7 @@
               boot.loader.grub = {
                 theme = "${inputs.grub-theme-yorha}/yorha-2256x1504";
               };
+              stylix.targets.grub.enable = false;
             })
             (lib.mkIf (machine == "terra") {
               # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
@@ -381,10 +389,10 @@
           }:
           {
             imports = [
-              inputs.homebase.homeManagerModules.default
-              inputs.homedesk.homeManagerModules.default
+              inputs.homebase.homeModules.default
+              inputs.homedesk.homeModules.default
 
-              inputs.nix-index-database.hmModules.nix-index
+              inputs.nix-index-database.homeModules.nix-index
               inputs.agenix.homeManagerModules.age
 
               ./hm/shared.nix
@@ -400,22 +408,21 @@
               # wayland.windowManager.hyprland.pyprland.package =
               #   inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
 
-              home.packages =
-                [
+              home.packages = [
 
-                ]
-                ++ (with inputs.openmw-nix.packages.${pkgs.system}; [
-                  (openmw-dev.overrideAttrs (
-                    final: prev: {
-                      src = inputs.openmw-src;
-                    }
-                  ))
-                  openmw-validator
-                  # plox
-                  # umo # build failure 2025-05-24
-                  delta-plugin
-                  groundcoverify
-                ]);
+              ]
+              ++ ([
+                # (openmw-dev.overrideAttrs (
+                #   final: prev: {
+                #     src = inputs.openmw-src;
+                #   }
+                # ))
+                # openmw-validator
+                # plox
+                # umo # build failure 2025-05-24
+                # delta-plugin
+                # groundcoverify
+              ]);
             };
           };
       };
@@ -475,4 +482,3 @@
       checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
     };
 }
-

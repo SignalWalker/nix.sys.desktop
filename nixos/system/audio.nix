@@ -4,12 +4,14 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = with lib; { };
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     security.rtkit.enable = true;
     services.pipewire = {
@@ -21,16 +23,19 @@ in {
       pulse.enable = true;
       jack.enable = true;
       wireplumber.enable = true;
-      # extraConfig = {
+      # raopOpenFirewall = true;
+      # extraconfig = {
       #   pipewire = {
-      #     "92-low-latency" = {
-      #       "context.properties" = {
-      #
-      #       };
+      #     "10-airplay" = {
+      #       "context.modules" = [
+      #         {
+      #           name = "libpipewire-module-raop-discover";
+      #         }
+      #       ];
       #     };
       #   };
       # };
     };
   };
-  meta = {};
+  meta = { };
 }

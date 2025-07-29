@@ -18,9 +18,6 @@ in
   config = {
     services.navidrome = {
       enable = true;
-    };
-
-    services.navidrome = {
       listen.port = 41457;
       settings = {
         BaseUrl = "https://${domain}";
@@ -35,7 +32,7 @@ in
     };
 
     services.anubis.instances."navidrome" = {
-      enable = true;
+      enable = false; # FIX :: disbled because it was messing with phone client (also why did i even enable it in the first place)
       settings = {
         TARGET = "http://${navi.listen.address}:${toString navi.listen.port}";
         SOCKET_MODE = "0777"; # FIX :: does this really need to be 0777
@@ -48,7 +45,8 @@ in
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
-        proxyPass = "http://unix:${anubis.instances."navidrome".settings.BIND}";
+        proxyPass = "http://${navi.listen.address}:${toString navi.listen.port}";
+        # proxyPass = "http://unix:${anubis.instances."navidrome".settings.BIND}";
       };
     };
 
@@ -61,3 +59,4 @@ in
   };
   meta = { };
 }
+
