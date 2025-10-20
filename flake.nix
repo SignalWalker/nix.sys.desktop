@@ -198,6 +198,11 @@
       url = "github:openmw/openmw";
       flake = false;
     };
+
+    "nix-auth" = {
+      url = "github:numtide/nix-auth";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{
@@ -322,13 +327,18 @@
               warnings = [
                 "using lix instead of nix"
               ];
-              # nix.package = inputs.nix.packages.${pkgs.system}.nix;
+
+              environment.systemPackages = [
+                inputs.nix-auth.packages.${pkgs.system}.default
+              ];
 
               networking.hostName = machine;
               networking.domain = lib.mkDefault "local";
+
               home-manager = {
                 users = self.homeConfigurations;
               };
+
               nixpkgs.overlays = [
                 self.overlays.default
 
@@ -345,10 +355,13 @@
 
                 # inputs.nixgl.overlay
               ];
+
               nixpkgs.config.packageOverrides = pkgs: {
                 # gamescope = pkgs.gamescope.override {wlroots = std.trivial.warn "overriding gamescope wlroots" pkgs.wlroots_0_17;};
               };
+
               nixpkgs.config.permittedInsecurePackages = [
+                "electron-35.7.5"
                 "libsoup-2.74.3"
                 "qtwebengine-5.15.19"
                 # "dotnet-sdk-6.0.428"

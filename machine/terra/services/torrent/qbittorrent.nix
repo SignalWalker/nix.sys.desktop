@@ -94,6 +94,9 @@ in
       ${qbit.webui.hostName} = {
         enableACME = false;
         forceSSL = false;
+        addSSL = true;
+        sslCertificate = config.services.nginx.terraCert;
+        sslCertificateKey = config.services.nginx.terraCertKey;
 
         # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
 

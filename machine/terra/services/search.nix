@@ -23,7 +23,7 @@ in
     };
 
     services.meilisearch = {
-      enable = true;
+      enable = false;
       listenAddress = "0.0.0.0";
       listenPort = 46782;
       masterKeyFile = secrets.meilisearchMasterKey.path;

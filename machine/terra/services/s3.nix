@@ -4,10 +4,12 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   garage = config.services.garage;
-in {
+in
+{
   options = with lib; {
     services.garage = {
       port = {
@@ -18,15 +20,15 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     age.secrets.garageEnvironment = {
       file = ./s3/garageEnvironment.age;
     };
     services.garage = {
       enable = true;
-      package = pkgs.garage_1_x;
+      package = pkgs.garage_1;
       environmentFile = config.age.secrets.garageEnvironment.path;
       port = {
         rpc = 42341;
@@ -66,7 +68,7 @@ in {
       upstreams = {
         "s3_backend" = {
           servers = {
-            "unix:${garage.settings.s3_api.api_bind_addr}" = {};
+            "unix:${garage.settings.s3_api.api_bind_addr}" = { };
           };
         };
       };
@@ -85,5 +87,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }

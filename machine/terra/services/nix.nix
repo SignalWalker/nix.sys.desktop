@@ -4,11 +4,13 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   secrets = config.age.secrets;
   serve = config.services.nix-serve;
-in {
+in
+{
   options = with lib; {
     services.nix-serve = {
       user = mkOption {
@@ -23,16 +25,20 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
-  config = {
+  disabledModules = [ ];
+  imports = [ ];
+  # FIX :: internal server error on every operation
+  config = lib.mkIf false {
     age.secrets.nixStoreKey = {
       file = ./nix/nixStoreKey.age;
       owner = serve.user;
       group = serve.group;
     };
     nix = {
-      settings.secret-key-files = [secrets.nixStoreKey.path];
+      settings = {
+        secret-key-files = [ secrets.nixStoreKey.path ];
+        allowed-users = [ serve.user ];
+      };
     };
     services.nix-serve = {
       enable = true;
@@ -43,8 +49,11 @@ in {
       isSystemUser = true;
       inherit (serve) group;
     };
-    users.groups.${serve.group} = {};
+    users.groups.${serve.group} = { };
     services.nginx.virtualHosts."nix-cache.terra.ashwalker.net" = {
+      addSSL = true;
+      sslCertificate = config.services.nginx.terraCert;
+      sslCertificateKey = config.services.nginx.terraCertKey;
       locations."/" = {
         proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
       };
@@ -57,5 +66,5 @@ in {
     #   }
     # ];
   };
-  meta = {};
+  meta = { };
 }

@@ -18,6 +18,16 @@ in
         default = [
         ];
       };
+      terraCert = mkOption {
+        type = types.str;
+        readOnly = true;
+        default = "/etc/nginx/terra.ashwalker.net.crt";
+      };
+      terraCertKey = mkOption {
+        type = types.str;
+        readOnly = true;
+        default = "/etc/nginx/terra.ashwalker.net.key";
+      };
     };
   };
   disabledModules = [ ];
@@ -25,6 +35,12 @@ in
   config = {
     services.nginx = {
       enable = true;
+
+      # additionalModules = attrValues {
+      #   inherit (pkgs.nginxModules)
+      #
+      #   ;
+      # };
 
       logError = "stderr warn";
 

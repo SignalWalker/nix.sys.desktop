@@ -4,11 +4,13 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   syncthing = config.services.syncthing;
   atuin = config.services.atuin;
-in {
+in
+{
   options = with lib; {
     services.syncthing = {
       gui = {
@@ -24,8 +26,8 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.atuin = {
       enable = true;
@@ -36,6 +38,9 @@ in {
     };
 
     services.nginx.virtualHosts."${syncthing.gui.hostName}" = {
+      addSSL = true;
+      sslCertificate = config.services.nginx.terraCert;
+      sslCertificateKey = config.services.nginx.terraCertKey;
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString syncthing.gui.port}/";
         recommendedProxySettings = false;
@@ -53,10 +58,13 @@ in {
     };
 
     services.nginx.virtualHosts."atuin.${syncthing.gui.hostName}" = {
+      addSSL = true;
+      sslCertificate = config.services.nginx.terraCert;
+      sslCertificateKey = config.services.nginx.terraCertKey;
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString atuin.port}";
       };
     };
   };
-  meta = {};
+  meta = { };
 }

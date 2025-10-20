@@ -22,9 +22,9 @@ in
         "standard" = {
           autoprune = true;
           autosnap = true;
-          hourly = 36;
-          daily = 30;
-          monthly = 3;
+          hourly = 24;
+          daily = 14;
+          monthly = 1;
           yearly = 0;
         };
         "archive" = {
@@ -40,3 +40,4 @@ in
   };
   meta = { };
 }
+

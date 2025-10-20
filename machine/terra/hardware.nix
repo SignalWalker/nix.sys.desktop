@@ -8,13 +8,15 @@
 with builtins;
 let
   std = pkgs.lib;
+  use_pstate = !(elem "intel_pstate=disable" config.boot.kernelParams);
 in
 {
-  options = with lib; { };
+  options = { };
   disabledModules = [ ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
-  ] ++ lib.listFilePaths ./hardware;
+  ]
+  ++ lib.listFilePaths ./hardware;
   config = {
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
@@ -30,24 +32,31 @@ in
     #   ];
     # };
 
+    boot.kernelParams = [
+      "intel_pstate=disable"
+    ];
+
     programs.auto-cpufreq = {
       enable = true;
       settings = {
         battery = {
-          governor = "powersave";
+          governor = if use_pstate then "powersave" else "schedutil";
           energy_performance_preference = "balance_power";
           turbo = "auto";
         };
         charger = {
-          governor = "performance";
-          energy_performance_preference = "performance";
+          governor = if use_pstate then "performance" else "schedutil";
+          energy_performance_preference = "balance_performance";
           turbo = "auto";
         };
       };
     };
 
+    services.thermald = {
+      enable = true;
+    };
+
     services.tlp.enable = false;
-    services.thermald.enable = false;
 
     hardware.bluetooth = {
       enable = true;
@@ -75,3 +84,4 @@ in
   };
   meta = { };
 }
+

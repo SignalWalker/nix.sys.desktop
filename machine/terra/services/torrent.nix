@@ -4,7 +4,8 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   qbit = config.services.qbittorrent;
   deluge = config.services.deluge;
@@ -18,7 +19,8 @@ with builtins; let
   udpt = config.services.udpt;
 
   secrets = config.age.secrets;
-in {
+in
+{
   options = with lib; {
     services.jackett = {
       # port = mkOption {
@@ -49,7 +51,7 @@ in {
       };
     };
   };
-  disabledModules = [];
+  disabledModules = [ ];
   imports = lib.listFilePaths ./torrent;
   config = {
     age.secrets = {
@@ -64,15 +66,20 @@ in {
     };
 
     systemd.services."update-dynamic-ip" = {
-      after = ["network-online.target" "nss-lookup.target"];
-      wants = ["network-online.target"];
-      wantedBy = ["multi-user.target"];
-      path = [pkgs.curl];
+      after = [
+        "network-online.target"
+        "nss-lookup.target"
+      ];
+      wants = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
+      path = [ pkgs.curl ];
       serviceConfig = {
         Type = "oneshot";
-        ExecStart = let
-          cookiePath = "/elysium/torrent/mam.cookies";
-        in "${pkgs.curl}/bin/curl -c ${cookiePath} -b ${cookiePath} https://t.myanonamouse.net/json/dynamicSeedbox.php";
+        ExecStart =
+          let
+            cookiePath = "/elysium/torrent/mam.cookies";
+          in
+          "${pkgs.curl}/bin/curl -c ${cookiePath} -b ${cookiePath} https://t.myanonamouse.net/json/dynamicSeedbox.php";
         User = qbit.user;
         Group = qbit.group;
       };
@@ -134,7 +141,7 @@ in {
     services.mylar3 = {
       enable = false;
       hostName = "mylar3.${qbit.webui.hostName}";
-      settings = {};
+      settings = { };
     };
 
     services.kaizoku = {
@@ -183,52 +190,58 @@ in {
       };
     };
 
-    services.nginx.virtualHosts = let
-      # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
-      # listen = [
-      #   {
-      #   }
-      # ];
-    in
+    services.nginx.virtualHosts =
+      let
+        # listenAddresses = ["172.24.86.0" "[fd24:fad3:8246::]"];
+        # listen = [
+        #   {
+        #   }
+        # ];
+        defaults = {
+          addSSL = true;
+          sslCertificate = config.services.nginx.terraCert;
+          sslCertificateKey = config.services.nginx.terraCertKey;
+        };
+      in
       lib.mkMerge [
         (lib.mkIf jackett.enable {
-          "search.${qbit.webui.hostName}" = {
+          "search.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString jackett.port}";
           };
         })
         (lib.mkIf radarr.enable {
-          "radarr.${qbit.webui.hostName}" = {
+          "radarr.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString radarr.port}";
           };
         })
         (lib.mkIf sonarr.enable {
-          "sonarr.${qbit.webui.hostName}" = {
+          "sonarr.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString sonarr.port}";
           };
         })
         (lib.mkIf lidarr.enable {
-          "lidarr.${qbit.webui.hostName}" = {
+          "lidarr.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString lidarr.port}";
           };
         })
         (lib.mkIf readarr.enable {
-          "readarr.${qbit.webui.hostName}" = {
+          "readarr.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString readarr.port}";
           };
         })
         (lib.mkIf prowlarr.enable {
-          "prowlarr.${qbit.webui.hostName}" = {
+          "prowlarr.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             locations."/".proxyPass = "http://127.0.0.1:${toString prowlarr.port}";
           };
         })
         (lib.mkIf jseer.enable {
-          "seer.${qbit.webui.hostName}" = {
+          "seer.${qbit.webui.hostName}" = defaults // {
             # inherit listenAddresses;
             extraConfig = ''
               proxy_set_header Referer $http_referer;
@@ -249,5 +262,6 @@ in {
         })
       ];
   };
-  meta = {};
+  meta = { };
 }
+
