@@ -1,26 +1,22 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }:
-with builtins;
 let
   std = pkgs.lib;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./artemis;
   config = {
     warnings = [
-      "disabling systemd.network.wait-online"
+      # "disabling systemd.network.wait-online"
     ];
     networking.networkmanager = {
-      enable = false;
+      enable = true;
     };
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
-    systemd.network.wait-online.enable = false;
+    # systemd.network.wait-online.enable = false;
 
     boot.supportedFilesystems = [ "ntfs" ];
 
@@ -104,4 +100,3 @@ in
   };
   meta = { };
 }
-

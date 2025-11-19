@@ -4,17 +4,12 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
   pg = config.services.postgresql;
   pgbck = config.services.postgresqlBackup;
   shouldUpgrade = pg.package.psqlSchema != pkgs.postgresql.psqlSchema;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  imports = [ ];
   config = {
     warnings = lib.mkIf shouldUpgrade [
       "postgresql upgrade available (${pg.package.psqlSchema} -> ${pkgs.postgresql.psqlSchema}); use `sudo upgrade-pg-cluster` to upgrade"
@@ -22,7 +17,8 @@ in
     services.postgresql = {
       enable = true;
       package = pkgs.postgresql_17;
-      extensions = ps: with ps; [ ];
+      extensions = ps: [
+      ];
     };
     services.postgresqlBackup = {
       enable = pg.enable;

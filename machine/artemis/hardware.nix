@@ -28,10 +28,6 @@ in
       # loadInInitrd = lib.mkForce true;
     };
 
-    environment.systemPackages = with pkgs; [
-      # intel-gpu-tools
-    ];
-
     nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 
     system.linuxKernel.filter = name: kp: lib.versionAtLeast kp.kernel.version "6.8";
@@ -90,6 +86,12 @@ in
 
     hardware.bluetooth = {
       enable = true;
+      powerOnBoot = false;
+      settings = {
+        General = {
+          Experimental = true;
+        };
+      };
     };
 
     # nixpkgs.config.packageOverrides = pkgs: {
@@ -98,7 +100,6 @@ in
     hardware.graphics = {
       enable = true;
       enable32Bit = true;
-      extraPackages = with pkgs; [ ];
     };
 
     services.xserver.xkb = {

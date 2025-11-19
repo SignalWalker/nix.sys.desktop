@@ -28,7 +28,7 @@ in
     };
     services.garage = {
       enable = true;
-      package = pkgs.garage_1;
+      package = pkgs.garage_2;
       environmentFile = config.age.secrets.garageEnvironment.path;
       port = {
         rpc = 42341;

@@ -123,8 +123,7 @@ in
     {
       system.linuxKernel.filter =
         let
-          unstable =
-            config.boot.zfs.package == pkgs.zfsUnstable || config.boot.zfs.package == pkgs.zfs_unstable;
+          unstable = config.boot.zfs.package == pkgs.zfs_unstable;
         in
         name: kp: (!unstable && !kp.zfs.meta.broken) || (unstable && !kp.zfs_unstable.meta.broken);
       zfs-root.fileSystems = {

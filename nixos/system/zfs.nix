@@ -1,20 +1,13 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }:
-with builtins;
-let
-  std = pkgs.lib;
-in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./zfs;
   config = {
     boot.zfs = {
-      package = pkgs.zfsUnstable;
+      package = pkgs.zfs_unstable;
     };
     services.sanoid = {
       enable = true;
@@ -22,7 +15,7 @@ in
         "standard" = {
           autoprune = true;
           autosnap = true;
-          hourly = 24;
+          hourly = 12;
           daily = 14;
           monthly = 1;
           yearly = 0;
@@ -40,4 +33,3 @@ in
   };
   meta = { };
 }
-

@@ -1,12 +1,10 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
 with builtins;
 let
-  std = pkgs.lib;
   secrets = config.age.secrets;
   serve = config.services.nix-serve;
 in
@@ -27,37 +25,36 @@ in
   };
   disabledModules = [ ];
   imports = [ ];
-  # FIX :: internal server error on every operation
-  config = lib.mkIf false {
+  config = {
     age.secrets.nixStoreKey = {
       file = ./nix/nixStoreKey.age;
-      owner = serve.user;
-      group = serve.group;
+      # owner = serve.user;
+      # group = serve.group;
     };
     nix = {
       settings = {
         secret-key-files = [ secrets.nixStoreKey.path ];
-        allowed-users = [ serve.user ];
+        # allowed-users = [ serve.user ];
       };
     };
-    services.nix-serve = {
-      enable = true;
-      secretKeyFile = secrets.nixStoreKey.path;
-      port = 42533;
-    };
-    users.users.${serve.user} = {
-      isSystemUser = true;
-      inherit (serve) group;
-    };
-    users.groups.${serve.group} = { };
-    services.nginx.virtualHosts."nix-cache.terra.ashwalker.net" = {
-      addSSL = true;
-      sslCertificate = config.services.nginx.terraCert;
-      sslCertificateKey = config.services.nginx.terraCertKey;
-      locations."/" = {
-        proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
-      };
-    };
+    # services.nix-serve = {
+    #   enable = true;
+    #   secretKeyFile = secrets.nixStoreKey.path;
+    #   port = 42533;
+    # };
+    # users.users.${serve.user} = {
+    #   isSystemUser = true;
+    #   inherit (serve) group;
+    # };
+    # users.groups.${serve.group} = { };
+    # services.nginx.virtualHosts."nix-cache.terra.ashwalker.net" = {
+    #   addSSL = true;
+    #   sslCertificate = config.services.nginx.terraCert;
+    #   sslCertificateKey = config.services.nginx.terraCertKey;
+    #   locations."/" = {
+    #     proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
+    #   };
+    # };
 
     # services.glance.monitorSites = [
     #   {

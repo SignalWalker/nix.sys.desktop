@@ -33,13 +33,13 @@ in
       };
     };
 
-    environment.systemPackages = with pkgs; [
-      fastfetch
+    environment.systemPackages = [
+      pkgs.fastfetch
 
-      wineWowPackages.waylandFull
-      winetricks
+      pkgs.wineWowPackages.waylandFull
+      pkgs.winetricks
 
-      nix-alien
+      pkgs.nix-alien
     ];
 
     programs.appimage = {
@@ -49,64 +49,65 @@ in
 
     programs.nix-ld = {
       enable = true;
-      libraries = with pkgs; [
-        libGL
-        xorg.libX11
-        xorg.libXcursor
-        xorg.libXext
-        xorg.libXi
-        xorg.libXinerama
-        xorg.libXrandr
-        xorg.libXrender
-        xorg.libxcb
-        xorg.libXcomposite
-        xorg.libXdamage
-        xorg.libXfixes
-        xorg.libXtst
-        xorg.libXScrnSaver
-        xorg.libXxf86vm
+      libraries = [
+        pkgs.libGL
+        pkgs.xorg.libX11
+        pkgs.xorg.libXcursor
+        pkgs.xorg.libXext
+        pkgs.xorg.libXi
+        pkgs.xorg.libXinerama
+        pkgs.xorg.libXrandr
+        pkgs.xorg.libXrender
+        pkgs.xorg.libxcb
+        pkgs.xorg.libXcomposite
+        pkgs.xorg.libXdamage
+        pkgs.xorg.libXfixes
+        pkgs.xorg.libXtst
+        pkgs.xorg.libXScrnSaver
+        pkgs.xorg.libXxf86vm
         # for some games (like cataclysm:bn) to work
-        SDL2
-        SDL2_Pango
-        SDL2_gfx
-        SDL2_image
-        SDL2_mixer
-        SDL2_net
-        SDL2_sound
-        SDL2_ttf
+        pkgs.SDL2
+        pkgs.SDL2_Pango
+        pkgs.SDL2_gfx
+        pkgs.SDL2_image
+        pkgs.SDL2_mixer
+        pkgs.SDL2_net
+        pkgs.SDL2_sound
+        pkgs.SDL2_ttf
         ## modloader64
-        glew
-        speexdsp
-        libsamplerate
-        sfml_2
-        openal
-        libvorbis
-        flac
+        pkgs.glew
+        pkgs.speexdsp
+        pkgs.libsamplerate
+        pkgs.sfml_2
+        pkgs.openal
+        pkgs.libvorbis
+        pkgs.flac
         ## tes3cmd
-        libxcrypt-legacy
+        pkgs.libxcrypt-legacy
         # rpgmaker
-        nss
-        glib
-        nspr
-        cups
-        dbus
-        expat
-        alsa-lib
-        pango
-        cairo
-        at-spi2-atk
-        gtk3
-        gdk-pixbuf
-        libxkbcommon
-        libgbm
-        gnome2.GConf
-        fontconfig
-        freetype
-        gtk2
-        libnotify
+        pkgs.nss
+        pkgs.glib
+        pkgs.nspr
+        pkgs.cups
+        pkgs.dbus
+        pkgs.expat
+        pkgs.alsa-lib
+        pkgs.pango
+        pkgs.cairo
+        pkgs.at-spi2-atk
+        pkgs.gtk3
+        pkgs.gdk-pixbuf
+        pkgs.libxkbcommon
+        pkgs.libgbm
+        pkgs.gnome2.GConf
+        pkgs.fontconfig
+        pkgs.freetype
+        pkgs.gtk2
+        pkgs.libnotify
+        # misc
+        pkgs.libdrm
       ];
     };
   };
   meta = { };
 }
-

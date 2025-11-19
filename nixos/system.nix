@@ -1,16 +1,9 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }:
-with builtins;
-let
-  std = pkgs.lib;
-in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./system;
   config = {
     musnix = {
@@ -19,9 +12,15 @@ in
       rtcqs.enable = true;
       kernel = {
         realtime = false;
-        packages = pkgs.linuxPkacages_latest_rt;
+        packages = pkgs.linuxPackages_latest_rt;
       };
+    };
+
+    services.upower = {
+      enable = true;
+      criticalPowerAction = "PowerOff";
     };
   };
   meta = { };
 }
+

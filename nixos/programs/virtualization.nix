@@ -4,12 +4,7 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+{
   config = {
     assertions = [
       {
@@ -22,14 +17,14 @@ in {
       enable = false;
     };
 
-    environment.systemPackages = lib.mkIf config.virtualisation.containers.enable (with pkgs; [
-      dive # look into docker image layers
-      podman-tui # status of containers in the terminal
-      podman-compose # start group of containers for dev
-    ]);
+    environment.systemPackages = lib.mkIf config.virtualisation.containers.enable [
+      pkgs.dive # look into docker image layers
+      pkgs.podman-tui # status of containers in the terminal
+      pkgs.podman-compose # start group of containers for dev
+    ];
 
-    users.extraGroups."docker".members = ["ash"];
-    users.extraGroups."podman".members = ["ash"];
+    users.extraGroups."docker".members = [ "ash" ];
+    users.extraGroups."podman".members = [ "ash" ];
 
     virtualisation.podman = {
       autoPrune.enable = true;
@@ -43,13 +38,13 @@ in {
         runAsRoot = false;
         ovmf = {
           enable = true;
-          packages = with pkgs; [OVMFFull.fd];
+          packages = [ pkgs.OVMFFull.fd ];
         };
       };
       onBoot = "ignore";
       onShutdown = "shutdown";
     };
-    users.extraGroups."libvirtd".members = ["ash"];
+    users.extraGroups."libvirtd".members = [ "ash" ];
   };
-  meta = {};
+  meta = { };
 }

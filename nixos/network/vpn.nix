@@ -1,16 +1,7 @@
 {
-  config,
-  pkgs,
-  lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {
-  };
-  disabledModules = [];
-  imports = [];
+{
   config = {
     services.mullvad-vpn = {
       enable = false;
@@ -24,7 +15,10 @@ in {
       "wg-airvpn" = {
         enable = true;
         privateKeyFile = "/run/wireguard/wg-airvpn.sign";
-        dns = ["10.128.0.1" "fd7d:76ee:e68f:a993::1"];
+        dns = [
+          "10.128.0.1"
+          "fd7d:76ee:e68f:a993::1"
+        ];
         table = 51820;
         port = 51820;
         priority = 20;
@@ -34,7 +28,10 @@ in {
           presharedKeyFile = "/run/wireguard/wg-airvpn.psk";
           # airvpn terrebellum
           endpoint = "198.44.136.30:1637";
-          allowedIps = ["0.0.0.0/0" "::/0"];
+          allowedIps = [
+            "0.0.0.0/0"
+            "::/0"
+          ];
         };
       };
     };
@@ -49,5 +46,5 @@ in {
       "z /run/wireguard/wg-airvpn.psk 0400 systemd-network systemd-network"
     ];
   };
-  meta = {};
+  meta = { };
 }

@@ -1,19 +1,13 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
-with builtins;
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  imports = [ ];
   config = {
     stylix = {
       enable = true;
       autoEnable = true;
-      base16Scheme = "${pkgs.base16-schemes}/share/themes/tokyo-night-storm.yaml";
+      base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine-moon.yaml";
       overlays = {
         enable = true;
       };

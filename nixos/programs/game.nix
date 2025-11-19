@@ -57,23 +57,22 @@ in
           # MANGOHUD = true;
         };
         # fix gamescope launch from within steam
-        extraLibraries =
-          p: with p; [
-            xorg.libXcursor
-            xorg.libXi
-            xorg.libXinerama
-            xorg.libXScrnSaver
-            libpng
-            libpulseaudio
-            libvorbis
-            stdenv.cc.cc.lib
-            libkrb5
-            keyutils
-          ];
+        extraLibraries = p: [
+          p.xorg.libXcursor
+          p.xorg.libXi
+          p.xorg.libXinerama
+          p.xorg.libXScrnSaver
+          p.libpng
+          p.libpulseaudio
+          p.libvorbis
+          p.stdenv.cc.cc.lib
+          p.libkrb5
+          p.keyutils
+        ];
       };
       extest.enable = false;
-      extraCompatPackages = with pkgs; [
-        proton-ge-bin
+      extraCompatPackages = [
+        pkgs.proton-ge-bin
       ];
       gamescopeSession = {
         enable = true;

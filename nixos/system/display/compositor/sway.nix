@@ -4,11 +4,7 @@
   lib,
   ...
 }:
-with builtins; let
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+{
   config = lib.mkIf (config.services.desktopManager.manager == "sway") {
     programs.sway = {
       enable = true;
@@ -16,10 +12,10 @@ in {
         base = true;
         gtk = true;
       };
-      extraPackages = with pkgs; [
-        swaylock
+      extraPackages = [
+        pkgs.swaylock
         # swaylock-effects
-        swayidle
+        pkgs.swayidle
       ];
     };
 
@@ -44,5 +40,5 @@ in {
       };
     };
   };
-  meta = {};
+  meta = { };
 }

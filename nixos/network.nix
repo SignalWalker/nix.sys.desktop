@@ -4,13 +4,7 @@
   lib,
   ...
 }:
-with builtins;
-let
-  std = pkgs.lib;
-in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./network;
   config = {
     programs.wireshark = {
@@ -19,7 +13,7 @@ in
     };
 
     services.blueman = {
-      enable = config.hardware.bluetooth.enable;
+      enable = false; # config.hardware.bluetooth.enable;
     };
 
     services.resolved = {
@@ -31,10 +25,8 @@ in
     };
 
     networking.networkmanager = {
-      enable = false; # lib.mkDefault (!config.systemd.network.enable);
-      wifi.backend = "iwd";
+      enable = lib.mkDefault false; # lib.mkDefault (!config.systemd.network.enable);
     };
   };
   meta = { };
 }
-

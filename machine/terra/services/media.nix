@@ -4,10 +4,12 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   jelly = config.services.jellyfin;
-in {
+in
+{
   options = with lib; {
     services.jellyfin = {
       port = mkOption {
@@ -17,14 +19,28 @@ in {
       };
     };
   };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     services.jellyfin = {
       enable = true;
       package = pkgs.jellyfin;
       openFirewall = false;
     };
+
+    networking.firewall =
+      let
+        lanMdns = builtins.toString 7359;
+        http = builtins.toString jelly.port;
+      in
+      {
+        extraInputRules = ''
+          ip saddr { 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8 } udp dport ${lanMdns} accept comment "jellyfin lan discovery"
+          ip6 saddr { fc00::/7, fe80::/10 } udp dport ${lanMdns} accept comment "jellyfin lan discovery"
+          ip saddr { 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8 } tcp dport ${http} accept comment "jellyfin local http"
+          ip6 saddr { fc00::/7, fe80::/10 } tcp dport ${http} accept comment "jellyfin local http"
+        '';
+      };
 
     # services.anubis.instances."jellyfin" = {
     #   target = "http://${navi.listen.address}:${toString navi.listen.port}";
@@ -63,6 +79,7 @@ in {
 
       locations."/" = {
         proxyPass = "http://127.0.0.1:${toString jelly.port}";
+        proxyWebsockets = true;
         extraConfig = ''
           proxy_set_header X-Forwarded-Protocol $scheme;
           # Disable buffering when the nginx proxy gets very resource heavy upon streaming
@@ -72,6 +89,7 @@ in {
 
       locations."=/web/" = {
         proxyPass = "http://127.0.0.1:${toString jelly.port}/web/index.html";
+        proxyWebsockets = true;
         extraConfig = ''
           proxy_set_header X-Forwarded-Protocol $scheme;
         '';
@@ -93,5 +111,5 @@ in {
       }
     ];
   };
-  meta = {};
+  meta = { };
 }

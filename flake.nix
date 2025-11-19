@@ -171,9 +171,12 @@
     };
 
     hyprland = {
-      # url = "git+https://github.com/hyprwm/Hyprland?submodules=1";
       url = "github:hyprwm/Hyprland";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs"; # commented out for the cache
+    };
+    hyprqt6engine = {
+      url = "github:hyprwm/hyprqt6engine";
+      # inputs.nixpkgs.follows = "nixpkgs"; # commented out for the cache
     };
 
     pyprland = {
@@ -211,7 +214,6 @@
       deploy-rs,
       ...
     }:
-    with builtins;
     let
       std = nixpkgs.lib;
       systems = [
@@ -254,13 +256,13 @@
         };
       };
       packages."x86_64-linux" =
-        let
-          pkgs = import nixpkgs {
-            localSystem = "x86_64-linux";
-            crossSystem = "x86_64-linux";
-            overlays = [ self.overlays.default ];
-          };
-        in
+        # let
+        #   pkgs = import nixpkgs {
+        #     localSystem = "x86_64-linux";
+        #     crossSystem = "x86_64-linux";
+        #     overlays = [ self.overlays.default ];
+        #   };
+        # in
         {
           # inherit
           #   (pkgs)
@@ -273,7 +275,6 @@
       nixosModules = std.genAttrs machines (
         machine:
         {
-          config,
           lib,
           pkgs,
           ...
@@ -416,15 +417,11 @@
               programs.guix.enable = false;
 
               # desktop.wayland.compositor.sway.enable = true;
-              desktop.wayland.taskbar.enable = true;
 
               # wayland.windowManager.hyprland.pyprland.package =
               #   inputs.pyprland.packages.${pkgs.stdenv.hostPlatform.system}.pyprland;
 
               home.packages = [
-
-              ]
-              ++ ([
                 # (openmw-dev.overrideAttrs (
                 #   final: prev: {
                 #     src = inputs.openmw-src;
@@ -435,7 +432,7 @@
                 # umo # build failure 2025-05-24
                 # delta-plugin
                 # groundcoverify
-              ]);
+              ];
             };
           };
       };
