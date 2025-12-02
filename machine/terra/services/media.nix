@@ -4,23 +4,28 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
   jelly = config.services.jellyfin;
 in
 {
-  options = with lib; {
-    services.jellyfin = {
-      port = mkOption {
-        type = types.port;
-        readOnly = true;
-        default = 8096;
+  options =
+    let
+      inherit (lib) mkOption types;
+    in
+    {
+      services.jellyfin = {
+        port = mkOption {
+          type = types.port;
+          readOnly = true;
+          default = 8096;
+        };
+        mdnsPort = mkOption {
+          type = types.port;
+          readOnly = true;
+          default = 7359;
+        };
       };
     };
-  };
-  disabledModules = [ ];
-  imports = [ ];
   config = {
     services.jellyfin = {
       enable = true;
@@ -28,19 +33,10 @@ in
       openFirewall = false;
     };
 
-    networking.firewall =
-      let
-        lanMdns = builtins.toString 7359;
-        http = builtins.toString jelly.port;
-      in
-      {
-        extraInputRules = ''
-          ip saddr { 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8 } udp dport ${lanMdns} accept comment "jellyfin lan discovery"
-          ip6 saddr { fc00::/7, fe80::/10 } udp dport ${lanMdns} accept comment "jellyfin lan discovery"
-          ip saddr { 192.168.0.0/16, 172.16.0.0/12, 10.0.0.0/8 } tcp dport ${http} accept comment "jellyfin local http"
-          ip6 saddr { fc00::/7, fe80::/10 } tcp dport ${http} accept comment "jellyfin local http"
-        '';
-      };
+    networking.firewall = {
+      allowedLocalUdpPorts = [ jelly.mdnsPort ];
+      allowedLocalTcpPorts = [ jelly.port ];
+    };
 
     # services.anubis.instances."jellyfin" = {
     #   target = "http://${navi.listen.address}:${toString navi.listen.port}";
@@ -52,7 +48,7 @@ in
     # };
 
     services.nginx.virtualHosts."media.home.ashwalker.net" = {
-      enableACME = true;
+      useACMEHost = "home.ashwalker.net";
       forceSSL = true;
 
       listenAddresses = config.services.nginx.publicListenAddresses;
@@ -113,3 +109,4 @@ in
   };
   meta = { };
 }
+

@@ -1,14 +1,13 @@
 {
   config,
   pkgs,
-  lib,
   ...
 }:
 let
   nc = config.services.nextcloud;
 in
 {
-  config = lib.mkIf false {
+  config = {
     age.secrets.cloudAdminPassword = {
       file = ./cloud/cloudAdminPassword.age;
       owner = "nextcloud";
@@ -19,12 +18,12 @@ in
       enable = true;
       hostName = "cloud.home.ashwalker.net";
       https = true;
-      package = pkgs.nextcloud31;
+      package = pkgs.nextcloud32;
       autoUpdateApps.enable = true;
       configureRedis = true;
       database.createLocally = true;
       settings = {
-        overwriteprotocol = if nc.https then "https" else null;
+        overwriteprotocol = "https";
         default_phone_region = "US";
       };
       config = {
@@ -42,7 +41,7 @@ in
     };
 
     services.nginx.virtualHosts.${nc.hostName} = {
-      enableACME = true;
+      useACMEHost = "home.ashwalker.net";
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
     };

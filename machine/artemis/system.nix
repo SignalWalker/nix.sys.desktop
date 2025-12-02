@@ -4,7 +4,7 @@
 {
   config = {
     environment.variables = {
-      LIBMOUNT_DEBUG = "all";
+      # LIBMOUNT_DEBUG = "all";
     };
     services.sanoid = {
       datasets = {

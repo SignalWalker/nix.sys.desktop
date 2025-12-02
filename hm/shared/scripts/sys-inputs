@@ -25,7 +25,6 @@ nixmod=$PROJECTS/nix/mod
 typeset -A INPUTS
 INPUTS=( \
 	[homebase]="$hm/base" \
-	[homedesk/watch-battery]="$PROJECTS/misc/batwatch" \
 	[homedesk/ashvim]="$PROJECTS/cfg/neovim" \
 	[homedesk]="$hm/desktop" \
 	[sysbase/nginx-vhost-defaults]="$nixmod/nginx-vhost-defaults"

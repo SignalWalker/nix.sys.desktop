@@ -36,7 +36,7 @@ in {
 
       services.nginx.virtualHosts = lib.mkIf hydra.enable {
         ${hydra.hydraURL} = {
-          enableACME = true;
+          useACMEHost = "home.ashwalker.net";
           forceSSL = true;
           locations."/" = {
             proxyPass = "http://127.0.0.1:${toString hydra.port}";

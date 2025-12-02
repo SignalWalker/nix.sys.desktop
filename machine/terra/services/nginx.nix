@@ -4,35 +4,39 @@
   lib,
   ...
 }:
-with builtins;
 let
   std = pkgs.lib;
   nginx = config.services.nginx;
 in
 {
-  options = with lib; {
-    services.nginx = {
-      publicListenAddresses = mkOption {
-        description = "Default listen addresses for public virtual hosts.";
-        type = types.listOf types.str;
-        default = [
-        ];
-      };
-      terraCert = mkOption {
-        type = types.str;
-        readOnly = true;
-        default = "/etc/nginx/terra.ashwalker.net.crt";
-      };
-      terraCertKey = mkOption {
-        type = types.str;
-        readOnly = true;
-        default = "/etc/nginx/terra.ashwalker.net.key";
+  options =
+    let
+      inherit (lib) mkOption types;
+    in
+    {
+      services.nginx = {
+        publicListenAddresses = mkOption {
+          description = "Default listen addresses for public virtual hosts.";
+          type = types.listOf types.str;
+          default = [
+          ];
+        };
+        terraCert = mkOption {
+          type = types.str;
+          readOnly = true;
+          default = "/etc/nginx/terra.ashwalker.net.crt";
+        };
+        terraCertKey = mkOption {
+          type = types.str;
+          readOnly = true;
+          default = "/etc/nginx/terra.ashwalker.net.key";
+        };
       };
     };
-  };
   disabledModules = [ ];
   imports = [ ];
   config = {
+
     services.nginx = {
       enable = true;
 
@@ -105,7 +109,7 @@ in
         '';
 
       # virtualHosts."files.home.ashwalker.net" = {
-      #   enableACME = true;
+      #   useACMEHost = "home.ashwalker.net";
       #   forceSSL = true;
       #   listenAddresses = nginx.publicListenAddresses;
       #   locations."/" = {

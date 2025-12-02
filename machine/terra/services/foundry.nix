@@ -19,7 +19,7 @@ in {
     };
     services.nginx.virtualHosts = lib.mkIf foundry.enable {
       "vtt.home.ashwalker.net" = {
-        enableACME = true;
+        useACMEHost = "home.ashwalker.net";
         forceSSL = true;
         listenAddresses = config.services.nginx.publicListenAddresses;
         extraConfig = ''

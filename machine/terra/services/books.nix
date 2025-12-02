@@ -62,7 +62,7 @@ in
 
     services.nginx.virtualHosts = {
       "library.books.terra.ashwalker.net" = lib.mkIf calibre.enable {
-        # enableACME = true;
+        # useACMEHost = "home.ashwalker.net";
         # forceSSL = true;
         # listenAddresses = config.services.nginx.publicListenAddresses;
         extraConfig = ''
@@ -73,7 +73,7 @@ in
         };
       };
       "books.home.ashwalker.net" = lib.mkIf web.enable {
-        enableACME = true;
+        useACMEHost = "home.ashwalker.net";
         forceSSL = true;
         listenAddresses = config.services.nginx.publicListenAddresses;
         extraConfig = ''

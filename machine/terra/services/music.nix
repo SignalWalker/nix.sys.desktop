@@ -4,16 +4,12 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
   navi = config.services.navidrome;
   domain = "music.home.ashwalker.net";
-  anubis = config.services.anubis;
+  # anubis = config.services.anubis;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
   imports = lib.listFilePaths ./music;
   config = {
     services.navidrome = {
@@ -41,7 +37,7 @@ in
     };
 
     services.nginx.virtualHosts."music.home.ashwalker.net" = {
-      enableACME = true;
+      useACMEHost = "home.ashwalker.net";
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
@@ -59,4 +55,3 @@ in
   };
   meta = { };
 }
-

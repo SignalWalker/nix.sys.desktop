@@ -47,7 +47,7 @@ in
     };
     services.nginx.virtualHosts = lib.mkIf searx.enable {
       "search.home.ashwalker.net" = {
-        enableACME = true;
+        useACMEHost = "home.ashwalker.net";
         forceSSL = true;
         listenAddresses = config.services.nginx.publicListenAddresses;
         locations."/" = {

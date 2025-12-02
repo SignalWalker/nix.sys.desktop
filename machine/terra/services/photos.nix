@@ -83,12 +83,16 @@ in
       "render"
     ];
 
+    networking.firewall = {
+      allowedLocalTcpPorts = [ immich.port ];
+    };
+
     services.nginx.virtualHosts.${domain} = {
-      enableACME = true;
+      useACMEHost = "home.ashwalker.net";
       forceSSL = true;
       listenAddresses = config.services.nginx.publicListenAddresses;
       locations."/" = {
-        proxyPass = "http://0.0.0.0:${builtins.toString config.services.immich.port}";
+        proxyPass = "http://0.0.0.0:${builtins.toString immich.port}";
         proxyWebsockets = true;
         recommendedProxySettings = true;
         extraConfig = ''

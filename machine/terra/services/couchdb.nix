@@ -14,7 +14,7 @@
         enable = true;
       };
       services.nginx.virtualHosts."couchdb.home.ashwalker.net" = {
-        enableACME = true;
+        useACMEHost = "home.ashwalker.net";
         forceSSL = true;
         listenAddresses = config.services.nginx.publicListenAddresses;
         locations."/" = {
