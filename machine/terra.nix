@@ -6,9 +6,8 @@
   imports = lib.listFilePaths ./terra;
   config = {
     networking.publicAddresses = [
-      "24.98.17.92"
+      "107.205.77.253"
     ];
   };
   meta = { };
 }
-
