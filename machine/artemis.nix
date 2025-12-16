@@ -18,12 +18,6 @@ in
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
     # systemd.network.wait-online.enable = false;
 
-    boot.supportedFilesystems = [ "ntfs" ];
-
-    musnix = {
-      soundcardPciId = "00:1f.3";
-    };
-
     nix = {
       extraOptions = ''
         builders-use-substitutes = true

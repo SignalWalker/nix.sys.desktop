@@ -4,6 +4,7 @@
   ...
 }:
 let
+  zfs = config.zfs-root;
   cfg = config.zfs-root.fileSystems;
   inherit (lib)
     mkIf
@@ -39,7 +40,7 @@ in
       };
     };
   };
-  config = {
+  config = lib.mkIf zfs.boot.enable {
     fileSystems = mkMerge (
       mapAttrsToList (dataset: mountpoint: {
         "${mountpoint}" = {

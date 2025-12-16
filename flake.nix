@@ -22,6 +22,16 @@
       inputs.lix.follows = "lix";
     };
 
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -287,6 +297,9 @@
 
             inputs.lix-module.nixosModules.default
 
+            inputs.disko.nixosModules.disko
+            inputs.impermanence.nixosModules.impermanence
+
             inputs.nix-index-database.nixosModules.nix-index
             inputs.foundryvtt.nixosModules.foundryvtt
             inputs.musnix.nixosModules.musnix
@@ -301,6 +314,7 @@
             ./machine/${machine}.nix
           ]
           ++ (lib.listFilePaths ./nixos)
+          ++ (lib.listFilePaths ./modules)
           ++ (std.optionals (machine == "artemis") [
             inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
           ])
@@ -330,7 +344,7 @@
               ];
 
               environment.systemPackages = [
-                inputs.nix-auth.packages.${pkgs.system}.default
+                inputs.nix-auth.packages.${pkgs.stdenv.hostPlatform.system}.default
               ];
 
               networking.hostName = machine;
@@ -375,7 +389,7 @@
             }
             (lib.mkIf (machine == "artemis") {
               environment.systemPackages = [
-                inputs.fw-ectool.packages.${pkgs.system}.default
+                inputs.fw-ectool.packages.${pkgs.stdenv.hostPlatform.system}.default
               ];
               boot.loader.grub = {
                 theme = "${inputs.grub-theme-yorha}/yorha-2256x1504";

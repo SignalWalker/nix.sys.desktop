@@ -4,17 +4,19 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {
-    boot.loader.configurationLimit = mkOption {
-      type = types.int;
-      default = 16;
+{
+  options =
+    let
+      inherit (lib) mkOption types;
+    in
+    {
+      boot.loader.configurationLimit = mkOption {
+        type = types.int;
+        default = 16;
+      };
     };
-  };
-  disabledModules = [];
-  imports = [];
+  disabledModules = [ ];
+  imports = [ ];
   config = {
     boot.loader = {
       systemd-boot = {
@@ -37,6 +39,10 @@ in {
       enable = false;
       theme = "tribar";
     };
+
+    boot.crashDump = {
+      enable = true;
+    };
   };
-  meta = {};
+  meta = { };
 }

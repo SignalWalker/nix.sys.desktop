@@ -1,14 +1,11 @@
 {
   config,
-  pkgs,
   lib,
   modulesPath,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
-
+  inherit (builtins) elem;
   use_pstate = !(elem "intel_pstate=disable" config.boot.kernelParams);
 in
 {
@@ -22,6 +19,10 @@ in
     # warnings = [
     #   "force-enabling hardware.intelgpu.loadInInitrd"
     # ];
+
+    musnix = {
+      soundcardPciId = "00:1f.3";
+    };
 
     hardware.intelgpu = {
       driver = "xe";

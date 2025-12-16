@@ -70,48 +70,50 @@ in
       };
     };
 
-    security.pam.u2f = {
-      enable = true;
-      settings = {
-        cue = true;
+    security.pam = {
+      u2f = {
+        enable = true;
+        settings = {
+          cue = true;
+        };
+        control = "sufficient";
       };
-      control = "sufficient";
-    };
+      services = {
+        login = {
+          u2fAuth = true;
+          enableGnomeKeyring = true;
+          gnupg = {
+            enable = true;
+            noAutostart = true;
+          };
+        };
 
-    security.pam.services = {
-      login = {
-        u2fAuth = true;
-        enableGnomeKeyring = true;
-        gnupg = {
-          enable = true;
-          noAutostart = true;
+        sudo = {
+          u2fAuth = true;
+        };
+
+        swaylock = {
+          u2fAuth = true;
+          text = ''
+            auth  include login
+          '';
         };
       };
-
-      sudo.u2fAuth = true;
-
-      swaylock = {
-        u2fAuth = true;
-        text = ''
-          auth  include login
-        '';
-      };
+      loginLimits = [
+        {
+          domain = "ash";
+          item = "nofile";
+          type = "hard";
+          value = 524288;
+        }
+        {
+          domain = "ash";
+          item = "nofile";
+          type = "soft";
+          value = 524288;
+        }
+      ];
     };
-
-    security.pam.loginLimits = [
-      {
-        domain = "ash";
-        item = "nofile";
-        type = "hard";
-        value = 524288;
-      }
-      {
-        domain = "ash";
-        item = "nofile";
-        type = "soft";
-        value = 524288;
-      }
-    ];
 
     security.polkit = {
       enable = true;
@@ -124,12 +126,14 @@ in
         "org.freedesktop.network1."
       ];
       allowedUserActions = [
-      ];
-      allowedUserPrefixes = [
         "org.freedesktop.login1.reboot"
+        "org.freedesktop.login1.reboot-multiple-sessions"
         "org.freedesktop.login1.power-off"
+        "org.freedesktop.login1.power-off-multiple-sessions"
         "org.freedesktop.login1.hibernate"
         "org.freedesktop.login1.suspend"
+      ];
+      allowedUserPrefixes = [
         "com.feralinteractive.GameMode."
         "org.freedesktop.NetworkManager."
         "org.freedesktop.RealtimeKit1."

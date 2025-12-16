@@ -126,10 +126,12 @@ in
           unstable = config.boot.zfs.package == pkgs.zfs_unstable;
         in
         name: kp: (!unstable && !kp.zfs.meta.broken) || (unstable && !kp.zfs_unstable.meta.broken);
+
       zfs-root.fileSystems = {
         efiSystemPartitions = map (diskName: diskName + cfg.partitionScheme.efiBoot) cfg.bootDevices;
         swapPartitions = map (diskName: diskName + cfg.partitionScheme.swap) cfg.bootDevices;
       };
+
       boot = {
         initrd.availableKernelModules = cfg.availableKernelModules;
         kernelParams = cfg.kernelParams;

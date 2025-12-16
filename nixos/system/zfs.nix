@@ -13,7 +13,6 @@
       pkgs.zfs-prune-snapshots
     ];
     services.sanoid = {
-      enable = true;
       templates = {
         "standard" = {
           autoprune = true;

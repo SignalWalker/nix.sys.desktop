@@ -1,21 +1,16 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
+  zfs-root = config.zfs-root;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  # imports = lib.listFilePaths ./zfs;
-  imports = [ ];
   config = {
     zfs-root = {
       boot = {
+        enable = false;
         devNodes = "/dev/disk/by-id/";
         bootDevices = [ "nvme-WDC_PC_SN530_SDBPNPZ-1T00-1002_20309U447208" ];
         immutable = false;
@@ -31,8 +26,7 @@ in
       };
     };
 
-    networking.hostId = "d8aabc08";
+    networking.hostId = lib.mkIf zfs-root.boot.enable "d8aabc08";
   };
   meta = { };
 }
-

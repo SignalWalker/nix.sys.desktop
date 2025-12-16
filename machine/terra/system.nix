@@ -4,6 +4,7 @@
 {
   config = {
     services.sanoid = {
+      enable = true;
       datasets = {
         "elysium/project" = {
           useTemplate = [ "standard" ];
