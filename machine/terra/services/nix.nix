@@ -65,6 +65,9 @@ in
       # addSSL = true;
       # sslCertificate = config.services.nginx.terraCert;
       # sslCertificateKey = config.services.nginx.terraCertKey;
+      locations."=/public-key" = {
+        return = "200 'nix-cache.home.ashwalker.net:nfUY5yBAH5M1oCqkW+FjdZa+olzErfDvx6OIXut4THs='";
+      };
       locations."/" = {
         proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
       };
