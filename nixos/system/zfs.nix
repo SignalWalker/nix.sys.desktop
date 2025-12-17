@@ -1,11 +1,12 @@
 {
   pkgs,
+  config,
   lib,
   ...
 }:
 {
   imports = lib.listFilePaths ./zfs;
-  config = {
+  config = lib.mkIf config.zfs-root.boot.enable {
     boot.zfs = {
       package = pkgs.zfs_unstable;
     };

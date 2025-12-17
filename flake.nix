@@ -215,6 +215,11 @@
       url = "github:numtide/nix-auth";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-serve-ng = {
+      url = "github:aristanetworks/nix-serve-ng";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{
@@ -328,6 +333,8 @@
             inputs.minecraft.nixosModules.default
 
             inputs.simple-nixos-mailserver.nixosModules.default
+
+            inputs.nix-serve-ng.nixosModules.default
           ]);
 
           config = lib.mkMerge [
@@ -396,6 +403,8 @@
               stylix.targets.grub.enable = false;
             })
             (lib.mkIf (machine == "terra") {
+              services.nix-serve.package =
+                inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng;
               # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
 
               # networking.domain = "home.ashwalker.net";

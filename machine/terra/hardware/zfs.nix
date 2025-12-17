@@ -4,18 +4,13 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  # imports = lib.listFilePaths ./zfs;
-  imports = [];
+{
   config = {
     zfs-root = {
       boot = {
+        enable = true;
         devNodes = "/dev/disk/by-id/";
-        bootDevices = ["nvme-eui.002538d51100a6ad"];
+        bootDevices = [ "nvme-eui.002538d51100a6ad" ];
         immutable = false;
         availableKernelModules = [
           "xhci_pci"
@@ -26,7 +21,7 @@ in {
           "sd_mod"
         ];
         removableEfi = true;
-        kernelParams = [];
+        kernelParams = [ ];
         sshUnlock = {
           enable = false;
           authorizedKeys = config.users.users."root".openssh.authorizedKeys.keys;
@@ -37,8 +32,9 @@ in {
     networking.hostId = "8ffb526d";
 
     boot.zfs = {
-      extraPools = ["elysium"];
+      extraPools = [ "elysium" ];
     };
   };
-  meta = {};
+  meta = { };
 }
+

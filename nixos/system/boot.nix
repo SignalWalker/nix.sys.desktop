@@ -27,7 +27,7 @@
       grub = {
         enable = true;
         efiSupport = true;
-        zfsSupport = config.boot.supportedFilesystems.zfs or false;
+        zfsSupport = config.zfs-root.boot.enable or false;
         configurationLimit = config.boot.loader.configurationLimit;
         theme = lib.mkDefault pkgs.nixos-grub2-theme;
         useOSProber = lib.mkDefault false;
