@@ -6,6 +6,8 @@
 let
   secrets = config.age.secrets;
   serve = config.services.nix-serve;
+
+  pubkey = "nix-cache.home.ashwalker.net:nfUY5yBAH5M1oCqkW+FjdZa+olzErfDvx6OIXut4THs=";
 in
 {
   options =
@@ -66,8 +68,21 @@ in
       # sslCertificate = config.services.nginx.terraCert;
       # sslCertificateKey = config.services.nginx.terraCertKey;
       locations."=/public-key" = {
-        return = "200 'nix-cache.home.ashwalker.net:nfUY5yBAH5M1oCqkW+FjdZa+olzErfDvx6OIXut4THs='";
+        return = "200 '${pubkey}'";
       };
+      locations."=/disko-install-cmd" =
+        let
+          artemis = "github:signalwalker/nix.sys.desktop#artemis";
+          diskoInstall = "github:nix-community/disko/latest#disko-install";
+          substituters = lib.concatStringsSep " " (
+            [ "https://nix-cache.home.ashwalker.net" ] ++ config.nix.settings.substituters
+          );
+          pubkeys = lib.concatStringsSep " " ([ pubkey ] ++ config.nix.settings.trusted-public-keys);
+          cmd = "nix --extra-experimental-features \"nix-command flakes\" run \"${diskoInstall}\" -- --option substituters \"${substituters}\" --option trusted-public-keys \"${pubkeys}\" --flake \"${artemis}\" --disk main /dev/nvme0n1";
+        in
+        {
+          return = "200 '${cmd}'";
+        };
       locations."/" = {
         proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
       };

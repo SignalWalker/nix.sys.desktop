@@ -63,7 +63,6 @@ in
     };
 
     boot.supportedFilesystems = [
-      "bcachefs"
       "ntfs"
     ];
 

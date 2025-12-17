@@ -3525,11 +3525,11 @@
         "wireguard-networks": "wireguard-networks"
       },
       "locked": {
-        "lastModified": 1765983698,
-        "narHash": "sha256-/Q5x5sV5KjaOaGZuyg1j5fCFNT1Kmz2fxShVperxJaA=",
+        "lastModified": 1765996252,
+        "narHash": "sha256-oCXBxWFPbLRiykf0WpWW/iKu2CNgTCjPC6yToOP0URQ=",
         "owner": "signalwalker",
         "repo": "nix.sys.base",
-        "rev": "e5d1e61f520237344367356986ef10cbf430f9d6",
+        "rev": "a083148517f5069375deeb367d7efce4a042d937",
         "type": "github"
       },
       "original": {

@@ -217,9 +217,9 @@ in
                 partitions = {
                   ESP = {
                     label = "boot";
-                    name = "ESP";
                     type = "EF00";
                     size = "512M";
+                    priority = 0;
                     content = {
                       type = "filesystem";
                       format = "vfat";
@@ -230,6 +230,7 @@ in
                   luks = {
                     size = "100%";
                     label = "luks";
+                    priority = 1;
                     content = {
                       type = "luks";
                       name = "crypt-main";

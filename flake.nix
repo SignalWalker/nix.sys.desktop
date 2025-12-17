@@ -459,32 +459,85 @@
           };
       };
 
-      nixosConfigurations = std.mapAttrs (
-        machine: module:
-        std.nixosSystem {
-          system = null; # set in `config.nixpkgs.hostPlatform`
-          specialArgs = {
-            inherit inputs;
-          };
-          modules = [
-            module
-            {
-              _module.args.nixinate = {
-                host = "${machine}.ashwalker.net";
-                sshUser = "root";
-                buildOn = "remote";
-                substituteOnTarget = true;
-                hermetic = false;
+      nixosConfigurations =
+        std.mapAttrs
+          (
+            machine: module:
+            std.nixosSystem {
+              system = null; # set in `config.nixpkgs.hostPlatform`
+              specialArgs = {
+                inherit inputs;
               };
+              modules = [
+                module
+                {
+                  _module.args.nixinate = {
+                    host = "${machine}.ashwalker.net";
+                    sshUser = "root";
+                    buildOn = "remote";
+                    substituteOnTarget = true;
+                    hermetic = false;
+                  };
+                }
+              ];
+              lib = std.extend (
+                final: prev: {
+                  inherit (import "${inputs.homebase}/lib.nix") listFilePaths;
+                }
+              );
             }
-          ];
-          lib = std.extend (
-            final: prev: {
-              inherit (import "${inputs.homebase}/lib.nix") listFilePaths;
+          )
+          (
+            {
+              "iso-installer" = (
+                { pkgs, ... }:
+                {
+                  imports = [
+                    inputs.sysbase.nixosModules.default
+                    inputs.lix-module.nixosModules.default
+                    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal-new-kernel.nix"
+                    "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/channel.nix"
+                  ];
+                  config = {
+                    networking = {
+                      hostName = "theia-installer";
+                    };
+                    users.users.ash = {
+                      password = "ash";
+                    };
+                    home-manager.users = {
+                      ash = (
+                        { ... }:
+                        {
+                          imports = [
+                            inputs.homebase.homeModules.default
+                          ];
+                          config = { };
+                        }
+                      );
+                    };
+                    environment.systemPackages = [
+                      inputs.nix-auth.packages.${pkgs.stdenv.hostPlatform.system}.default
+                    ];
+                    boot = {
+                      supportedFilesystems = [
+                        "btrfs"
+                        "f2fs"
+                        "vfat"
+                      ];
+                    };
+                    system.targets = {
+                      sleep.enable = false;
+                      suspend.enable = false;
+                      hibernate.enable = false;
+                      hybrid-sleep.enable = false;
+                    };
+                  };
+                }
+              );
             }
+            // self.nixosModules
           );
-        }
-      ) self.nixosModules;
 
       deploy = {
         sshUser = "root";
