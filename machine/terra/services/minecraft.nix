@@ -4,22 +4,36 @@
   ...
 }:
 let
-  driftingLeague = config.services.minecraft.driftingLeague;
+  playground = config.services.minecraft.servers.playground;
+  # driftingLeague = config.services.minecraft.servers.driftingLeague;
+  hostName = "minecraft.home.ashwalker.net";
 in
 {
   config = {
-    services.minecraft.driftingLeague = {
-      enable = false;
-      java.memory = {
-        initial = "1024M";
-        max = "8912M";
+    services.minecraft.servers = {
+      # driftingLeague = {
+      #   enable = false;
+      #   java.memory = {
+      #     initial = "1024M";
+      #     max = "8912M";
+      #   };
+      #   packwiz.hostName = hostName;
+      #   openFirewall = true;
+      #   prism.name = "DriftingLeague";
+      # };
+      playground = {
+        enable = true;
+        java.memory = {
+          initial = "1024M";
+          max = "8912M";
+        };
+        packwiz.hostName = hostName;
+        openFirewall = true;
+        prism.name = "Playground";
       };
-      packwiz.hostName = "minecraft.home.ashwalker.net";
-      openFirewall = true;
-      prism.name = "DriftingLeague";
     };
-    services.nginx.virtualHosts = lib.mkIf driftingLeague.enable {
-      ${driftingLeague.packwiz.hostName} = {
+    services.nginx.virtualHosts = lib.mkIf (playground.enable) {
+      ${hostName} = {
         listenAddresses = config.services.nginx.publicListenAddresses;
         useACMEHost = "home.ashwalker.net";
         addSSL = true;

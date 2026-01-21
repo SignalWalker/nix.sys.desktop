@@ -4,19 +4,14 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
+  greetd = config.services.greetd;
+  regreet = config.programs.regreet;
   sessionPkgs = config.services.displayManager.sessionPackages;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  imports = [ ];
   config = {
-    # programs.regreet = {
-    #   enable = false;
-    # };
+
     #
     # services.displayManager = {
     #   sddm = {
@@ -38,24 +33,30 @@ in
     #   };
     # };
 
+    programs.regreet = {
+      enable = false;
+    };
+
     services.greetd =
       let
-        greetd = config.services.greetd;
         sessions = {
-          wayland = std.concatStringsSep ":" (
+          wayland = lib.concatStringsSep ":" (
             [ "/usr/share/wayland-sessions" ] ++ (map (pkg: "${pkg}/share/wayland-sessions") sessionPkgs)
           );
-          x11 = std.concatStringsSep ":" (
+          x11 = lib.concatStringsSep ":" (
             [ "/usr/share/xsessions" ] ++ (map (pkg: "${pkg}/share/xsessions") sessionPkgs)
           );
         };
       in
       {
         enable = config.services.desktopManager.manager != "plasma6";
+        useTextGreeter = !regreet.enable;
         settings = {
           default_session = {
             user = "greeter";
-            command = "${pkgs.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}:${sessions.x11}";
+            command =
+              lib.mkIf (!regreet.enable)
+                "${pkgs.tuigreet}/bin/tuigreet --time --asterisks --remember --remember-session --greeting SignalOS --sessions ${sessions.wayland}:${sessions.x11}";
           };
         };
       };

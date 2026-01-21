@@ -4,14 +4,11 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
   hydra = config.services.hydra;
   baseDomain = "home.ashwalker.net";
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
   config = lib.mkMerge [
     {
       services.woodpecker-server = {
@@ -31,7 +28,7 @@ in {
         port = 49232;
         useSubstitutes = true;
         hydraURL = "hydra.${baseDomain}";
-        buildMachinesFiles = [];
+        buildMachinesFiles = [ ];
       };
 
       services.nginx.virtualHosts = lib.mkIf hydra.enable {
@@ -45,5 +42,6 @@ in {
       };
     }
   ];
-  meta = {};
+  meta = { };
 }
+

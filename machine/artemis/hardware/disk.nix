@@ -88,9 +88,14 @@ in
             # network
             "/etc/NetworkManager/system-connections"
             "/var/lib/iwd"
+            "/var/lib/wgautomesh"
 
             # system
+            "/var/db/sudo/lectured" # which users have received the lecture sudo outputs on first use
             "/var/lib/nixos"
+            ## greeter
+            "/var/cache/tuigreet" # last-logged-in user
+            "/var/lib/regreet" # last-logged-in user
             ## systemd
             "/var/lib/systemd/coredump"
             "/var/lib/systemd/timers"
@@ -132,6 +137,9 @@ in
           };
         };
       };
+      boot.resumeDevice = luksDevice;
+      # NOTE :: `btrfs inspect-internal map-swapfile -r /.swapvol/swapfile`
+      boot.kernelParams = [ "resume_offset=533760" ]; # TODO :: automate finding this?
       boot.initrd = {
         systemd = {
           enable = true;

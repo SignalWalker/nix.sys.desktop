@@ -1,14 +1,8 @@
 {
-  config,
-  pkgs,
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
+{
   imports = lib.listFilePaths ./compositor;
   config = {
     environment.variables = {
@@ -23,5 +17,6 @@ in {
       enable = true;
     };
   };
-  meta = {};
+  meta = { };
 }
+

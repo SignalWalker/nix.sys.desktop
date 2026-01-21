@@ -29,12 +29,32 @@ in
     signal.machines."terra" = {
       nix.build.sshKey = "/run/nix/remote-build.sign";
     };
-    systemd.tmpfiles.rules = [
-      "C /run/nix/remote-build.sign - - - - /home/ash/.ssh/id_ed25519"
-      "z /run/nix/remote-build.sign 0400 root root"
-      "L /root/.ssh/known_hosts - - - - /home/ash/.ssh/known_hosts"
-      "L /root/.ssh/id_ed25519 - - - - /home/ash/.ssh/id_ed25519"
-    ];
+    systemd.tmpfiles.settings = {
+      "10-nix-remote-build" = {
+        "/run/nix/remote-build.sign" = {
+          "C" = {
+            argument = "/home/ash/.ssh/id_ed25519";
+          };
+          "z" = {
+            mode = "0400";
+            user = "root";
+            group = "root";
+          };
+        };
+      };
+      "10-root-ssh" = {
+        "/root/.ssh/known_hosts" = {
+          "L" = {
+            argument = "/home/ash/.ssh/known_hosts";
+          };
+        };
+        "/root/.ssh/id_ed25519" = {
+          "L" = {
+            argument = "/home/ash/.ssh/id_ed25519";
+          };
+        };
+      };
+    };
 
     networking.wireguard.tunnels."wg-airvpn" = {
       # TODO :: figure out a good way to keep this out of public repos
@@ -42,17 +62,6 @@ in
         "10.171.122.61/32"
         "fd7d:76ee:e68f:a993:4543:e7b0:c146:840d/128"
       ];
-    };
-
-    programs.kdeconnect = {
-      enable = false;
-      package = pkgs.gnomeExtensions.gsconnect;
-    };
-
-    programs.weylus = {
-      enable = true;
-      users = [ "ash" ];
-      openFirewall = true;
     };
 
     virtualisation.libvirtd = {

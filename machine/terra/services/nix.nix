@@ -51,7 +51,7 @@ in
       };
     };
     services.nix-serve = {
-      enable = true;
+      enable = false; # FIX :: build failure 2026-01-19
       secretKeyFile = secrets.nixStoreKeyHttp.path;
       port = 42533;
     };

@@ -147,7 +147,7 @@
       flake = false;
     };
     minecraft = {
-      url = "github:signalwalker/cfg.minecraft.modpack/drifting-league";
+      url = "github:signalwalker/cfg.minecraft.modpack/playground";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     thaw = {
