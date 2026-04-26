@@ -21,6 +21,7 @@ fi
 sys=$PROJECTS/nix/sys
 hm=$PROJECTS/nix/home
 nixmod=$PROJECTS/nix/mod
+nixpkg=$PROJECTS/nix/pkg
 
 typeset -A INPUTS
 INPUTS=( \
@@ -29,6 +30,7 @@ INPUTS=( \
 	[homedesk]="$hm/desktop" \
 	[sysbase/nginx-vhost-defaults]="$nixmod/nginx-vhost-defaults"
 	[sysbase]="$sys/base" \
+	[minecraft]="$nixpkg/minecraft-server" \
 	[sysdesk]="$sys/desktop"
 )
 

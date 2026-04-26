@@ -329,6 +329,7 @@
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+            "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
 
             inputs.minecraft.nixosModules.default
 

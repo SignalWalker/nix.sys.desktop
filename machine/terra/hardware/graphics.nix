@@ -4,16 +4,12 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
+  inherit (builtins) toString;
   # nvidiaEnabled = lib.elem "nvidia" config.services.xserver.videoDrivers;
   nvidia = config.hardware.nvidia;
 in
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  imports = [ ];
   config = {
     environment.variables = lib.mkIf nvidia.enabled {
       EXTRA_SWAY_ARGS = "--unsupported-gpu";
@@ -24,9 +20,8 @@ in
 
     hardware.nvidia = {
       modesetting.enable = true;
-      open = false; # doesn't support pascall (10xx series)
       nvidiaSettings = true;
-      package = config.boot.kernelPackages.nvidiaPackages.beta;
+      # package = config.boot.kernelPackages.nvidiaPackages.beta;
       nvidiaPersistenced = false;
     };
 

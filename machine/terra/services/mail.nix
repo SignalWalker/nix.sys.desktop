@@ -1,29 +1,25 @@
 {
   config,
-  pkgs,
-  lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
+  secrets = config.age.secrets;
   mail = config.mailserver;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
   config = {
-    mailserver = {
-      enable = false;
-      fqdn = "mail.home.ashwalker.net";
-      domains = ["home.ashwalker.net"];
-      loginAccounts = {
-        "ash@home.ashwalker.net" = {
-          hashedPasswordFile = secrets.emailAshPassword.path;
-          aliases = ["admin@home.ashwalker.net"];
-        };
-      };
-      certificateScheme = "acme-nginx";
-    };
+    # mailserver = {
+    #   enable = false;
+    #   fqdn = "mail.home.ashwalker.net";
+    #   domains = [ "home.ashwalker.net" ];
+    #   loginAccounts = {
+    #     "ash@home.ashwalker.net" = {
+    #       hashedPasswordFile = secrets.emailAshPassword.path;
+    #       aliases = [ "admin@home.ashwalker.net" ];
+    #     };
+    #   };
+    #   certificateScheme = "acme-nginx";
+    # };
   };
-  meta = {};
+  meta = { };
 }

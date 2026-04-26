@@ -106,6 +106,8 @@ in
         pkgs.libnotify
         # misc
         pkgs.libdrm
+        # banjo recompiled
+        pkgs.libsm
       ];
     };
   };
