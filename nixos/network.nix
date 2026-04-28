@@ -8,7 +8,7 @@
   imports = lib.listFilePaths ./network;
   config = {
     programs.wireshark = {
-      enable = true;
+      enable = false; # FIX :: build error 2026-05-03
       package = pkgs.wireshark;
     };
 

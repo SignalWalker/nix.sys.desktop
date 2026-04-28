@@ -16,8 +16,6 @@ let
     ;
   inherit (builtins)
     head
-    toString
-    map
     tail
     ;
 in

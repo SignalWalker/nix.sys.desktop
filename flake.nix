@@ -329,7 +329,7 @@
             inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
 
             inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
-            "${inputs.nixos-hardware}/common/gpu/nvidia/pascal"
+            "${inputs.nixos-hardware}/common/gpu/nvidia/turing"
 
             inputs.minecraft.nixosModules.default
 
@@ -405,7 +405,16 @@
             })
             (lib.mkIf (machine == "terra") {
               services.nix-serve.package =
-                inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng;
+                inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng.overrideAttrs
+                  (
+                    final: prev: {
+                      buildInputs = prev.buildInputs ++ [
+                        pkgs.libcpuid
+                        pkgs.aws-sdk-cpp
+                        pkgs.libseccomp
+                      ];
+                    }
+                  );
 
               # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
 

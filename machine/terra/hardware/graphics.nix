@@ -5,7 +5,7 @@
   ...
 }:
 let
-  inherit (builtins) toString;
+  # inherit (builtins) toString;
   # nvidiaEnabled = lib.elem "nvidia" config.services.xserver.videoDrivers;
   nvidia = config.hardware.nvidia;
 in

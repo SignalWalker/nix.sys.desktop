@@ -31,7 +31,7 @@ in
     };
 
     services.calibre-web = {
-      enable = true;
+      enable = false; # FIX :: build failure 2026-04-28
       listen = {
         ip = "127.0.0.1";
         port = 40508;
@@ -98,3 +98,4 @@ in
   };
   meta = { };
 }
+
