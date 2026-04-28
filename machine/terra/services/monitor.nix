@@ -4,20 +4,20 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
   prom = config.services.prometheus;
   exporters = prom.exporters;
   grafana = config.services.grafana;
   ntopng = config.services.ntopng;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  imports = [];
+in
+{
+  options = { };
+  disabledModules = [ ];
+  imports = [ ];
   config = lib.mkMerge [
     {
       services.grafana = {
-        enable = true;
+        enable = false;
         settings = {
           server = {
             http_addr = "127.0.0.1";
@@ -79,7 +79,7 @@ in {
     }
     (lib.mkIf ntopng.enable {
       # IPFIX
-      networking.firewall.allowedUDPPorts = [4739];
+      networking.firewall.allowedUDPPorts = [ 4739 ];
       services.nginx.virtualHosts."bandwidth.monitor.terra.ashwalker.net" = {
         locations."/" = {
           proxyPass = "http://localhost:${toString ntopng.httpPort}";
@@ -89,5 +89,5 @@ in {
       };
     })
   ];
-  meta = {};
+  meta = { };
 }

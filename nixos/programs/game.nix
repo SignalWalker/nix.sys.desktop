@@ -51,10 +51,10 @@
         };
         # fix gamescope launch from within steam
         extraLibraries = p: [
-          p.xorg.libXcursor
-          p.xorg.libXi
-          p.xorg.libXinerama
-          p.xorg.libXScrnSaver
+          p.libxcursor
+          p.libxi
+          p.libxinerama
+          p.libxscrnsaver
           p.libpng
           p.libpulseaudio
           p.libvorbis

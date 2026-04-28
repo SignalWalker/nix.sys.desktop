@@ -34,7 +34,7 @@ in
 
     services.xserver.enable = lib.mkDefault false;
 
-    programs.light.enable = true;
+    # programs.light.enable = true;
 
     xdg.portal = {
       enable = true;
@@ -71,4 +71,3 @@ in
   };
   meta = { };
 }
-

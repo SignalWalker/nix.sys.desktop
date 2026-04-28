@@ -10,7 +10,7 @@ let
   guix = config.services.guix;
 in
 {
-  options = with lib; { };
+  options = { };
   disabledModules = [ ];
   imports = lib.listFilePaths ./programs;
   config = {
@@ -36,7 +36,7 @@ in
     environment.systemPackages = [
       pkgs.fastfetch
 
-      pkgs.wineWowPackages.waylandFull
+      pkgs.wineWow64Packages.waylandFull
       pkgs.winetricks
 
       pkgs.nix-alien
@@ -51,20 +51,20 @@ in
       enable = true;
       libraries = [
         pkgs.libGL
-        pkgs.xorg.libX11
-        pkgs.xorg.libXcursor
-        pkgs.xorg.libXext
-        pkgs.xorg.libXi
-        pkgs.xorg.libXinerama
-        pkgs.xorg.libXrandr
-        pkgs.xorg.libXrender
-        pkgs.xorg.libxcb
-        pkgs.xorg.libXcomposite
-        pkgs.xorg.libXdamage
-        pkgs.xorg.libXfixes
-        pkgs.xorg.libXtst
-        pkgs.xorg.libXScrnSaver
-        pkgs.xorg.libXxf86vm
+        pkgs.libx11
+        pkgs.libxcursor
+        pkgs.libxext
+        pkgs.libxi
+        pkgs.libxinerama
+        pkgs.libxrandr
+        pkgs.libxrender
+        pkgs.libxcb
+        pkgs.libxcomposite
+        pkgs.libxdamage
+        pkgs.libxfixes
+        pkgs.libxtst
+        pkgs.libxscrnsaver
+        pkgs.libxxf86vm
         # for some games (like cataclysm:bn) to work
         pkgs.SDL2
         pkgs.SDL2_Pango

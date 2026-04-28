@@ -21,8 +21,6 @@ in
       host = "0.0.0.0";
       database = {
         enable = true;
-        enableVectors = false; # obselete
-        enableVectorChord = true;
       };
       accelerationDevices = null; # allows all
       mediaLocation = "/elysium/media/video/photos";

@@ -250,7 +250,7 @@
       ];
     in
     {
-      formatter = std.mapAttrs (system: pkgs: pkgs.nixfmt-rfc-style) nixpkgsFor;
+      formatter = std.mapAttrs (system: pkgs: pkgs.nixfmt) nixpkgsFor;
       overlays.default = final: prev: {
         # cross-seed = import ./pkgs/cross-seed.nix {
         #   inherit inputs;
@@ -406,6 +406,7 @@
             (lib.mkIf (machine == "terra") {
               services.nix-serve.package =
                 inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng;
+
               # services.websurfx.package = inputs.websurfx.packages.${pkgs.system}.websurfx;
 
               # networking.domain = "home.ashwalker.net";

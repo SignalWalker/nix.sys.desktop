@@ -4,20 +4,19 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
   surf = config.services.websurfx;
-in {
-  options = with lib; {
-    services.websurfx = {
-      enable = mkEnableOption "websurfx search engine";
-      package = mkPackageOption pkgs "websurfx" {};
-    };
+in
+{
+  options = {
+    # services.websurfx = {
+    #   enable = mkEnableOption "websurfx search engine";
+    #   package = mkPackageOption pkgs "websurfx" { };
+    # };
   };
-  disabledModules = [];
-  imports = [];
-  config =
-    lib.mkIf surf.enable {
-    };
-  meta = {};
+  disabledModules = [ ];
+  imports = [ ];
+  config = {
+  };
+  meta = { };
 }

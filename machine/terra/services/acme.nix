@@ -25,7 +25,9 @@ in
           ];
           dnsProvider = "hetzner";
           dnsPropagationCheck = true;
-          credentialsFile = secrets.hetznerDnsApiKey.path;
+          credentialFiles = {
+            "HETZNER_API_KEY_FILE" = secrets.hetznerDnsApiKey.path;
+          };
         };
       };
     };

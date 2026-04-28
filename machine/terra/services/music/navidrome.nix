@@ -4,16 +4,20 @@
   lib,
   ...
 }:
-with builtins; let
+with builtins;
+let
   std = pkgs.lib;
   navi = config.services.navidrome;
-  toml = pkgs.formats.toml {};
-  mkTomlFile = name: src: (lib.mkOption {
-    type = lib.types.path;
-    readOnly = true;
-    default = toml.generate name src;
-  });
-in {
+  toml = pkgs.formats.toml { };
+  mkTomlFile =
+    name: src:
+    (lib.mkOption {
+      type = lib.types.path;
+      readOnly = true;
+      default = toml.generate name src;
+    });
+in
+{
   options = with lib; {
     services.navidrome = {
       enable = mkEnableOption "navidrome";
@@ -25,7 +29,7 @@ in {
         type = types.str;
         default = "navidrome";
       };
-      package = mkPackageOption pkgs "navidrome" {};
+      package = mkPackageOption pkgs "navidrome" { };
       dir = {
         runtime = mkOption {
           type = types.str;
@@ -58,7 +62,7 @@ in {
       };
       settings = mkOption {
         type = toml.type;
-        default = {};
+        default = { };
       };
       settingsFile = mkOption {
         type = types.path;
@@ -86,15 +90,15 @@ in {
       };
     };
   };
-  disabledModules = ["services/audio/navidrome.nix"];
-  imports = [];
+  disabledModules = [ "services/audio/navidrome.nix" ];
+  imports = [ ];
   config = lib.mkIf navi.enable {
-    warnings = ["using custom navidrome module"];
+    warnings = [ "using custom navidrome module" ];
     users.users.${navi.user} = {
       group = navi.group;
       isSystemUser = true;
     };
-    users.groups.${navi.group} = {};
+    users.groups.${navi.group} = { };
 
     services.navidrome.settings = {
       MusicFolder = navi.dir.library;
@@ -125,10 +129,13 @@ in {
 
     systemd.services."navidrome" = {
       description = "Navidrome Music Server and Streamer compatible with Subsonic/Airsonic";
-      after = ["remote-fs.target" "network.target"];
-      wantedBy = ["multi-user.target"];
+      after = [
+        "remote-fs.target"
+        "network.target"
+      ];
+      wantedBy = [ "multi-user.target" ];
       path = [
-        pkgs.opusTools
+        pkgs.opus-tools
         pkgs.ffmpeg
       ];
       environment = {
@@ -162,7 +169,9 @@ in {
           navi.dir.cfg
         ];
         BindReadOnlyPaths = [
-          "${config.environment.etc."ssl/certs/ca-certificates.crt".source}:/etc/ssl/certs/ca-certificates.crt"
+          "${
+            config.environment.etc."ssl/certs/ca-certificates.crt".source
+          }:/etc/ssl/certs/ca-certificates.crt"
           navi.dir.library
           storeDir
         ];
@@ -174,15 +183,28 @@ in {
         ProtectControlGroups = true;
         ProtectKernelModules = true;
         ProtectKernelTunables = true;
-        RestrictAddressFamilies = ["AF_UNIX" "AF_INET" "AF_INET6"];
+        RestrictAddressFamilies = [
+          "AF_UNIX"
+          "AF_INET"
+          "AF_INET6"
+        ];
         RestrictNamespaces = true;
         RestrictRealtime = true;
-        SystemCallFilter = ["~@clock" "@debug" "@module" "@mount" "@obsolete" "@reboot" "@setuid" "@swap"];
+        SystemCallFilter = [
+          "~@clock"
+          "@debug"
+          "@module"
+          "@mount"
+          "@obsolete"
+          "@reboot"
+          "@setuid"
+          "@swap"
+        ];
         PrivateDevices = true;
         ProtectSystem = "strict";
         ProtectHome = true;
       };
     };
   };
-  meta = {};
+  meta = { };
 }
