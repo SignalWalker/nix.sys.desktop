@@ -10,7 +10,7 @@ let
 in
 {
   options = with lib; { };
-  imports = [ ];
+  
   config =
     let
       scripts = listToAttrs (

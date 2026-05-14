@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   modulesPath,
@@ -13,6 +14,7 @@ in
   disabledModules = [ ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
+    inputs.nixos-hardware.nixosModules.framework-13th-gen-intel
   ]
   ++ (lib.listFilePaths ./hardware);
   config = {
@@ -107,10 +109,6 @@ in
       model = "pc104";
     };
 
-    programs.gamescope.args = [
-      "-w 2256"
-      "-h 1504"
-    ];
   };
   meta = { };
 }

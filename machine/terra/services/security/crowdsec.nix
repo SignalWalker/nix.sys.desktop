@@ -131,7 +131,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = lib.mkIf crowdsec.enable {
     users.users.${crowdsec.user} = {
       isSystemUser = true;

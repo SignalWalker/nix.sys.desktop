@@ -1,6 +1,8 @@
 {
+  inputs,
   config,
   lib,
+  pkgs,
   ...
 }:
 let
@@ -28,6 +30,9 @@ in
         };
       };
     };
+  imports = [
+    inputs.nix-serve-ng.nixosModules.default
+  ];
   config = {
     age.secrets = {
       nixStoreKey = {
@@ -54,6 +59,17 @@ in
       enable = true;
       secretKeyFile = secrets.nixStoreKeyHttp.path;
       port = 42533;
+      package =
+        inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng.overrideAttrs
+          (
+            final: prev: {
+              buildInputs = prev.buildInputs ++ [
+                pkgs.libcpuid
+                pkgs.aws-sdk-cpp
+                pkgs.libseccomp
+              ];
+            }
+          );
     };
     users.users.${serve.user} = {
       isSystemUser = true;

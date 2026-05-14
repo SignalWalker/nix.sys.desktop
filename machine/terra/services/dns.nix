@@ -10,7 +10,7 @@ with builtins; let
 in {
   options = with lib; {};
   disabledModules = [];
-  imports = [];
+  
   config = {
     services.bind = {
       enable = true;

@@ -1,13 +1,13 @@
 {
+  inputs,
   config,
   pkgs,
   lib,
   modulesPath,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
+  inherit (builtins) elem;
   use_pstate = !(elem "intel_pstate=disable" config.boot.kernelParams);
 in
 {
@@ -15,6 +15,14 @@ in
   disabledModules = [ ];
   imports = [
     (modulesPath + "/installer/scan/not-detected.nix")
+
+    inputs.nixos-hardware.nixosModules.common-pc
+    inputs.nixos-hardware.nixosModules.common-pc-ssd
+
+    inputs.nixos-hardware.nixosModules.common-cpu-intel-cpu-only
+
+    inputs.nixos-hardware.nixosModules.common-gpu-nvidia-nonprime
+    "${inputs.nixos-hardware}/common/gpu/nvidia/turing"
   ]
   ++ lib.listFilePaths ./hardware;
   config = {

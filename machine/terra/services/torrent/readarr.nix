@@ -19,7 +19,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = {
     services.readarr = {
       enable = jackett.enable;

@@ -33,7 +33,7 @@ in
     };
   };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     services.gnome.gnome-keyring = {
       enable = true;

@@ -21,7 +21,7 @@ in
     };
   };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     age.secrets.garageEnvironment = {
       file = ./s3/garageEnvironment.age;
@@ -89,4 +89,3 @@ in
   };
   meta = { };
 }
-

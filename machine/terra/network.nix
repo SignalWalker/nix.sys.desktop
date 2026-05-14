@@ -18,7 +18,7 @@
       };
     };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     networking.wireless.iwd.enable = false;
 

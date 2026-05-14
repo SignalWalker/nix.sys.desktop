@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   lib,
   ...
@@ -9,6 +10,9 @@ let
   hostName = "minecraft.home.ashwalker.net";
 in
 {
+  imports = [
+    inputs.minecraft.nixosModules.default
+  ];
   config = {
     services.minecraft.servers = {
       # driftingLeague = {

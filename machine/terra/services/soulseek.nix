@@ -35,7 +35,7 @@ in {
   #   };
   # };
   # disabledModules = [];
-  # imports = [];
+  # 
   # config = {
   #   services.slskd = {
   #     openFirewall = true;

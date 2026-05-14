@@ -27,7 +27,7 @@ in
     };
   };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     services.atuin = {
       enable = true;

@@ -13,7 +13,7 @@ in
 {
   options = { };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = lib.mkMerge [
     {
       services.grafana = {

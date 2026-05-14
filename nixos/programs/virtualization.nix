@@ -26,8 +26,18 @@
     users.extraGroups."docker".members = [ "ash" ];
     users.extraGroups."podman".members = [ "ash" ];
 
+    virtualisation.containers = {
+      containersConf.settings = {
+        network = {
+          dns_bind_port = 48462;
+        };
+      };
+    };
+
     virtualisation.podman = {
+      enable = true;
       autoPrune.enable = true;
+      dockerCompat = true;
       dockerSocket.enable = true;
     };
 

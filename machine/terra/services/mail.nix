@@ -1,4 +1,5 @@
 {
+  inputs,
   config,
   ...
 }:
@@ -7,6 +8,9 @@ let
   mail = config.mailserver;
 in
 {
+  imports = [
+    # inputs.simple-nixos-mailserver.nixosModules.default
+  ];
   config = {
     # mailserver = {
     #   enable = false;

@@ -22,8 +22,9 @@
       };
     };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
+    networking.firewall.allowedLocalTcpPorts = [ 8080 ]; # FIX :: guh
     networking.firewall.extraInputRules =
       let
         ip = lib.concatStringsSep ", " [
@@ -37,8 +38,8 @@
         ];
         tcp = config.networking.firewall.allowedLocalTcpPorts;
         udp = config.networking.firewall.allowedLocalUdpPorts;
-        tcpStr = lib.concatMapStringsSep ", " (builtins.toString) tcp;
-        udpStr = lib.concatMapStringsSep ", " (builtins.toString) udp;
+        tcpStr = lib.concatMapStringsSep ", " (toString) tcp;
+        udpStr = lib.concatMapStringsSep ", " (toString) udp;
       in
       lib.concatStringsSep "\n" [
         (

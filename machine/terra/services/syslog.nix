@@ -8,7 +8,7 @@ with builtins;
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     services.rsyslogd = {
       enable = true;

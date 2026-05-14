@@ -54,7 +54,7 @@ in
     };
   };
   disabledModules = [ "services/torrent/qbittorrent.nix" ];
-  imports = [ ];
+  
   config = lib.mkIf qbit.enable {
     users.users.${qbit.user} = {
       isSystemUser = true;

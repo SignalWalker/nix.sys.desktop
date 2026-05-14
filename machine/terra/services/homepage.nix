@@ -18,7 +18,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = {
     # services.homepage-dashboard = {
     #   enable = false;

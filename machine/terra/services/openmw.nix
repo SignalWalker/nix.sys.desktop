@@ -1,17 +1,9 @@
 {
-  config,
   pkgs,
   lib,
   ...
 }:
-with builtins;
-let
-  std = pkgs.lib;
-in
 {
-  options = with lib; { };
-  disabledModules = [ ];
-  imports = [ ];
   config = lib.mkIf false {
     users.users."tes3mp" = {
       isSystemUser = true;

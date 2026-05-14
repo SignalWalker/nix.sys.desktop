@@ -19,7 +19,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = {
     services.sonarr = {
       enable = true;

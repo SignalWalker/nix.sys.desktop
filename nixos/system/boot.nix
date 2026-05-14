@@ -16,7 +16,7 @@
       };
     };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     boot.loader = {
       systemd-boot = {

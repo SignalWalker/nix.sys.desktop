@@ -21,7 +21,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = lib.mkIf flare.enable {
     services.flaresolverr = {
       openFirewall = false;

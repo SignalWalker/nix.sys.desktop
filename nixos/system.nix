@@ -1,10 +1,20 @@
 {
+  inputs,
   pkgs,
   lib,
   ...
 }:
 {
-  imports = lib.listFilePaths ./system;
+  imports = (lib.listFilePaths ./system) ++ [
+    inputs.sysbase.nixosModules.default
+
+    inputs.disko.nixosModules.disko
+
+    inputs.impermanence.nixosModules.impermanence
+
+    inputs.musnix.nixosModules.musnix
+    inputs.auto-cpufreq.nixosModules.default
+  ];
   config = {
     musnix = {
       enable = true;
@@ -23,4 +33,3 @@
   };
   meta = { };
 }
-

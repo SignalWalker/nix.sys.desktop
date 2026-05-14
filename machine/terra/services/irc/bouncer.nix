@@ -41,7 +41,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = lib.mkIf bouncer.enable {
     users.users.${bouncer.user} = {
       inherit (bouncer) group;

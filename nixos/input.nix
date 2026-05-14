@@ -14,7 +14,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = lib.mkIf input.enable {
     environment.systemPackages = [
       pkgs.xorg.setxkbmap

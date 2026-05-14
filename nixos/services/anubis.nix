@@ -13,7 +13,7 @@ in
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = [ ];
+  
   config = {
     services.anubis = {
       defaultOptions = {

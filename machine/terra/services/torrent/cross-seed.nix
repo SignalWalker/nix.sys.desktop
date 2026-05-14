@@ -35,7 +35,7 @@ in {
   #   };
   # };
   # disabledModules = [];
-  # imports = [];
+  # 
   # config = lib.mkIf seed.enable (lib.mkMerge [
   #   {
   #     users.users.${seed.user} = {

@@ -100,7 +100,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = lib.mkIf grocy.enable {
     services.grocy.enable = lib.mkForce false;
 

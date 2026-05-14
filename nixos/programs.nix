@@ -104,6 +104,10 @@ in
         pkgs.freetype
         pkgs.gtk2
         pkgs.libnotify
+        ## rpgmaker-linux
+        pkgs.pulseaudio
+        pkgs.libffi
+        pkgs.libyaml
         # misc
         pkgs.libdrm
         # banjo recompiled

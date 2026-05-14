@@ -15,7 +15,7 @@ in
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = [ ]; # lib.listFilePaths ./irc;
+   # lib.listFilePaths ./irc;
   config = {
     users.users.soju = {
       group = "soju";
@@ -92,4 +92,3 @@ in
   };
   meta = { };
 }
-

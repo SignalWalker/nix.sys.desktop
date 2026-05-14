@@ -1,8 +1,12 @@
 {
+  inputs,
   pkgs,
   ...
 }:
 {
+  imports = [
+    inputs.stylix.nixosModules.stylix
+  ];
   config = {
     stylix = {
       enable = true;

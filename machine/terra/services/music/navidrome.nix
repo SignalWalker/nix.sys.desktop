@@ -91,7 +91,7 @@ in
     };
   };
   disabledModules = [ "services/audio/navidrome.nix" ];
-  imports = [ ];
+  
   config = lib.mkIf navi.enable {
     warnings = [ "using custom navidrome module" ];
     users.users.${navi.user} = {

@@ -12,7 +12,7 @@ in
 {
   options = with lib; { };
   disabledModules = [ ];
-  imports = [ ]; # lib.listFilePaths ./security;
+   # lib.listFilePaths ./security;
   config = {
     # TODO :: crowdsec
     # services.crowdsec = {
@@ -29,4 +29,3 @@ in
   };
   meta = { };
 }
-

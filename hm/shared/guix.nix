@@ -95,7 +95,7 @@ in {
     };
   };
   disabledModules = [];
-  imports = [];
+  
   config = let
     shellInitExtra = ''
       if [[ -z "$GUIX_LOGIN_VARIABLES_INITIALIZED" ]]; then
