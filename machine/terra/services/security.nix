@@ -1,19 +1,17 @@
 {
-  config,
-  pkgs,
-  lib,
   ...
 }:
-with builtins;
-let
-  std = pkgs.lib;
-  crowdsec = config.services.crowdsec;
-in
 {
-  options = with lib; { };
+  options = { };
   disabledModules = [ ];
-   # lib.listFilePaths ./security;
+  # lib.listFilePaths ./security;
   config = {
+    security = {
+      auditd = {
+        enable = true;
+
+      };
+    };
     # TODO :: crowdsec
     # services.crowdsec = {
     #   enable = false; # there aren't any bouncers packaged yet.......
