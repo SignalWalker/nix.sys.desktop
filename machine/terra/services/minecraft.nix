@@ -26,7 +26,7 @@ in
       #   prism.name = "DriftingLeague";
       # };
       playground = {
-        enable = true;
+        enable = false;
         java.memory = {
           initial = "1024M";
           max = "8912M";
