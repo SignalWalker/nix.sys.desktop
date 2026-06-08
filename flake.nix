@@ -181,7 +181,7 @@
         ...
       }:
       {
-        
+
         flake = {
           nixosModules = (import ./nixos-modules.nix) top [
             "artemis"
@@ -201,3 +201,4 @@
       }
     );
 }
+
