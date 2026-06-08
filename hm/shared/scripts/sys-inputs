@@ -1,69 +1,53 @@
-#! /usr/bin/env zsh
+#! /usr/bin/env nu
 
-set -e
+export def get_inputs [] {
+  let projects_dir = $env.XDG_PROJECTS_DIR? | default $'($env.HOME)/projects'
+  let sys = $'($projects_dir)/nix/sys'
+  let hm = $'($projects_dir)/nix/home'
+  let nixmod = $'($projects_dir)/nix/mod'
+  let nixpkg = $'($projects_dir)/nix/pkg'
 
-autoload colors; colors
+  [
+    { name: 'homebase', dir: $'($hm)/base' }
+    { name: 'homedesk/ashvim', dir: $'($projects_dir)/cfg/neovim' }
+    { name: 'homedesk', dir: $'($hm)/desktop' }
+    { name: 'sysbase/nginx-vhost-defaults', dir: $'($nixmod)/nginx-vhost-defaults' }
+    { name: 'sysbase', dir: $'($sys)/base' }
+    { name: 'minecraft', dir: $'($nixpkg)/minecraft-server' }
+    { name: 'sysdesk', dir: $'($sys)/desktop' }
+  ]
+}
 
-printerr() { printf "${fg[yellow]}[.list-inputs]${reset_color} %s\n" "$@" 1>&2; }
+export def into_overrides [] {
+  each {|input| [ '--override-input' $input.name $input.dir ]} | flatten
+}
 
-if [[ ! -v HOME ]]; then
-	printerr '$HOME not set'
-	exit 1
-fi
-
-PROJECTS=${XDG_PROJECTS_DIR:-$HOME/projects}
-
-if [[ ! -d "$PROJECTS" ]]; then
-	printerr "$PROJECTS is inaccessible || not a directory"
-	exit 1
-fi
-
-sys=$PROJECTS/nix/sys
-hm=$PROJECTS/nix/home
-nixmod=$PROJECTS/nix/mod
-nixpkg=$PROJECTS/nix/pkg
-
-typeset -A INPUTS
-INPUTS=( \
-	[homebase]="$hm/base" \
-	[homedesk/ashvim]="$PROJECTS/cfg/neovim" \
-	[homedesk]="$hm/desktop" \
-	[sysbase/nginx-vhost-defaults]="$nixmod/nginx-vhost-defaults"
-	[sysbase]="$sys/base" \
-	[minecraft]="$nixpkg/minecraft-server" \
-	[sysdesk]="$sys/desktop"
-)
-
-for INPUT PATH in ${(kv)INPUTS}; do
-	if [[ ! -d "$PATH" ]]; then
-		printerr "$PATH is inaccessible || not a directory"
-		exit 1
-	fi
-	if [[ ! -e "$PATH/flake.nix" ]]; then
-		printerr "$PATH does not contain flake.nix"
-		exit 1
-	fi
-done
-
-
-if [[ (! -v 1) || $1 == "overrides" ]]; then
-	prefix=""
-	if [[ -v 2 ]]; then
-		prefix="git+ssh://$2.ashwalker.net"
-		printerr "using prefix: $prefix"
-	fi
-	for INPUT PATH in ${(kv)INPUTS}; do
-		printf "--override-input\n%q\n%q\n" "$INPUT" "$prefix$PATH"
-	done
-elif [[ $1 == "paths" ]]; then
-	if [[ -v 2 ]]; then
-		printerr "unexpected prefix argument: \`$2\`"
-		exit 1
-	fi
-	print -r -- ${(v)INPUTS}
-else
-	printerr "expected one of [\"paths\", \"overrides\"], got: \"$1\""
-	exit 1
-fi
-
-
+def main [command?: string, --fmt: string = "lines"] {
+  let res = match $command {
+    "overrides" | null => {
+      get_inputs | into_overrides
+    }
+    "paths" => {
+      get_inputs | get dir
+    }
+    "table" => {
+      get_inputs
+    }
+    _ => {
+      return (error make $'expected overrides or paths, got: ($command)')
+    }
+  }
+  match $fmt {
+    "lines" => {
+      for line in $res {
+        print $line
+      }
+    }
+    "nu" => {
+      $res
+    }
+    _ => {
+      error make $'expected lines or nu, got ($fmt)'
+    }
+  }
+}

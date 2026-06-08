@@ -1,0 +1,29 @@
+#! /usr/bin/env nu
+
+def --wrapped main [
+    option: string
+    --host: string
+    --fmt: string = "raw"
+    ...rest: string
+] {
+    let projects_dir = $env.XDG_PROJECTS_DIR? | default $'($env.HOME)/projects'
+    let desktop_dir = $'($projects_dir)/nix/sys/desktop'
+    let eval_args = (sys-inputs overrides | split row "\n") ++ [
+        $'($desktop_dir)#nixosConfigurations.($host | default (hostname)).($option)'
+        ...$rest
+    ]
+    match $fmt {
+        "nix" => {
+            nix eval ...$eval_args | nix run nixpkgs#nixfmt -- -s | bat -l nix
+        },
+        "json" => {
+            nix eval ...$eval_args --json | jq | bat -l json
+        },
+        "raw" => {
+            nix eval ...$eval_args
+        },
+        _ => {
+            error make "fmt must be either nix, json, or raw"
+        }
+    }
+}
