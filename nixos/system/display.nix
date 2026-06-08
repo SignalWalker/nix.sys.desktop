@@ -36,11 +36,6 @@ in
 
     # programs.light.enable = true;
 
-    xdg.portal = {
-      enable = true;
-      xdgOpenUsePortal = true;
-    };
-
     fonts.packages =
       (
         let
