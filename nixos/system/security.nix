@@ -4,11 +4,7 @@
   lib,
   ...
 }:
-with builtins;
 let
-  std = pkgs.lib;
-  gnupg = config.programs.gnupg;
-  agent = gnupg.agent;
   polkit = config.security.polkit;
 in
 {
@@ -33,7 +29,7 @@ in
     };
   };
   disabledModules = [ ];
-  
+
   config = {
     services.gnome.gnome-keyring = {
       enable = true;

@@ -9,7 +9,6 @@
     security = {
       auditd = {
         enable = true;
-
       };
     };
     # TODO :: crowdsec
