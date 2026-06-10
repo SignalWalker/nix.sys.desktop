@@ -4,12 +4,20 @@
   lib,
   ...
 }:
+let
+  libvirt = config.virtualisation.libvirtd;
+  virtman = config.programs.virt-manager;
+in
 {
   config = {
     assertions = [
       {
-        assertion = config.virtualisation.libvirtd.enable -> config.programs.dconf.enable;
+        assertion = libvirt.enable -> config.programs.dconf.enable;
         message = "virt-manager requires dconf";
+      }
+      {
+        assertion = virtman.enable -> libvirt.enable;
+        message = "virt-manager requires libvirtd";
       }
     ];
 
@@ -17,10 +25,15 @@
       enable = false;
     };
 
-    environment.systemPackages = lib.mkIf config.virtualisation.containers.enable [
-      pkgs.dive # look into docker image layers
-      pkgs.podman-tui # status of containers in the terminal
-      pkgs.podman-compose # start group of containers for dev
+    environment.systemPackages = lib.mkMerge [
+      [
+        pkgs.dnsmasq # libvirt networking
+      ]
+      (lib.mkIf config.virtualisation.containers.enable [
+        pkgs.dive # look into docker image layers
+        pkgs.podman-tui # status of containers in the terminal
+        pkgs.podman-compose # start group of containers for dev
+      ])
     ];
 
     users.extraGroups."docker".members = [ "ash" ];
@@ -42,14 +55,14 @@
     };
 
     virtualisation.libvirtd = {
-      enable = lib.mkDefault false;
+      enable = lib.mkDefault true;
       qemu = {
         package = pkgs.qemu_kvm;
         runAsRoot = false;
-        ovmf = {
-          enable = true;
-          packages = [ pkgs.OVMFFull.fd ];
-        };
+        vhostUserPackages = [ pkgs.virtiofsd ];
+      };
+      dbus = {
+        enable = true;
       };
       onBoot = "ignore";
       onShutdown = "shutdown";

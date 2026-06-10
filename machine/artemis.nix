@@ -64,10 +64,6 @@ in
       ];
     };
 
-    virtualisation.libvirtd = {
-      enable = false;
-    };
-
     services.clight =
       let
         backlight_curve =
