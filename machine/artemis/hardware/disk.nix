@@ -118,6 +118,7 @@ in
             # virtualization
             "/var/lib/docker"
             "/var/lib/lxc"
+            "/var/lib/libvirt"
           ];
           files = [
             "/etc/machine-id"
