@@ -1,14 +1,12 @@
 {
-  config,
   pkgs,
-  lib,
   ...
 }:
 {
   config = {
     programs.gamescope = {
       enable = true;
-      capSysNice = false; # FIX :: https://github.com/NixOS/nixpkgs/issues/208936
+      capSysNice = true;
       args = [
         "--scaler fit"
         "--filter pixel"
@@ -27,16 +25,14 @@
         general = {
           renice = 10;
           desiredgov = "performance";
-          defaultgov = "schedutil";
-          igpu_desiredgov = "performance";
         };
         custom =
           let
-            notify = "${pkgs.libnotify}/bin/notify-send -a Gamemode -c system";
+            notify = "${pkgs.libnotify}/bin/notify-send --app-name=Gamemode --category=system --urgency=low";
           in
           {
-            start = "${notify} 'Game Mode Enabled'";
-            end = "${notify} 'Game Mode Disabled'";
+            start = "${notify} 'Game mode enabled'";
+            end = "${notify} 'Game mode disabled'";
           };
       };
     };
@@ -68,7 +64,7 @@
         pkgs.proton-ge-bin
       ];
       gamescopeSession = {
-        enable = true;
+        enable = false;
       };
     };
 
