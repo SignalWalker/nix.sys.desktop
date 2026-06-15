@@ -3,13 +3,6 @@
   inputs = {
     # TODO :: switch to nixos-unstable
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nix = {
-      type = "github";
-      owner = "NixOS";
-      repo = "nix";
-      ref = "2.23.3";
-      # inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     lix = {
       url = "https://git.lix.systems/lix-project/lix/archive/main.tar.gz";
@@ -201,4 +194,3 @@
       }
     );
 }
-
