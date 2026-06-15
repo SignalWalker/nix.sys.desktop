@@ -48,9 +48,7 @@
 
       config = {
         permittedInsecurePackages = [
-          # "electron-35.7.5"
-          # "libsoup-2.74.3"
-          # "qtwebengine-5.15.19"
+          "electron-39.8.10"
         ];
         nvidia.acceptLicense = true;
       };
