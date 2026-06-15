@@ -35,6 +35,10 @@ in
       enable = true;
     };
 
+    programs.firejail = {
+      enable = true;
+    };
+
     # WARN :: automatically retrieve unknown keys from keyserver; potential privacy leak
     environment.etc."gnupg/gpg.conf".text = ''
       auto-key-retrieve
