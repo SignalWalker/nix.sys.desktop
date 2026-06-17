@@ -1,0 +1,21 @@
+#! /usr/bin/env nu
+
+# sudo NIXOS_LABEL_VERSION="$(date -Iminutes)" nixos-rebuild --flake ~/projects/nix/sys/desktop (sys-inputs overrides) switch -L --fallback --keep-going
+
+def --wrapped main [
+    ...rest: string
+] {
+    let projects_dir = $env.XDG_PROJECTS_DIR? | default $'($env.HOME)/projects'
+    let desktop_dir = $'($projects_dir)/nix/sys/desktop'
+
+    let date = ^date -Iminutes
+
+    let rebuild_args = [
+        '--flake'
+        $desktop_dir
+        ...(sys-inputs overrides | split row "\n")
+        ...$rest
+    ]
+
+    exec sudo $'NIXOS_LABEL_VERSION=($date)' nixos-rebuild ...$rebuild_args
+}
