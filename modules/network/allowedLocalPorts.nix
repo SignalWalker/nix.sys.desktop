@@ -22,9 +22,8 @@
       };
     };
   disabledModules = [ ];
-  
+
   config = {
-    networking.firewall.allowedLocalTcpPorts = [ 8080 ]; # FIX :: guh
     networking.firewall.extraInputRules =
       let
         ip = lib.concatStringsSep ", " [
@@ -64,3 +63,4 @@
   };
   meta = { };
 }
+
