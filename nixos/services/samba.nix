@@ -4,47 +4,47 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
   wsdd = config.services.samba-wsdd;
   samba = config.services.samba;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  
+in
+{
+
   config = {
+    networking.firewall = lib.mkMerge [
+      (lib.mkIf samba.enable {
+        allowedLocalTcpPorts = [
+          139
+          445
+        ];
+        allowedLocalUdpPorts = [
+          137
+          138
+        ];
+        allowPing = true; # FIX :: why???
+      })
+      (lib.mkIf wsdd.enable {
+        allowedLocalTcpPorts = [
+          5357
+        ];
+        allowedLocalUdpPorts = [
+          3702
+        ];
+      })
+    ];
+    users.users.ash.extraGroups = lib.mkIf samba.enable [ "samba" ];
     services.samba-wsdd = {
       enable = samba.enable;
-      openFirewall = true;
+      openFirewall = false;
       workgroup = "WORKGROUP";
     };
     services.samba = {
       enable = false;
-      openFirewall = true;
-      settings = {
-        "workgroup" = wsdd.workgroup;
-        "server string" = config.networking.hostName;
-        "netbios name" = config.networking.hostName;
-
-        "server min protocol" = "SMB2_02";
-        "hosts allow" = ["192.168.0." "127.0.0.1" "localhost"];
-        "hosts deny" = "0.0.0.0/0";
-
-        "guest account" = "nobody";
-        "map to guest" = "bad user";
-
-        "usershare path" = "/var/lib/samba/usershares";
-        "usershare max shares" = 100;
-        "usershare allow guests" = true;
-        "usershare owner only" = true;
-      };
+      package = pkgs.samba4Full;
+      openFirewall = false;
+      usershares.enable = true;
     };
-
-    networking.firewall.allowPing = lib.mkDefault samba.enable;
-    # networking.firewall = {
-    #   allowedTCPPorts = [ 5357 ];
-    #   allowedUDPPorts = [ 3702 ];
-    # };
   };
-  meta = {};
+  meta = { };
 }
+

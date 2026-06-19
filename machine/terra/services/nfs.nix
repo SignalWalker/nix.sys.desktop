@@ -4,12 +4,7 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
-in {
-  options = with lib; {};
-  disabledModules = [];
-  
+{
   config = {
     services.nfs = {
       server = {
@@ -18,5 +13,5 @@ in {
       };
     };
   };
-  meta = {};
 }
+
