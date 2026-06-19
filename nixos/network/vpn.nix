@@ -9,6 +9,9 @@
 
     networking.wireguard.networks."wg-signal" = {
       privateKeyFile = "/run/wireguard/wg-signal.sign";
+      network.extraConfig = {
+        networkConfig.MulticastDNS = "yes";
+      };
     };
 
     networking.wireguard.tunnels = {

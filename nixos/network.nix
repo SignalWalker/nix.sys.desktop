@@ -19,6 +19,11 @@
     services.resolved = {
       multicastDns = true;
     };
+    services.avahi = {
+    };
+    networking.firewall.allowedLocalUdpPorts = [
+      5353 # mdns
+    ];
 
     services.tailscale = {
       tailnet.name = "tail3d611.ts.net";

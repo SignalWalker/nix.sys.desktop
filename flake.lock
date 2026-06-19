@@ -3364,11 +3364,11 @@
         "wireguard-networks": "wireguard-networks"
       },
       "locked": {
-        "lastModified": 1781544069,
-        "narHash": "sha256-4GfJC1g+MglDcj+ymBl1OkgJT44aKMJudvgheS++JDE=",
+        "lastModified": 1781897446,
+        "narHash": "sha256-Ss1Rv0cUy1TfaG3UzbknoTqNmggvOoldnf6XjWBvogg=",
         "owner": "signalwalker",
         "repo": "nix.sys.base",
-        "rev": "4ef78c2095658e53cc98f0d4ac9d556b9b5bfbc4",
+        "rev": "7e38433af96f38e9e5db113aed5c0991cd3522e1",
         "type": "github"
       },
       "original": {
@@ -3752,11 +3752,11 @@
     },
     "wireguard-networks": {
       "locked": {
-        "lastModified": 1733257742,
-        "narHash": "sha256-v6sRtAXS25yzHui3uRXFCIjGizS9PA6Pd30zRBoIMGQ=",
+        "lastModified": 1781732632,
+        "narHash": "sha256-/MN10Acn+geHjh9CY6Cb0OI5/wXWFttHu24l4H69LDU=",
         "owner": "SignalWalker",
         "repo": "nix.net.wireguard",
-        "rev": "8f6874a7ced76da44b3896e1d4e1ecb58c11ee68",
+        "rev": "1d502f4180b37f66cabd032d6ff96651e7218f6c",
         "type": "github"
       },
       "original": {

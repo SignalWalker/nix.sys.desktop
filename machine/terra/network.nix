@@ -18,12 +18,12 @@
       };
     };
   disabledModules = [ ];
-  
+
   config = {
     networking.wireless.iwd.enable = false;
 
     systemd.network.networks = {
-      "eth" = {
+      "10-eth" = {
         ipv6AcceptRAConfig = {
           Token = "prefixstable";
         };
@@ -172,3 +172,4 @@
   };
   meta = { };
 }
+
