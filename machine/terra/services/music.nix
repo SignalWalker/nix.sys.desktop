@@ -20,9 +20,17 @@ in
         RecentlyAddedByModTime = true;
         CoverArtPriority = "embedded, cover.*, folder.*, front.*, external";
         EnableUserEditing = false;
-        TranscodingCacheSize = "1GiB";
+        TranscodingCacheSize = "2GiB";
         FFmpegPath = "${pkgs.ffmpeg}/bin/ffmpeg";
+        MPVPath = "${pkgs.mpv}/bin/mpv";
         EnableSharing = true;
+        ListenBrainz = {
+          Enabled = true;
+        };
+        Jukebox = {
+          Enabled = false; # TODO :: basically no clients support this and it seems like it's hard to get pipewire to work across multiple users
+        };
+        # LogLevel = "debug";
       };
       dir.library = "/elysium/media/audio/library";
     };
