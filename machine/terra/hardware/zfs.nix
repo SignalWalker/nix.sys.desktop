@@ -1,7 +1,5 @@
 {
   config,
-  pkgs,
-  lib,
   ...
 }:
 {
@@ -29,6 +27,12 @@
       };
     };
 
+    boot.zswap = {
+      enable = true;
+      maxPoolPercent = 20;
+      compressor = "lz4";
+    };
+
     networking.hostId = "8ffb526d";
 
     boot.zfs = {
@@ -37,4 +41,3 @@
   };
   meta = { };
 }
-

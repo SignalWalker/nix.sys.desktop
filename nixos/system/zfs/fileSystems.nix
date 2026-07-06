@@ -5,9 +5,7 @@
 }:
 let
   zfs = config.zfs-root;
-  cfg = config.zfs-root.fileSystems;
   inherit (lib)
-    mkIf
     types
     mkDefault
     mkOption
@@ -52,7 +50,7 @@ in
           ];
           neededForBoot = true;
         };
-      }) cfg.datasets
+      }) zfs.fileSystems.datasets
       ++ mapAttrsToList (bindsrc: mountpoint: {
         "${mountpoint}" = {
           device = "${bindsrc}";
@@ -63,7 +61,7 @@ in
             "noatime"
           ];
         };
-      }) cfg.bindmounts
+      }) zfs.fileSystems.bindmounts
       ++ map (esp: {
         "/boot/efis/${esp}" = {
           device = "${config.zfs-root.boot.devNodes}${esp}";
@@ -77,17 +75,17 @@ in
             "X-mount.mkdir"
           ];
         };
-      }) cfg.efiSystemPartitions
+      }) zfs.fileSystems.efiSystemPartitions
     );
-    swapDevices = mkDefault (
+    swapDevices = (
       map (swap: {
         device = "${config.zfs-root.boot.devNodes}${swap}";
-        discardPolicy = mkDefault "both";
+        discardPolicy = "both";
         randomEncryption = {
           enable = true;
-          allowDiscards = mkDefault true;
+          allowDiscards = true;
         };
-      }) cfg.swapPartitions
+      }) zfs.fileSystems.swapPartitions
     );
   };
 }
