@@ -1,4 +1,5 @@
 {
+  config,
   inputs,
   pkgs,
   ...
@@ -10,12 +11,12 @@
     inputs.nix-index-database.nixosModules.nix-index
   ];
   config = {
-    # assertions = [
-    #   {
-    #     assertion = config.nix.package.version >= pkgs.nix.version;
-    #     message = "inputs.nix is out of date (${config.nix.package.version} < ${pkgs.nix.version})";
-    #   }
-    # ];
+    assertions = [
+      {
+        assertion = config.nix.settings.access-tokens == [ ];
+        message = "nix access tokens should not be present in config files; use nix-auth instead";
+      }
+    ];
 
     environment.systemPackages = [
       inputs.nix-auth.packages.${pkgs.stdenv.hostPlatform.system}.default
@@ -27,7 +28,7 @@
         dates = "weekly";
       };
       settings = {
-        # NOTE :: use nix-auth for this; don't try to put access tokens here
+        # NOTE ::
         access-tokens = [ ];
       };
     };
