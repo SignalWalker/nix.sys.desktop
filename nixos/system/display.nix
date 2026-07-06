@@ -52,10 +52,10 @@ in
 
     # tty/console
     services.kmscon = {
-      enable = false; # FIX :: breaks display manager as of 2025-04-02
+      enable = true;
       useXkbConfig = true;
       config = {
-        hwaccel = false;
+        hwaccel = true;
       };
     };
   };
