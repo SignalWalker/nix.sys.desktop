@@ -14,7 +14,8 @@ in
     environment.variables = lib.mkIf nvidia.enabled {
       EXTRA_SWAY_ARGS = "--unsupported-gpu";
       WLR_NO_HARDWARE_CURSORS = toString 1;
-      XWAYLAND_NO_GLAMOR = toString 1; # supposed to help with flickering under xwayland windows
+
+      LIBVA_DRIVER_NAME = "nvidia";
       __GLX_VENDOR_LIBRARY_NAME = "nvidia"; # :eyeroll:
     };
 
@@ -23,6 +24,7 @@ in
       nvidiaSettings = true;
       # package = config.boot.kernelPackages.nvidiaPackages.beta;
       nvidiaPersistenced = false;
+      branch = "bleeding_edge";
     };
 
     nixpkgs.config.packageOverrides = pkgs: {

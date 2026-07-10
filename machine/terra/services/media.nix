@@ -31,6 +31,11 @@ in
       enable = true;
       package = pkgs.jellyfin;
       openFirewall = false;
+      hardwareAcceleration = {
+        enable = true;
+        type = "nvenc";
+        device = "/dev/dri/by-path/pci-0000:01:00.0-render";
+      };
     };
 
     networking.firewall = {
@@ -109,4 +114,3 @@ in
   };
   meta = { };
 }
-

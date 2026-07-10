@@ -7,9 +7,10 @@
 }:
 let
   secrets = config.age.secrets;
-  serve = config.services.nix-serve;
 
   pubkey = "nix-cache.home.ashwalker.net:nfUY5yBAH5M1oCqkW+FjdZa+olzErfDvx6OIXut4THs=";
+
+  harmonia = config.services.harmonia;
 in
 {
   options =
@@ -17,33 +18,32 @@ in
       inherit (lib) mkOption types;
     in
     {
-      services.nix-serve = {
+      services.harmonia = {
         user = mkOption {
           type = types.str;
           readOnly = true;
-          default = "nix-serve";
+          default = "harmonia";
         };
         group = mkOption {
           type = types.str;
           readOnly = true;
-          default = "nix-serve";
+          default = "harmonia";
         };
       };
     };
   imports = [
-    inputs.nix-serve-ng.nixosModules.default
   ];
   config = {
     age.secrets = {
       nixStoreKey = {
         file = ./nix/nixStoreKey.age;
-        # owner = serve.user;
-        # group = serve.group;
+        owner = harmonia.user;
+        group = harmonia.group;
       };
       nixStoreKeyHttp = {
         file = ./nix/nixStoreKeyHttp.age;
-        owner = serve.user;
-        group = serve.group;
+        owner = harmonia.user;
+        group = harmonia.group;
       };
     };
     nix = {
@@ -52,30 +52,28 @@ in
           secrets.nixStoreKey.path
           secrets.nixStoreKeyHttp.path
         ];
-        allowed-users = [ serve.user ];
+        allowed-users = [ harmonia.user ];
       };
     };
-    services.nix-serve = {
-      enable = true;
-      secretKeyFile = secrets.nixStoreKeyHttp.path;
-      port = 42533;
-      package =
-        inputs.nix-serve-ng.packages.${pkgs.stdenv.hostPlatform.system}.lix-serve-ng.overrideAttrs
-          (
-            final: prev: {
-              buildInputs = prev.buildInputs ++ [
-                pkgs.libcpuid
-                pkgs.aws-sdk-cpp
-                pkgs.libseccomp
-              ];
-            }
-          );
+    services.harmonia = {
+      cache = {
+        enable = true;
+        signKeyPaths = [
+          secrets.nixStoreKey.path
+          secrets.nixStoreKeyHttp.path
+        ];
+        settings = {
+          bind = "unix:/run/harmonia/socket";
+        };
+      };
     };
-    users.users.${serve.user} = {
+
+    users.users.${harmonia.user} = {
       isSystemUser = true;
-      inherit (serve) group;
+      inherit (harmonia) group;
     };
-    users.groups.${serve.group} = { };
+    users.groups.${harmonia.group} = { };
+
     services.nginx.virtualHosts."nix-cache.home.ashwalker.net" = {
       useACMEHost = "home.ashwalker.net";
       forceSSL = true;
@@ -100,7 +98,7 @@ in
           return = "200 '${cmd}'";
         };
       locations."/" = {
-        proxyPass = "http://${serve.bindAddress}:${toString serve.port}";
+        proxyPass = "http://${harmonia.cache.settings.bind}";
       };
     };
 

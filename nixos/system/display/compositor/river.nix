@@ -5,15 +5,10 @@
   ...
 }:
 {
-  config = lib.mkIf (config.services.desktopManager.manager == "river") {
-    programs.river = {
-      enable = true;
-      xwayland.enable = true;
-      extraPackages = [
-        pkgs.swaylock
-        pkgs.swayidle
-      ];
-    };
+  config = {
+    environment.systemPackages = [ pkgs.river ];
+    services.displayManager.sessionPackages = [ pkgs.river ];
+    xdg.portal.config.river.default = [ "wlr" "gtk" ];
   };
   meta = { };
 }

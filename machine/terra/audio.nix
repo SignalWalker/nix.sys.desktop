@@ -16,25 +16,26 @@
             "10-sample-rates" = {
               "context.properties" = {
                 "default.clock.allowed-rates" = [
-                  44100
+                  # 44100
+                  # NOTE :: nevermind it seems to mess with mic input
                   48000
                 ];
               };
             };
           };
           pipewire-pulse = {
-            "10-zeroconf-publish" = {
-              "pulse.cmd" = [
-                {
-                  cmd = "load-module";
-                  args = "module-native-protocol-tcp port=${toString pulsePort} listen=0.0.0.0";
-                }
-                {
-                  cmd = "load-module";
-                  args = "module-zeroconf-publish";
-                }
-              ];
-            };
+            # "10-zeroconf-publish" = {
+            #   "pulse.cmd" = [
+            #     {
+            #       cmd = "load-module";
+            #       args = "module-native-protocol-tcp port=${toString pulsePort} listen=0.0.0.0";
+            #     }
+            #     {
+            #       cmd = "load-module";
+            #       args = "module-zeroconf-publish";
+            #     }
+            #   ];
+            # };
           };
         };
       };

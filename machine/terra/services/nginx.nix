@@ -5,7 +5,6 @@
   ...
 }:
 let
-  std = pkgs.lib;
   nginx = config.services.nginx;
 in
 {
@@ -24,18 +23,28 @@ in
         terraCert = mkOption {
           type = types.str;
           readOnly = true;
-          default = "/etc/nginx/terra.ashwalker.net.crt";
+          default = "/var/lib/nginx/terra.ashwalker.net.crt";
         };
         terraCertKey = mkOption {
           type = types.str;
           readOnly = true;
-          default = "/etc/nginx/terra.ashwalker.net.key";
+          default = "/var/lib/nginx/terra.ashwalker.net.key";
         };
       };
     };
   disabledModules = [ ];
-  
+
   config = {
+
+    environment.persistence.${config.system.persist.defaultMount} = {
+      directories = [
+        {
+          directory = "/var/lib/nginx";
+          inherit (nginx) user group;
+          mode = "u=rwx,g=rx,o=";
+        }
+      ];
+    };
 
     services.nginx = {
       enable = true;
@@ -90,7 +99,7 @@ in
             "upstream_addr"
             "upstream_connect_time"
           ];
-          logFormatStr = std.concatStringsSep ",'\n" (
+          logFormatStr = lib.concatStringsSep ",'\n" (
             map (field: "'\"${field}\":\"\$${field}\"") logFormatFields
           );
         in

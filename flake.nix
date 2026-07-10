@@ -1,7 +1,6 @@
 {
   description = "Nix configuration - personal desktop computer";
   inputs = {
-    # TODO :: switch to nixos-unstable
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
 
     lix = {
@@ -97,16 +96,6 @@
       # this doesn't actually take any inputs
       # inputs.nixpkgs.follows = "nixpkgs";
     };
-    fw-ectool-src = {
-      url = "github:FrameworkComputer/EmbeddedController";
-      flake = false;
-    };
-    fw-ectool = {
-      url = "github:ssddq/fw-ectool";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.ec-git.follows = "fw-ectool-src";
-      inputs.ec-local.follows = "fw-ectool-src";
-    };
 
     grub-theme-yorha = {
       url = "github:OliveThePuffin/yorha-grub-theme";
@@ -118,10 +107,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    thaw = {
-      url = "github:snowfallorg/thaw";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # thaw = {
+    #   url = "github:snowfallorg/thaw";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     eww = {
       url = "github:elkowar/eww";
@@ -138,10 +127,10 @@
       # inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nix-alien = {
-      url = "github:thiagokokada/nix-alien";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    # nix-alien = {
+    #   url = "github:thiagokokada/nix-alien";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
 
     hyprland = {
       url = "github:hyprwm/Hyprland";
@@ -159,11 +148,6 @@
 
     "nix-auth" = {
       url = "github:numtide/nix-auth";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nix-serve-ng = {
-      url = "github:aristanetworks/nix-serve-ng";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

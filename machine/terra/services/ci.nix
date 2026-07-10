@@ -1,6 +1,5 @@
 {
   config,
-  pkgs,
   lib,
   ...
 }:
@@ -28,7 +27,6 @@ in
         port = 49232;
         useSubstitutes = true;
         hydraURL = "hydra.${baseDomain}";
-        buildMachinesFiles = [ ];
       };
 
       services.nginx.virtualHosts = lib.mkIf hydra.enable {
@@ -44,4 +42,3 @@ in
   ];
   meta = { };
 }
-

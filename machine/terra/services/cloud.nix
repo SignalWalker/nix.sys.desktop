@@ -1,6 +1,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 let
@@ -8,17 +9,19 @@ let
 in
 {
   config = {
-    age.secrets.cloudAdminPassword = {
+    age.secrets = lib.mkIf nc.enable {
+      cloudAdminPassword = {
       file = ./cloud/cloudAdminPassword.age;
       owner = "nextcloud";
       group = "nextcloud";
+      };
     };
 
     services.nextcloud = {
-      enable = true;
+      enable = false;
       hostName = "cloud.home.ashwalker.net";
       https = true;
-      package = pkgs.nextcloud32;
+      package = pkgs.nextcloud35;
       autoUpdateApps.enable = true;
       configureRedis = true;
       database.createLocally = true;
@@ -31,8 +34,8 @@ in
         dbuser = "nextcloud";
         dbhost = "/run/postgresql";
         dbname = "nextcloud";
-        adminpassFile = config.age.secrets.cloudAdminPassword.path;
-        adminuser = "admin";
+        # adminpassFile = config.age.secrets.cloudAdminPassword.path;
+        # adminuser = "admin";
       };
       phpOptions = {
         # upload_max_filesize = "64G";

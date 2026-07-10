@@ -4,20 +4,20 @@
   lib,
   ...
 }:
-with builtins; let
-  std = pkgs.lib;
+let
   input = config.signal.input;
-in {
-  options = with lib; {
+in
+{
+  options = {
     signal.input = {
-      enable = (mkEnableOption "input configuration") // {default = true;};
+      enable = (lib.mkEnableOption "input configuration") // {
+        default = true;
+      };
     };
   };
-  disabledModules = [];
-  
   config = lib.mkIf input.enable {
     environment.systemPackages = [
-      pkgs.xorg.setxkbmap
+      pkgs.setxkbmap
     ];
     services.xserver = {
       xkb = {
@@ -25,7 +25,7 @@ in {
         extraLayouts."hypersuper" = {
           description = "Ensures correct modifier mapping for hyper and super.";
           symbolsFile = ./input/symbols/hypersuper;
-          languages = ["eng"];
+          languages = [ "eng" ];
         };
         layout = "hypersuper(us)";
       };
@@ -33,5 +33,6 @@ in {
 
     programs.wshowkeys.enable = true;
   };
-  meta = {};
+  meta = { };
 }
+

@@ -11,7 +11,7 @@ in
     services.immich = {
       enable = true;
       machine-learning = {
-        enable = true;
+        enable = false;
         environment = {
           "MACHINE_LEARNING_DEVICE_IDS" = "0";
           "MACHINE_LEARNING_ANN_FP16_TURBO" = "True";
@@ -45,7 +45,7 @@ in
             "webm"
           ];
           targetVideoCodec = "av1";
-          targetAudioCodec = "libopus";
+          targetAudioCodec = "opus";
           targetResolution = "1080";
           preset = "fast";
         };

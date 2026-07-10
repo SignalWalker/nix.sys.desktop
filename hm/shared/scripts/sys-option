@@ -1,0 +1,17 @@
+#! /usr/bin/env nu
+
+def --wrapped main [
+    option: string
+    --host: string
+    ...rest: string
+] {
+    let projects_dir = $env.XDG_PROJECTS_DIR? | default $'($env.HOME)/projects'
+    let desktop_dir = $'($projects_dir)/nix/sys/desktop'
+    let opt_args = [
+        "-F"
+        $'($desktop_dir)#($host | default (hostname))'
+        $option
+        ...$rest
+    ]
+    nixos-option ...$opt_args
+}

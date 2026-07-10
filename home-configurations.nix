@@ -16,7 +16,6 @@ inputs: top: {
         # ./hm/${machine}.nix
       ];
       config = {
-        programs.guix.enable = false;
 
         # desktop.wayland.compositor.sway.enable = true;
 

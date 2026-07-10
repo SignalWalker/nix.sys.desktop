@@ -34,11 +34,9 @@
       # epub / mobi
       pkgs.gnome-epub-thumbnailer
       # various 3D formats
-      # pkgs.f3d # FIX :: build failure 2025-05-24
+      pkgs.f3d
       # video
       pkgs.ffmpegthumbnailer
-      # .raw
-      pkgs.nufraw-thumbnailer
     ];
   };
   meta = { };

@@ -65,13 +65,17 @@ in
       path = [ pkgs.curl ];
       serviceConfig = {
         Type = "oneshot";
+        User = qbit.user;
+        Group = qbit.group;
         ExecStart =
           let
             cookiePath = "/elysium/torrent/mam.cookies";
+            curl = "${pkgs.curl}/bin/curl";
+            mamEndpoint = "https://t.myanonamouse.net/json/dynamicSeedbox.php";
           in
-          "${pkgs.curl}/bin/curl -c ${cookiePath} -b ${cookiePath} https://t.myanonamouse.net/json/dynamicSeedbox.php";
-        User = qbit.user;
-        Group = qbit.group;
+          ''
+            ${curl} -c ${cookiePath} -b ${cookiePath} ${mamEndpoint}
+          '';
       };
     };
 

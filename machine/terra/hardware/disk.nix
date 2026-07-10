@@ -10,65 +10,39 @@
     let
       disko = config.disko;
       partitions = disko.devices.disk.main.content.partitions;
-      luks = partitions.luks;
-      subvols = luks.content.content.subvolumes;
-      mapper = luks.content.name;
-      luksDevice = "/dev/mapper/${mapper}";
-      # HACK :: this is literally just so that the treesitter parser doesn't get mad at me (note the escaped quotes)
-      luksDeviceShell = "\"${luksDevice}\"";
+      rootPart = partitions."root";
+      subvols = rootPart.content.subvolumes;
     in
     lib.mkIf false (
       lib.mkMerge [
-        (lib.mkIf disko.testMode (
-          let
-            dummyKey = "disko";
-            dummyKeyFile = "/tmp/diskotest.key";
-            mkDummyKeyFile = ''
-              echo -n "${dummyKey}" > "${dummyKeyFile}"
-            '';
-          in
-          {
-            warnings = [ "building in disko test mode" ];
-            environment.shellAliases = {
-              "sull" = "sudo eza -lhaM --sort=type";
+        (lib.mkIf disko.testMode {
+          warnings = [ "building in disko test mode" ];
+          environment.shellAliases = {
+            "sull" = "sudo eza -lhaM --sort=type";
+          };
+          users.users = {
+            ash = {
+              initialPassword = "dummy";
             };
-            users.users = {
-              ash = {
-                initialPassword = dummyKey;
-              };
-              root = {
-                initialPassword = dummyKey;
-              };
+            root = {
+              initialPassword = "dummy";
             };
-            services.greetd = {
-              settings = {
-                initial_session = {
-                  command = "fish";
-                  user = "ash";
-                };
+          };
+          services.greetd = {
+            settings = {
+              initial_session = {
+                command = "fish";
+                user = "ash";
               };
             };
-            # boot.initrd.systemd.services."mk-disko-test-keyfile" = {
-            #   description = "Generate ${dummyKeyFile}";
-            #   wantedBy = [ "cryptsetup-pre.target" ];
-            #   before = [ "systemd-cryptsetup@${mapper}.service" ];
-            #   unitConfig.DefaultDependencies = "no";
-            #   serviceConfig.Type = "oneshot";
-            #   script = ''
-            #     set -eux
-            #
-            #     ${mkDummyKeyFile}
-            #   '';
-            # };
-            # disko.devices.disk.main.content.partitions.luks.content = {
-            #   preCreateHook = mkDummyKeyFile;
-            #   settings = {
-            #     keyFile = dummyKeyFile;
-            #   };
-            # };
-          }
-        ))
+          };
+        })
         {
+          environment = {
+            btrfs.rootSupport = true;
+            defaultPersistMountpoint = subvols."/persist".mountpoint;
+          };
+
           fileSystems = {
             ${subvols."/persist".mountpoint}.neededForBoot = true;
             # (presumably) so we can get logs from boot
@@ -84,64 +58,6 @@
               ${subvols."/var/log".mountpoint}.neededForBoot = true;
             };
           };
-          environment.persistence = {
-            ${subvols."/persist".mountpoint} = {
-              enable = true;
-              hideMounts = true;
-              directories = [
-                # network
-                "/etc/NetworkManager/system-connections"
-                "/var/lib/iwd"
-                "/var/lib/wgautomesh"
-
-                # system
-                "/var/db/sudo/lectured" # which users have received the lecture sudo outputs on first use
-                "/var/lib/nixos"
-                ## greeter
-                "/var/cache/tuigreet" # last-logged-in user
-                "/var/lib/regreet" # last-logged-in user
-                ## systemd
-                "/var/lib/systemd/coredump"
-                "/var/lib/systemd/timers"
-                ## flatpak
-                "/var/lib/flatpak"
-                ## guix
-                "/etc/guix"
-                "/var/guix"
-                ## fwupd
-                "/var/lib/fwupd"
-                "/etc/fwupd"
-                ## ssh
-                "/etc/ssh/authorized_keys.d"
-
-                # hardware
-                "/var/lib/upower"
-                "/var/lib/bluetooth"
-                "/var/lib/systemd/backlight"
-
-                # virtualization
-                "/var/lib/docker"
-                "/var/lib/lxc"
-                "/var/lib/libvirt"
-              ];
-              files = [
-                "/etc/machine-id"
-                # ssh keys
-                "/etc/ssh/ssh_host_ed25519_key"
-                "/etc/ssh/ssh_host_ed25519_key.pub"
-                "/etc/ssh/ssh_host_rsa_key"
-                "/etc/ssh/ssh_host_rsa_key.pub"
-              ];
-            };
-          };
-          # disable copy-on-write for the system journal
-          systemd.tmpfiles.settings = {
-            "10-var-log-journal" = {
-              "/var/log/journal" = {
-                "h".argument = "C";
-              };
-            };
-          };
           boot.initrd = {
             systemd = {
               enable = true;
@@ -149,6 +65,7 @@
               services."rollback-root" =
                 let
                   maxRootAge = 14; # days
+                  luksDeviceShell = ""; # FIX :: this
                 in
                 {
                   description = "Rollback BTRFS root subvolume to a pristine state";
@@ -221,7 +138,7 @@
               disk = {
                 main = {
                   type = "disk";
-                  device = "/dev/disk/by-id/nvme-eui.e8238fa6bf530001001b444a466e9126";
+                  device = "/dev/disk/by-id/nvme-eui.002538d51100a6ad";
                   content = {
                     type = "gpt";
                     partitions = {
@@ -237,46 +154,94 @@
                           mountOptions = [ "umask=0077" ];
                         };
                       };
-                      luks = {
-                        size = "100%";
-                        label = "luks";
-                        priority = 1;
+                      swap = {
+                        size = if disko.testMode then "64M" else "32G";
                         content = {
-                          type = "luks";
-                          name = "crypt-main";
-                          settings = {
-                            allowDiscards = true;
-                            # NOTE :: workqueue decreases performance on SSDs https://blog.cloudflare.com/speeding-up-linux-disk-encryption/
-                            bypassWorkqueues = true;
-                          };
-                          content =
-                            let
-                              rootName = "/root";
-                              blankName = "${rootName}-blank";
-                              # HACK :: these are just so the treesitter parser doesn't get mad at me (note the escaped quotes)
-                              subvolAbsPath = "\"$mntpoint/${rootName}\"";
-                              snapshotAbsPath = "\"$mntpoint/${blankName}\"";
-                            in
-                            {
+                          type = "swap";
+                          discardPolicy = "both"; # TODO :: why?
+                          resumeDevice = true;
+                        };
+                      };
+                      root = {
+                        size = "100%";
+                        label = "root";
+                        priority = 1;
+                        settings = {
+                          allowDiscards = true;
+                        };
+                        content =
+                          let
+                            rootName = "/root";
+                            blankName = "${rootName}-blank";
+                            # HACK :: these are just so the treesitter parser doesn't get mad at me (note the escaped quotes)
+                            subvolAbsPath = "\"$mntpoint/${rootName}\"";
+                            snapshotAbsPath = "\"$mntpoint/${blankName}\"";
+
+                            rootDeviceShell = ""; # FIX :: this
+                          in
+                          {
+                            type = "btrfs";
+                            extraArgs = [ "-f" ];
+                            postCreateHook = ''
+                              (
+                                echo "Snapshot /root as /root-blank..."
+                                mntpoint=$(mktemp -d)
+                                mount ${rootDeviceShell} "$mntpoint" -o subvol=/
+                                trap 'umount "$mntpoint" && rm -d "$mntpoint"' EXIT
+                                subvol_abs_path=${subvolAbsPath}
+                                snapshot_abs_path=${snapshotAbsPath}
+
+                                if btrfs subvolume show "$subvol_abs_path" > /dev/null 2>&1; then
+                                  btrfs subvolume snapshot -r "$subvol_abs_path" "$snapshot_abs_path"
+                                else
+                                  echo ERROR: could not subvolume show "$subvol_abs_path" and therefore could not make "$snapshot_abs_path" snapshot
+                                  exit 1
+                                fi
+                              )
+                            '';
+
+                            subvolumes =
+                              let
+                                mntDefaults = [
+                                  "defaults"
+                                  "compress=zstd"
+                                  "noatime"
+                                ];
+                              in
+                              {
+                                ${rootName} = {
+                                  mountpoint = "/";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/root-archive" = {
+                                  mountpoint = "/.root-archive";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/nix" = {
+                                  mountpoint = "/nix";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/gnu" = {
+                                  mountpoint = "/gnu";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/home" = {
+                                  mountpoint = "/home";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/var/log" = {
+                                  mountpoint = "/var/log";
+                                  mountOptions = mntDefaults;
+                                };
+                                "/persist" = {
+                                  mountpoint = "/persist";
+                                  mountOptions = mntDefaults;
+                                };
+                              };
+
+                            content = {
                               type = "btrfs";
                               extraArgs = [ "-f" ];
-                              postCreateHook = ''
-                                (
-                                  echo "Snapshot /root as /root-blank..."
-                                  mntpoint=$(mktemp -d)
-                                  mount ${luksDeviceShell} "$mntpoint" -o subvol=/
-                                  trap 'umount "$mntpoint" && rm -d "$mntpoint"' EXIT
-                                  subvol_abs_path=${subvolAbsPath}
-                                  snapshot_abs_path=${snapshotAbsPath}
-
-                                  if btrfs subvolume show "$subvol_abs_path" > /dev/null 2>&1; then
-                                    btrfs subvolume snapshot -r "$subvol_abs_path" "$snapshot_abs_path"
-                                  else
-                                    echo ERROR: could not subvolume show "$subvol_abs_path" and therefore could not make "$snapshot_abs_path" snapshot
-                                    exit 1
-                                  fi
-                                )
-                              '';
                               subvolumes =
                                 let
                                   mntDefaults = [
@@ -322,7 +287,7 @@
                                   };
                                 };
                             };
-                        };
+                          };
                       };
                     };
                   };

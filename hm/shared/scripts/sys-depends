@@ -1,0 +1,8 @@
+#! /usr/bin/env nu
+
+def --wrapped main [
+    derivation: string,
+    ...rest: string
+] {
+    exec nix why-depends /run/current-system (nix eval --raw $derivation ...$rest) ...$rest
+}

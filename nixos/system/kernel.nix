@@ -102,7 +102,7 @@ in
       };
     };
   disabledModules = [ ];
-  
+
   config = {
     assertions = [
       {
@@ -117,9 +117,9 @@ in
       }
     ];
     system.linuxKernel.filter =
-      name: kp:
-      (match "linux(_rt)?_([0-9]+_[0-9]+|zen|xanmod|lqx|hardened)(_hardened)?(_latest)?" name) != null;
+      name: kp: (match "linux_([0-9]+_[0-9]+|zen|xanmod)(_latest)?" name) != null;
     boot.kernelPackages = kernel.latest;
+    # musnix.kernel.packages = kernel.latest;
   };
   meta = { };
 }

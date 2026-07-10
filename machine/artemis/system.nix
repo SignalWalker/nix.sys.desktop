@@ -11,7 +11,6 @@
     };
 
     environment.systemPackages = [
-      inputs.fw-ectool.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
 
     stylix.targets.grub.enable = false;

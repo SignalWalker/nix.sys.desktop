@@ -1,5 +1,6 @@
 {
   inputs,
+  config,
   pkgs,
   lib,
   ...
@@ -20,11 +21,13 @@
       enable = true;
       alsaSeq.enable = true;
       rtcqs.enable = true;
-      kernel = {
-        realtime = false;
-        packages = pkgs.linuxPackages_latest_rt;
-      };
+      # kernel = {
+      #   realtime = true;
+      # };
     };
+
+    # PREEMPT_RT (required by musnix) requires kernel version >= 6.12
+    system.linuxKernel.filter = name: kp: lib.versionOlder "6.11" kp.kernel.version;
 
     services.upower = {
       enable = true;

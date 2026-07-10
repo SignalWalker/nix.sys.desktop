@@ -61,7 +61,6 @@
       };
       extest.enable = false;
       extraCompatPackages = [
-        pkgs.proton-ge-bin
       ];
       gamescopeSession = {
         enable = false;

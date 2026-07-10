@@ -18,12 +18,6 @@ in
     systemd.network.networks."eth".linkConfig.RequiredForOnline = "no";
     # systemd.network.wait-online.enable = false;
 
-    nix = {
-      extraOptions = ''
-        builders-use-substitutes = true
-      '';
-    };
-
     # environment.variables."EXTRA_SWAY_ARGS" = "-Dlegacy-wl-drm";
 
     signal.machines."terra" = {

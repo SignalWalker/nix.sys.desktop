@@ -131,22 +131,21 @@ in
       };
     };
 
-    services.gitea-actions-runner = {
-      package = pkgs.forgejo-runner;
-      instances = {
-        ${config.networking.hostName} = {
-          enable = false;
-          name = config.networking.hostName;
-          url = "https://${domain}";
-          labels = [
-            "native:host"
-            "rust-latest:docker://rust:latest"
-            "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
-          ];
-          tokenFile = secrets.gitRunnerToken.path;
-        };
-      };
-    };
+    # services.forgejo-runner = {
+    #   instances = {
+    #     ${config.networking.hostName} = {
+    #       enable = false;
+    #       name = config.networking.hostName;
+    #       url = "https://${domain}";
+    #       labels = [
+    #         "native:host"
+    #         "rust-latest:docker://rust:latest"
+    #         "ubuntu-latest:docker://gitea/runner-images:ubuntu-latest"
+    #       ];
+    #       tokenFile = secrets.gitRunnerToken.path;
+    #     };
+    #   };
+    # };
     virtualisation = {
       containers.enable = true;
       podman = {

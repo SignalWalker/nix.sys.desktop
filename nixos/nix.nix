@@ -13,7 +13,7 @@
   config = {
     assertions = [
       {
-        assertion = config.nix.settings.access-tokens == [ ];
+        assertion = config.nix.settings ? access-tokens -> config.nix.settings.access-tokens == [ ];
         message = "nix access tokens should not be present in config files; use nix-auth instead";
       }
     ];
@@ -28,8 +28,12 @@
         dates = "weekly";
       };
       settings = {
-        # NOTE ::
-        access-tokens = [ ];
+        extra-substituters = [
+          "https://lan-mouse.cachix.org/"
+        ];
+        extra-trusted-public-keys = [
+          "lan-mouse.cachix.org-1:KlE2AEZUgkzNKM7BIzMQo8w9yJYqUpor1CAUNRY6OyM="
+        ];
       };
     };
 
@@ -42,9 +46,8 @@
         # inputs.wayland.overlays.default
         inputs.agenix.overlays.default
 
-        inputs.thaw.overlays."package/thaw"
+        # inputs.thaw.overlays."package/thaw"
 
-        inputs.nix-alien.overlays.default
       ];
 
       config = {

@@ -36,6 +36,12 @@ in
         prism.name = "Playground";
       };
     };
+
+    networking.firewall.allowedUDPPorts = [
+      # voice chat
+      43570
+    ];
+
     services.nginx.virtualHosts = lib.mkIf (playground.enable) {
       ${hostName} = {
         listenAddresses = config.services.nginx.publicListenAddresses;

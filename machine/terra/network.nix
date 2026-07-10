@@ -59,7 +59,7 @@
             publicKey = "PyLCXAQT8KkM4T+dUsOQfn+Ub3pGxfGlxkIApuig+hk=";
             presharedKeyFile = "/run/wireguard/wg-torrent.psk";
             # TODO :: automatically switch between set of endpoints?
-            endpoint = "198.44.136.30:1637";
+            endpoint = "198.44.134.21:1637";
             allowedIps = [
               "0.0.0.0/0"
               "::/0"
@@ -172,4 +172,3 @@
   };
   meta = { };
 }
-

@@ -19,14 +19,15 @@ in
       };
       certs = {
         "home.ashwalker.net" = {
-          domain = "home.ashwalker.net";
+          domain = "*.home.ashwalker.net";
           extraDomainNames = [
-            "*.home.ashwalker.net"
+            # "*.home.ashwalker.net"
           ];
           dnsProvider = "hetzner";
           dnsPropagationCheck = true;
+          enableDebugLogs = true;
           credentialFiles = {
-            "HETZNER_API_KEY_FILE" = secrets.hetznerDnsApiKey.path;
+            "HETZNER_API_TOKEN_FILE" = secrets.hetznerDnsApiKey.path;
           };
         };
       };
