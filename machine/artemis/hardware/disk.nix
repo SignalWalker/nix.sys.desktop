@@ -91,7 +91,6 @@ in
       boot.kernelParams = [ "resume_offset=533760" ]; # TODO :: automate finding this?
       boot.initrd = {
         systemd = {
-          enable = true;
           # NOTE :: from https://www.notashelf.dev/posts/impermanence
           services."rollback-root" =
             let
