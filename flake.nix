@@ -150,6 +150,11 @@
       url = "github:numtide/nix-auth";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    umbriel = {
+      url = "github:noctalia-dev/umbriel";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
   outputs =
     inputs@{ flake-parts, ... }:
@@ -171,9 +176,12 @@
         };
         systems = [ "x86_64-linux" ];
         perSystem =
-          { pkgs, ... }:
+          { self', pkgs, ... }:
           {
             formatter = pkgs.nixfmt;
+            devShells.default = pkgs.mkShell {
+              packages = [ self'.formatter ];
+            };
           };
       }
     );

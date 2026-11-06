@@ -7,7 +7,7 @@
 let
   pg = config.services.postgresql;
   pgbck = config.services.postgresqlBackup;
-  shouldUpgrade = pg.package.psqlSchema != pkgs.postgresql.psqlSchema;
+  shouldUpgrade = pg.finalPackage.psqlSchema != pkgs.postgresql.psqlSchema;
 in
 {
   config = {
@@ -16,6 +16,7 @@ in
     ];
     services.postgresql = {
       enable = true;
+      enableJIT = true;
       package = pkgs.postgresql_17;
       extensions = ps: [
       ];
@@ -26,7 +27,9 @@ in
       compression = "zstd";
       compressionLevel = if pgbck.compression == "zstd" then 19 else 9;
     };
-    environment.systemPackages = lib.mkIf shouldUpgrade [
+    environment.systemPackages = [
+      pg.finalPackage.pg_config
+    ] ++ (lib.optionals shouldUpgrade [
       (
         let
           newPg = pkgs.postgresql.withPackages pg.extensions;
@@ -41,21 +44,20 @@ in
           export NEWBIN="${newPg}/bin"
 
           export OLDDATA="${pg.dataDir}"
-          export OLDBIN="${pg.package}/bin"
+          export OLDBIN="${pg.finalPackage}/bin"
 
           install -d -m 0700 -o postgres -g postgres "$NEWDATA"
           cd "$NEWDATA"
-          sudo -u postgres $NEWBIN/initdb -D "$NEWDATA"
+          sudo -u postgres "$NEWBIN/initdb" -D "$NEWDATA" ${lib.escapeShellArgs pg.initdbArgs}
 
           sudo -u postgres $NEWBIN/pg_upgrade \
             --old-datadir "$OLDDATA" --new-datadir "$NEWDATA" \
             --old-bindir $OLDBIN --new-bindir $NEWBIN \
             --jobs $(nproc) \
-            --link \
             "$@"
         ''
       )
-    ];
+    ]);
   };
   meta = { };
 }

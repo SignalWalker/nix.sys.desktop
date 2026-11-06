@@ -19,6 +19,7 @@ in
           "sway"
           "river"
           "hyprland"
+          "river"
         ];
         default = "hyprland";
       };
@@ -29,7 +30,15 @@ in
     environment.systemPackages = [
       pkgs.vulkan-tools
       pkgs.mesa-demos
+      pkgs.ddcutil
     ];
+
+    # service for controlling monitor brightness, etc.
+    services.ddccontrol = {
+      enable = true;
+    };
+
+    users.users."ash".extraGroups = [ config.hardware.i2c.group ];
 
     programs.dconf.enable = true;
 

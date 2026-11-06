@@ -51,8 +51,10 @@
       ];
 
       config = {
+        problems.handlers = {
+          "gtk+".broken = "warn";
+        };
         permittedInsecurePackages = [
-          "electron-39.8.10"
         ];
         nvidia.acceptLicense = true;
       };

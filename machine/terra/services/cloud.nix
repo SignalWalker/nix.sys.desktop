@@ -11,9 +11,9 @@ in
   config = {
     age.secrets = lib.mkIf nc.enable {
       cloudAdminPassword = {
-      file = ./cloud/cloudAdminPassword.age;
-      owner = "nextcloud";
-      group = "nextcloud";
+        file = ./cloud/cloudAdminPassword.age;
+        owner = "nextcloud";
+        group = "nextcloud";
       };
     };
 
@@ -37,16 +37,14 @@ in
         # adminpassFile = config.age.secrets.cloudAdminPassword.path;
         # adminuser = "admin";
       };
-      phpOptions = {
-        # upload_max_filesize = "64G";
-        # post_max_size = "64G";
-      };
     };
 
-    services.nginx.virtualHosts.${nc.hostName} = {
-      useACMEHost = "home.ashwalker.net";
-      forceSSL = true;
-      listenAddresses = config.services.nginx.publicListenAddresses;
+    services.nginx.virtualHosts = lib.mkIf nc.enable {
+      ${nc.hostName} = {
+        useACMEHost = "home.ashwalker.net";
+        forceSSL = true;
+        listenAddresses = config.services.nginx.publicListenAddresses;
+      };
     };
 
     # services.postgresql = {
