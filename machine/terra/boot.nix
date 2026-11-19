@@ -10,8 +10,6 @@
   imports = [ ];
   config = {
 
-    # boot.kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
-
     boot = {
       # HACK :: I think this is fine since we have a ton of swap?
       tmp.tmpfsSize = "100%";

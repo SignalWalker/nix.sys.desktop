@@ -1,8 +1,12 @@
 {
+  inputs,
   config,
   ...
 }:
 {
+  imports = [
+    inputs.sysbase.nixosModules.zfsRoot
+  ];
   config = {
     zfs-root = {
       boot = {
